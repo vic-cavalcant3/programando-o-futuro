@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa de Carreira — Programando o Futuro</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <link rel="stylesheet" href="../styles/sidebar.css" />
+  <style>
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100; padding: 1rem 0;
+      background: rgba(6,11,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.3s;
+    }
+    .navbar.scrolled { padding: 0.7rem 0; background: rgba(6,11,20,0.98); }
+    .navbar .container {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+      flex-wrap: nowrap;
+    }
+    .nav-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 1rem; color: #f0f6ff;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem; color: rgba(255,255,255,0.55);
+      text-decoration: none; transition: color 0.2s; position: relative;
+    }
+    .nav-links a.active { color: #f0f6ff; }
+    .nav-links a.active::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 2px; background: #2563eb; border-radius: 2px;
+    }
+    .nav-links a:hover { color: #f0f6ff; }
+    .nav-user { display: flex; align-items: center; gap: 0.8rem; }
+    .nav-user span {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem; color: rgba(255,255,255,0.6);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; background: #2563eb;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 0.8rem; color: #fff; cursor: pointer;
+    }
+    .btn-hamburger {
+      display: none; background: none; border: none;
+      color: #f0f6ff; cursor: pointer; align-items: center;
+    }
+
+    /* ====== MAIN ====== */
+    main {
+      max-width: 1200px; margin: 0 auto;
+      padding: 110px 2rem 4rem;
+    }
+
+    /* ====== HERO ====== */
+    .page-hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 2rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .page-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      color: #3b82f6; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .page-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900; color: #f0f6ff;
+      letter-spacing: -0.03em; line-height: 1.05;
+      margin-bottom: 1rem;
+    }
+    .page-desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem; color: rgba(255,255,255,0.5);
+      line-height: 1.7; max-width: 520px;
+    }
+
+    /* Progresso card */
+    .progress-widget {
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      display: flex; align-items: center; gap: 1.2rem;
+      min-width: 220px;
+    }
+   
+    .progress-widget-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      color: rgba(255,255,255,0.3); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 0.3rem;
+    }
+    .progress-widget-pct {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2rem; font-weight: 900; color: #f0f6ff;
+      line-height: 1;
+    }
+    .progress-widget-icon {
+      width: 52px; height: 52px;
+      background: rgba(37,99,235,0.12);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ====== MAIN GRID ====== */
+    .map-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ====== TIMELINE ====== */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+
+    .timeline-step {
+      display: flex; align-items: flex-start; gap: 1.2rem;
+      position: relative;
+    }
+
+    /* linha conectora */
+    .timeline-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 31px; top: 72px;
+      width: 2px; height: calc(100% - 30px);
+      background: rgba(255,255,255,0.06);
+      z-index: 0;
+    }
+    .timeline-step.done::after { background: rgba(37,99,235,0.3); }
+
+    .step-icon-wrap {
+      width: 64px; height: 64px; flex-shrink: 0;
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+      transition: all 0.3s;
+    }
+    .timeline-step.done .step-icon-wrap {
+      border-color: rgba(37,99,235,0.35);
+      background: rgba(37,99,235,0.08);
+    }
+    .timeline-step.active .step-icon-wrap {
+      border-color: #2563eb;
+      background: rgba(37,99,235,0.12);
+      box-shadow: 0 0 20px rgba(37,99,235,0.2);
+    }
+    .timeline-step.locked .step-icon-wrap {
+      opacity: 0.4;
+    }
+
+    .step-content {
+      flex: 1;
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .step-content:hover {
+      border-color: rgba(37,99,235,0.2);
+    }
+    .timeline-step.active .step-content {
+      border-color: rgba(37,99,235,0.25);
+      background: rgba(37,99,235,0.04);
+    }
+    .timeline-step.locked .step-content {
+      opacity: 0.5; cursor: not-allowed;
+    }
+
+    .step-content h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.3rem;
+    }
+    .timeline-step.locked .step-content h3 {
+      color: rgba(255,255,255,0.4);
+    }
+    .step-content .step-sub {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.78rem; color: #3b82f6;
+      margin-bottom: 0.7rem;
+    }
+    .timeline-step.locked .step-content .step-sub {
+      color: rgba(255,255,255,0.25);
+    }
+
+    .step-badge {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .step-badge.concluido {
+      background: rgba(16,185,129,0.15);
+      color: #10b981;
+      border: 1px solid rgba(16,185,129,0.25);
+    }
+    .step-badge.atual {
+      background: rgba(37,99,235,0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(37,99,235,0.3);
+    }
+    .step-badge.bloqueado {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ====== DETALHES CARD ====== */
+    .details-card {
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 2rem;
+      position: sticky;
+      top: 90px;
+    }
+    .details-header {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .details-icon {
+      width: 48px; height: 48px;
+      background: rgba(37,99,235,0.12);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .details-header h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.2rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.2rem;
+    }
+    .details-level {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      color: #3b82f6; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    .details-section { margin-bottom: 1.5rem; }
+    .details-section-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      color: rgba(255,255,255,0.3); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+
+    /* Itens de estudo */
+    .study-items { display: flex; flex-direction: column; gap: 0.5rem; }
+    .study-item {
+      display: flex; align-items: center; gap: 0.8rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 0.7rem 1rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.85rem; color: rgba(255,255,255,0.65);
+    }
+    .study-item.done { color: rgba(255,255,255,0.4); text-decoration: line-through; }
+    .study-check {
+      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+    .study-check.checked {
+      background: rgba(37,99,235,0.2);
+      border-color: #2563eb;
+    }
+    .study-check.checked::after {
+      content: '';
+      width: 6px; height: 6px;
+      background: #2563eb; border-radius: 50%;
+    }
+    .study-check.pending { border-color: rgba(255,255,255,0.15); }
+
+    /* Stats row */
+    .stats-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-box {
+      background: rgba(37,99,235,0.08);
+      border: 1px solid rgba(37,99,235,0.15);
+      border-radius: 12px; padding: 1rem;
+    }
+    .stat-box-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.6rem; font-weight: 700;
+      color: #3b82f6; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 0.3rem;
+    }
+    .stat-box-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.1rem; font-weight: 800; color: #f0f6ff;
+    }
+
+    /* Ferramentas */
+    .tools-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .tool-tag {
+      padding: 0.3rem 0.8rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.75rem; color: rgba(255,255,255,0.6);
+    }
+
+    /* CTA btn */
+    .btn-cta-level {
+      width: 100%; padding: 1rem;
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: all 0.25s; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .btn-cta-level:hover {
+      background: #3b82f6; transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+    }
+
+    /* ====== FOOTER ====== */
+    footer {
+      background: rgba(13,20,36,0.95);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 2rem 0; margin-top: 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 0.95rem; color: #f0f6ff;
+    }
+    .footer-copy {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 0.2rem;
+    }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.8rem; color: rgba(255,255,255,0.3);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.6); }
+    .footer-socials { display: flex; gap: 0.6rem; }
+    .footer-socials a {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.3); transition: all 0.2s;
+    }
+    .footer-socials a:hover { border-color: #2563eb; color: #2563eb; }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.6s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 900px) {
+      .map-grid { grid-template-columns: 1fr; }
+      .details-card { position: static; }
+      .page-hero { grid-template-columns: 1fr; }
+      .progress-widget { width: fit-content; }
+    }
+    @media (max-width: 698px) {
+      .nav-links, .nav-user { display: none; }
+      .btn-hamburger { display: flex; }
+      .navbar .container {
+        flex-wrap: nowrap; justify-content: space-between; padding: 0 1.2rem;
+      }
+      .page-title { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="container">
+      <a href="inicial_mapa_feito.html" class="nav-logo font-jakarta">Programando o Futuro</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="inicial_mapa_feito.html" class="font-manrope">Início</a></li>
+          <li><a href="mapa_carreira.html" class="active font-manrope">Mapa de Carreira</a></li>
+          <li><a href="minha_jornada.html" class="font-manrope">Minha Jornada</a></li>
+          <li><a href="oportunidades.html" class="font-manrope">Oportunidades</a></li>
+        </ul>
+      </nav>
+      <div class="nav-user">
+        <span class="font-manrope">Olá, Lucas</span>
+        <div class="nav-avatar font-jakarta">LG</div>
+      </div>
+      <button class="btn-hamburger" onclick="openSidebar()">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <div class="page-hero fade-up">
+      <div class="page-hero-left">
+        <div class="page-label font-jakarta">Sua Jornada Evolutiva</div>
+        <h1 class="page-title font-jakarta">Seu Mapa:<br>Desenvolvimento Web</h1>
+        <p class="page-desc font-manrope">Navegue pelos módulos de conhecimento e visualize o caminho para se tornar um especialista de alto nível no mercado tecnológico.</p>
+      </div>
+      <div class="progress-widget fade-up delay-1">
+        <div class="progress-widget-info">
+          <div class="progress-widget-label font-jakarta">Progresso Atual</div>
+          <div class="progress-widget-pct font-jakarta">32%</div>
+        </div>
+        <div class="progress-widget-icon">
+          <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 
+      TODO BACK-END — MAP GRID:
+      Todo o conteúdo desta seção deve ser gerado dinamicamente via API.
+      
+      Endpoints esperados:
+      - GET /api/mapa/:userId → retorna todos os steps com status (done/active/locked)
+      - GET /api/mapa/:userId/step/:stepId → retorna detalhes do step selecionado
+      
+      Campos esperados por step:
+      - id (string)
+      - titulo (string)
+      - subtitulo (string)
+      - status: "done" | "active" | "locked"
+      - estudos: array de { nome: string, concluido: boolean }
+      - salario (string)
+      - tempo (string)
+      - ferramentas: array de strings
+      
+      Progresso geral (32%):
+      - GET /api/mapa/:userId/progresso → retorna { percentual: number }
+    -->
+    <div class="map-grid fade-up delay-2">
+
+      <!-- TIMELINE -->
+      <!-- TODO BACK-END: renderizar os steps dinamicamente com base na API -->
+      <div class="timeline">
+
+        <!-- Step 1 — Concluído -->
+        <!-- TODO BACK-END: status "done" = classe "done" no timeline-step -->
+        <div class="timeline-step done" onclick="selectStep('formacao')">
+          <div class="step-icon-wrap">
+            <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <!-- TODO BACK-END: substituir texto estático por dados da API -->
+            <h3 class="font-jakarta">Formação Inicial</h3>
+            <div class="step-sub font-manrope">HTML, CSS e Lógica com JavaScript</div>
+            <span class="step-badge concluido font-jakarta">Concluído</span>
+          </div>
+        </div>
+
+        <!-- Step 2 — Atual -->
+        <!-- TODO BACK-END: status "active" = classe "active" no timeline-step -->
+        <div class="timeline-step active" onclick="selectStep('especializacao')">
+          <div class="step-icon-wrap">
+            <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h3 class="font-jakarta">Especialização</h3>
+            <div class="step-sub font-manrope">Frameworks Modernos (React, Vue, Next.js)</div>
+            <span class="step-badge atual font-jakarta">Atual</span>
+          </div>
+        </div>
+
+        <!-- Step 3 — Bloqueado -->
+        <!-- TODO BACK-END: status "locked" = classe "locked" no timeline-step, desabilitar onclick -->
+        <div class="timeline-step locked" onclick="selectStep('experiencias')">
+          <div class="step-icon-wrap">
+            <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h3 class="font-jakarta">Primeiras Experiências</h3>
+            <div class="step-sub font-manrope">Freelance, Estágios e Projetos Open Source</div>
+            <span class="step-badge bloqueado font-jakarta">Bloqueado</span>
+          </div>
+        </div>
+
+        <!-- Step 4 — Bloqueado -->
+        <div class="timeline-step locked" onclick="selectStep('crescimento')">
+          <div class="step-icon-wrap">
+            <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h3 class="font-jakarta">Crescimento</h3>
+            <div class="step-sub font-manrope">Pleno, Sênior e Especialista de Software</div>
+            <span class="step-badge bloqueado font-jakarta">Bloqueado</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DETALHES -->
+      <!-- TODO BACK-END: popular este card dinamicamente quando o usuário clicar em um step -->
+      <div class="details-card" id="detailsCard">
+        <div class="details-header">
+          <div class="details-icon">
+            <svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div>
+            <!-- TODO BACK-END: titulo e nivel vêm da API -->
+            <h2 class="font-jakarta" id="detailsTitle">Detalhes do Nível</h2>
+            <div class="details-level font-jakarta" id="detailsLevel">Especialização</div>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <div class="details-section-label font-jakarta">O que estudar</div>
+          <!-- TODO BACK-END: lista de estudos vem da API → { nome, concluido } -->
+          <!-- concluido = true → classe "done" + check "checked" -->
+          <!-- concluido = false → sem classe + check "pending" -->
+          <div class="study-items" id="detailsStudyItems">
+            <div class="study-item done font-manrope">
+              <div class="study-check checked"></div>
+              Ecossistema React (Hooks, Context)
+            </div>
+            <div class="study-item done font-manrope">
+              <div class="study-check checked"></div>
+              State Management (Zustand/Redux)
+            </div>
+            <div class="study-item font-manrope">
+              <div class="study-check pending"></div>
+              Server Side Rendering (Next.js)
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <!-- TODO BACK-END: salario e tempo vêm da API -->
+          <div class="stat-box">
+            <div class="stat-box-label font-jakarta">Salário Médio</div>
+            <div class="stat-box-value font-jakarta" id="detailsSalario">R$ 5k - 9k</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label font-jakarta">Tempo Est.</div>
+            <div class="stat-box-value font-jakarta" id="detailsTempo">6-12 meses</div>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <div class="details-section-label font-jakarta">Ferramentas Essenciais</div>
+          <!-- TODO BACK-END: array de ferramentas vem da API -->
+          <div class="tools-tags" id="detailsTools">
+            <span class="tool-tag font-manrope">VS Code</span>
+            <span class="tool-tag font-manrope">Git/GitHub</span>
+            <span class="tool-tag font-manrope">Docker</span>
+            <span class="tool-tag font-manrope">Figma</span>
+          </div>
+        </div>
+
+        <!-- 
+          TODO BACK-END:
+          Redirecionar para cursos.html?nivel=<stepId>
+          A página de cursos deve filtrar os cursos com base no nível passado via query param.
+          Ex: cursos.html?nivel=especializacao
+        -->
+        <a href="cursos.html" class="btn-cta-level font-jakarta" id="detailsCursosBtn">
+          Acessar Cursos deste Nível →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  
+   <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+  
+
+  <script src="../js/sidebar.js"></script>
+   <script src="../js/footer.js"></script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    function selectStep(step) {
+      /*
+        TODO BACK-END:
+        Buscar detalhes do step via API e popular o card da direita.
+        
+        Endpoint: GET /api/mapa/:userId/step/:stepId
+        
+        Resposta esperada:
+        {
+          titulo: string,
+          nivel: string,
+          estudos: [{ nome: string, concluido: boolean }],
+          salario: string,
+          tempo: string,
+          ferramentas: string[],
+          bloqueado: boolean
+        }
+        
+        Se bloqueado = true → mostrar mensagem de bloqueio no card.
+        Atualizar href do botão "Acessar Cursos": cursos.html?nivel=<stepId>
+      */
+      console.log('step selecionado:', step);
+    }
+  </script>
+
+</body>
+</html>

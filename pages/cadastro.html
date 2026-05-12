@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro — Programando o Futuro</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: #060d1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* BG */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-glow::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 65%);
+    }
+    .bg-glow::after {
+      content: '';
+      position: absolute;
+      bottom: -150px; right: -100px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(56,189,248,0.07) 0%, transparent 65%);
+    }
+
+    /* Decorativos */
+    .deco-x {
+      position: fixed;
+      right: 5rem; top: 12rem;
+      z-index: 1;
+      opacity: 0.25;
+    }
+    .deco-square {
+      position: fixed;
+      left: 3rem; bottom: 18rem;
+      z-index: 1;
+      opacity: 0.3;
+    }
+
+    /* NAV */
+    .auth-nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 2.5rem;
+    }
+    .auth-nav .logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #f0f6ff;
+      text-decoration: none;
+    }
+    .auth-nav .back-arrow {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 1.4rem;
+      transition: color 0.2s;
+    }
+    .auth-nav .back-arrow:hover { color: #fff; }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* CARD */
+    .auth-card {
+      background: rgba(17,24,39,0.85);
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2.5rem 2.5rem;
+      width: 100%;
+      max-width: 460px;
+      text-align: center;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Icon topo */
+    .card-icon {
+      width: 56px; height: 56px;
+      background: #1e293b;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.4rem;
+    }
+
+    .auth-card h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #f0f6ff;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .auth-card .subtitle {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .auth-alert {
+      display: none;
+      width: 100%;
+      background: rgba(220,38,38,0.12);
+      border: 1px solid rgba(220,38,38,0.28);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.2rem;
+      color: #fca5a5;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    /* FORM */
+    .form-group {
+      margin-bottom: 1.1rem;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 0.45rem;
+    }
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrap .input-icon {
+      position: absolute;
+      left: 1rem;
+      color: rgba(255,255,255,0.3);
+      display: flex; align-items: center;
+    }
+    .input-wrap input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      color: #f0f6ff;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .input-wrap input::placeholder { color: rgba(255,255,255,0.22); }
+    .input-wrap input:focus {
+      border-color: rgba(59,130,246,0.5);
+      background: rgba(59,130,246,0.05);
+    }
+
+    /* Row de 2 campos */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+    }
+    .form-row .form-group { margin-bottom: 0; }
+
+    /* BTN */
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-submit:hover {
+      background: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+    }
+
+    /* FOOTER LINK */
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.6rem;
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .auth-footer a {
+      color: #3b82f6;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .auth-footer a:hover { color: #60a5fa; }
+
+    /* PAGE FOOTER */
+    .page-footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 1.8rem 1.2rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .deco-x, .deco-square { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <!-- Decorativos -->
+  <div class="deco-x">
+    <svg width="90" height="90" fill="none" viewBox="0 0 90 90">
+      <circle cx="45" cy="45" r="42" stroke="#3b82f6" stroke-width="1" stroke-dasharray="6 4"/>
+      <line x1="20" y1="20" x2="70" y2="70" stroke="#3b82f6" stroke-width="1.5"/>
+      <line x1="70" y1="20" x2="20" y2="70" stroke="#3b82f6" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <div class="deco-square">
+    <svg width="80" height="80" fill="none" viewBox="0 0 80 80">
+      <rect x="4" y="4" width="72" height="72" stroke="#3b82f6" stroke-width="1"/>
+      <rect x="18" y="18" width="44" height="44" stroke="#3b82f6" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <!-- NAV -->
+  <nav class="auth-nav">
+    <a href="../index.html" class="logo font-jakarta">Programando o Futuro</a>
+    <a href="../index.html" class="back-arrow" title="Voltar">→</a>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+    <div class="auth-card">
+
+      <div class="card-icon">
+        <svg width="26" height="26" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+
+      <h1 class="font-jakarta">Crie sua conta</h1>
+      <p class="subtitle font-manrope">Junte-se a milhares de estudantes e descubra seu futuro na TI.</p>
+
+      <div class="form-group">
+        <label class="font-jakarta">Nome Completo</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </span>
+          <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="font-jakarta">E-mail</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-10 7L2 7"/>
+            </svg>
+          </span>
+          <input type="email" id="email" placeholder="exemplo@email.com" autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="font-jakarta">Senha</label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input type="password" id="senha" placeholder="••••••••" autocomplete="new-password" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="font-jakarta">Confirmar Senha</label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </span>
+            <input type="password" id="confirmarSenha" placeholder="••••••••" autocomplete="new-password" />
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-submit font-jakarta" id="btnCadastro" type="button">
+        Criar Conta
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+      <div class="auth-footer font-manrope">
+        Já tem uma conta? <a href="login.html">Faça login</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer font-jakarta">© 2026 Programando o Futuro</footer>
+
+  <script src="../js/api.js"></script>
+  <script>
+    const nomeInput = document.getElementById('nome');
+    const emailInput = document.getElementById('email');
+    const senhaInput = document.getElementById('senha');
+    const confirmarSenhaInput = document.getElementById('confirmarSenha');
+    const btnCadastro = document.getElementById('btnCadastro');
+    const textoBotaoCadastro = btnCadastro.innerHTML;
+
+    function mensagemErroApi(error, fallback) {
+      return error?.detail?.erro || error?.erro || error?.detail || fallback;
+    }
+
+    async function fazerCadastro() {
+      hideErro();
+
+      const nome = nomeInput.value.trim();
+      const email = emailInput.value.trim();
+      const senha = senhaInput.value;
+      const confirmarSenha = confirmarSenhaInput.value;
+
+      if (!nome || !email || !senha || !confirmarSenha) {
+        showErro('Preencha todos os campos para criar sua conta.');
+        return;
+      }
+
+      if (senha.length < 6) {
+        showErro('A senha precisa ter pelo menos 6 caracteres.');
+        return;
+      }
+
+      if (senha !== confirmarSenha) {
+        showErro('As senhas não conferem.');
+        return;
+      }
+
+      setLoading(btnCadastro, true, textoBotaoCadastro);
+
+      try {
+        await authApi.cadastro(nome, email, senha);
+        await redirecionarUsuarioLogado();
+      } catch (error) {
+        showErro(mensagemErroApi(error, 'Não foi possível criar sua conta. Tente novamente.'));
+      } finally {
+        setLoading(btnCadastro, false, textoBotaoCadastro);
+      }
+    }
+
+    btnCadastro.addEventListener('click', fazerCadastro);
+
+    [nomeInput, emailInput, senhaInput, confirmarSenhaInput].forEach((input) => {
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') fazerCadastro();
+      });
+    });
+  </script>
+</body>
+</html>

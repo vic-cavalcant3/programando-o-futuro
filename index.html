@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Programando o Futuro</title>
+    <link rel="stylesheet" href="styles/global.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/fonts.css" />
+    <style>
+      * {
+        font-family: font-inter;
+      }
+      /* ====== HERO ====== */
+      #inicio {
+        min-height: 100vh;
+        padding-top: 80px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      #inicio::before {
+        content: "";
+        position: absolute;
+        top: -200px;
+        right: -200px;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(
+          circle,
+          rgba(37, 99, 235, 0.12) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+      }
+      #inicio::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: -100px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.06) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        padding: 4rem 0;
+      }
+      .hero-left {
+        position: relative;
+        z-index: 1;
+      }
+      .hero-badge {
+        margin-bottom: 1.5rem;
+      }
+      .hero-title {
+        font-size: clamp(2.8rem, 5vw, 4.1rem);
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.2rem;
+      }
+      .hero-title .accent {
+        color: var(--blue-light);
+      }
+      .hero-desc {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.7;
+        max-width: 440px;
+        margin-bottom: 2.5rem;
+      }
+      .hero-ctas {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .hero-right {
+        position: relative;
+        display: flex;
+        justify-content: center;
+      }
+      .hero-img-wrap {
+        position: relative;
+        width: 100%;
+        max-width: 520px;
+        animation: float 6s ease-in-out infinite;
+      }
+      .hero-img-wrap img {
+        width: 100%;
+        border-radius: 20px;
+        border: 1px solid rgba(37, 99, 235, 0.2);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5),
+          0 0 40px rgba(37, 99, 235, 0.15);
+      }
+      .hero-floating-card {
+        position: absolute;
+        bottom: -20px;
+        left: -20px;
+        background: rgba(13, 20, 36, 0.95);
+        border: 1px solid rgba(37, 99, 235, 0.25);
+        backdrop-filter: blur(12px);
+        border-radius: 14px;
+        padding: 1rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        animation: pulse-glow 3s ease-in-out infinite;
+        min-width: 200px;
+      }
+      .floating-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--blue);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+      .floating-text strong {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .floating-text span {
+        font-size: 0.72rem;
+        color: var(--text-secondary);
+      }
+
+      /* ====== COMO FUNCIONA ====== */
+      #como-funciona {
+        padding: 6rem 0;
+        background: var(--bg-secondary);
+        position: relative;
+        overflow: hidden;
+      }
+      .how-bg-text {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        font-size: clamp(6rem, 15vw, 11rem);
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.025);
+        letter-spacing: -0.05em;
+        pointer-events: none;
+        white-space: nowrap;
+        user-select: none;
+      }
+      .how-header {
+        text-align: center;
+        margin-bottom: 4rem;
+        position: relative;
+        z-index: 1;
+      }
+      .how-header .section-subtitle {
+        margin-top: 0.6rem;
+        font-size: clamp(1rem, 2vw, 1.2rem);
+      }
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+      .step-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-card);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+      .step-card:hover {
+        border-color: rgba(37, 99, 235, 0.3);
+        background: rgba(37, 99, 235, 0.04);
+        transform: translateY(-6px);
+      }
+      .step-num {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: rgba(37, 99, 235, 0.25);
+        line-height: 1;
+        margin-bottom: 1rem;
+      }
+      .step-icon {
+        width: 70px;
+        height: 70px;
+        background: #242a39;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 1.4rem;
+      }
+      .step-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+      }
+      .step-card p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      /* ====== BENEFÍCIOS ====== */
+      #beneficios {
+        padding: 6rem 0;
+        background: var(--bg-primary);
+      }
+      .benefits-header {
+        margin-bottom: 3rem;
+      }
+      .benefits-header h2 {
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        font-weight: 800;
+      }
+      .benefits-header h2 span {
+        display: block;
+        width: 78px;
+        height: 3px;
+        background: var(--blue);
+        border-radius: 2px;
+        margin-top: 0.8rem;
+      }
+      .benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.benefit-card-large {
+  grid-column: 1 / 3;
+  grid-row: 1;
+}
+
+
+
+.benefit-card-large-bottom {
+  grid-column: 2 / 4;
+  grid-row: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+
+
+
+      /* Card grande azul — Mapa de carreira */
+      .benefit-featured {
+        grid-column: 3;
+        grid-row: 1 / 3;
+        background: var(--blue);
+        border-radius: 20px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 245px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .benefit-featured:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 50px rgba(37, 99, 235, 0.45);
+      }
+      .benefit-featured::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+      }
+      .benefit-featured .feat-icon {
+        width: 44px;
+        height: 44px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: auto;
+        font-size: 1.2rem;
+      }
+      .benefit-featured h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.5rem;
+      }
+      .benefit-featured p {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.5;
+      }
+
+      /* Card 100% */
+      .benefit-stat {
+        grid-column: 3;
+      }
+
+      /* Normal benefit cards */
+      .benefit-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-card);
+        border-radius: 16px;
+        padding: 1.8rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        height: 245px;
+      }
+
+      .benefit-card h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.5rem;
+      }
+      .benefit-card p {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.5;
+      }
+
+      .benefit-card .icon-decorativo {
+        position: absolute;
+        right: 60px;
+        bottom: 25px;
+        opacity: 0.12;
+        pointer-events: none;
+      }
+      .benefit-card .icon-decorativo img {
+        width: 160px;
+        height: 160px;
+        object-fit: contain;
+      }
+      .benefit-card:hover {
+        border-color: rgba(37, 99, 235, 0.2);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+      }
+      .benefit-card .b-icon {
+        width: 50px;
+        height: 50px;
+
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.2rem;
+        font-size: 1.2rem;
+      }
+      .benefit-card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .benefit-card p {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        width: 420px;
+      }
+
+      /* Stat card */
+      .benefit-stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-card);
+        border-radius: 16px;
+        padding: 1.8rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        transition: all 0.3s ease;
+      }
+      .benefit-stat-card:hover {
+        border-color: rgba(37, 99, 235, 0.2);
+        transform: translateY(-4px);
+      }
+      .stat-num {
+        font-family: "Syne", sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--blue-light);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 0.3rem;
+      }
+
+      /* Card com imagem de fundo */
+      .benefit-card.bg-image {
+        position: relative;
+        overflow: hidden;
+      }
+      .benefit-card.bg-image img.card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+}
+      .benefit-card.bg-image > *:not(.card-bg) {
+        position: relative;
+        z-index: 1;
+      }
+
+      .inline-stat {
+  margin-top: auto;  /* empurra pro baixo */
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-radius: 17px;
+  position: relative;
+  z-index: 1;
+  background-color: #ffffff0e;
+  width: 150px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+      .inline-stat .stat-num {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        width: auto;
+        
+      }
+      .inline-stat .stat-label {
+        font-size: 0.7rem;
+        color: var(--blue-light);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 0.2rem;
+      }
+
+      /* Card resultado — largo (col 1-2) */
+      .benefit-card-large {
+        grid-column: 1 / 3;
+        grid-row: 1;
+      }
+
+      /* Azul span correto */
+      .benefit-featured {
+        grid-column: 3;
+        grid-row: 1 / 3;
+      }
+
+      /* ====== CTA SECTION ====== */
+      #cta {
+        padding: 5rem 0;
+        background: var(--bg-primary);
+      }
+      .cta-inner {
+        background: linear-gradient(
+          135deg,
+          #1d4ed8 0%,
+          #2563eb 50%,
+          #3b82f6 100%
+        );
+        border-radius: 24px;
+        padding: 4rem 3rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+      }
+      .cta-inner::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 50%;
+      }
+      .cta-inner::after {
+        content: "";
+        position: absolute;
+        bottom: -100px;
+        left: -60px;
+        width: 280px;
+        height: 280px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+      }
+      .cta-inner h2 {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 0.8rem;
+        position: relative;
+        z-index: 1;
+      }
+      .cta-inner p {
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        position: relative;
+        z-index: 1;
+        width: 550px;
+      }
+      .cta-inner .btn-white {
+        /* display: inline-flex; */
+        align-items: center;
+        padding: 0.85rem 2.2rem;
+        background: #fff;
+        color: var(--blue);
+        border: none;
+        border-radius: 12px;
+      
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        text-decoration: none;
+        position: relative;
+        z-index: 1;
+      }
+      .cta-inner .btn-white:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+      }
+
+      .floating-text .icon {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        border: none;
+        border-radius: 0;
+      }
+    </style>
+
+    <style #RESPONSIVE>
+      /* ===================================
+   RESPONSIVE — Programando o Futuro
+   breakpoints: 1024px | 768px | 480px
+=================================== */
+
+/* ── TABLET (≤ 1024px) ── */
+@media (max-width: 1024px) {
+    .hero-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+  
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 3rem) !important;
+    }
+  
+    .steps-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+  
+    .benefits-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  
+    .benefit-card-large {
+      grid-column: 1 / 3;
+      grid-row: 1;
+    }
+  
+    .benefit-featured {
+      grid-column: 1 / 3;
+      grid-row: 2;
+      height: 220px !important;
+    }
+  
+    .benefit-card-large-bottom {
+      grid-column: 1 / 3;
+      grid-row: 4;
+    }
+  
+    .cta-inner p {
+      width: auto !important;
+    }
+  }
+  
+  /* ── MOBILE GRANDE (≤ 768px) ── */
+  @media (max-width: 768px) {
+    /* NAV */
+    .nav-links {
+      display: none;
+    }
+  
+    .navbar .container {
+      padding: 0 1.2rem;
+    }
+  
+    /* HERO */
+    .hero-grid {
+      grid-template-columns: 1fr !important;
+      gap: 2.5rem;
+      padding: 2rem 0 !important;
+      margin-bottom: 4rem;
+    }
+  
+    .hero-right {
+      order: -1;
+    }
+  
+    .hero-img-wrap {
+      max-width: 100% !important;
+    }
+  
+    .hero-title {
+      font-size: clamp(2rem, 8vw, 2.8rem) !important;
+    }
+  
+    .hero-desc {
+      max-width: 100% !important;
+      font-size: 0.95rem !important;
+    }
+  
+    .hero-floating-card {
+      bottom: -10px;
+      left: 10px;
+      min-width: 170px;
+    }
+  
+    /* COMO FUNCIONA */
+    .steps-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1rem;
+    }
+  
+    .how-bg-text {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(5rem, 15vw, 11rem);
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.025);
+        letter-spacing: -0.05em;
+        pointer-events: none;
+        white-space: nowrap;
+        user-select: none;
+        z-index: 0;
+      }
+  
+    /* BENEFÍCIOS */
+    .benefits-grid {
+      grid-template-columns: 1fr !important;
+    }
+  
+    .benefit-card-large,
+    .benefit-featured,
+    .benefit-card-large-bottom {
+      grid-column: 1 !important;
+      grid-row: auto !important;
+      height: auto !important;
+    }
+  
+    .benefit-card {
+      height: auto !important;
+    }
+  
+    .benefit-card p {
+      width: auto !important;
+    }
+  
+    .benefit-card-large-bottom {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 1.5rem;
+    }
+  
+    .inline-stat {
+      width: 100% !important;
+      height: auto !important;
+      padding: 1rem !important;
+      margin-top: 1rem !important;
+    }
+  
+    /* CTA */
+    .cta-inner {
+      padding: 2.5rem 1.5rem !important;
+      border-radius: 16px !important;
+    }
+  
+    .cta-inner h2 {
+      font-size: clamp(1.6rem, 6vw, 2.2rem) !important;
+    }
+  
+    .cta-inner p {
+      width: auto !important;
+      font-size: 0.9rem !important;
+    }
+  
+    /* FOOTER */
+    .footer-inner {
+      flex-direction: column !important;
+      gap: 1.5rem !important;
+      align-items: flex-start !important;
+    }
+  
+    .footer-links {
+      flex-wrap: wrap;
+      gap: 1rem !important;
+    }
+
+    /* Cards de benefícios — mobile */
+.benefit-card,
+.benefit-featured,
+.benefit-stat-card {
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 1.2rem !important;
+}
+
+/* Remove largura fixa do parágrafo */
+.benefit-card p {
+  width: 100% !important;
+  font-size: 0.82rem !important;
+}
+
+/* Card com imagem de fundo — linha inferior */
+.benefit-card-large-bottom {
+  flex-direction: column !important;
+  gap: 1rem !important;
+  padding: 1.2rem !important;
+}
+
+/* Card azul destaque */
+.benefit-featured {
+  height: auto !important;
+  padding: 1.4rem !important;
+}
+
+/* Ícone decorativo — esconde no mobile pra não pesar layout */
+.benefit-card .icon-decorativo {
+  display: none !important;
+}
+
+/* Stat inline — compacto */
+.inline-stat {
+  width: 100% !important;
+  height: auto !important;
+  padding: 0.8rem 1rem !important;
+  margin-top: 0.8rem !important;
+}
+  
+  
+  .btn-primary, .btn-secondary {
+    padding: 0.65rem 1.4rem;
+    font-size: 0.85rem;
+    width: 100px;
+  } 
+
+}
+  
+  
+  /* ── MOBILE PEQUENO (≤ 480px) ── */
+  @media (max-width: 480px) {
+    .hero-title {
+    font-size: clamp(1.4rem, 7vw, 1.8rem) !important;
+  }
+  /* .hero-grid {
+    gap: 1rem !important;
+  } */
+  .btn-login {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  font-size: 0.70rem;
+  color: var(--text-primary);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+
+.hero-left{
+  margin-top: 3rem;
+  margin-bottom: 0rem;
+}
+  
+    .hero-ctas {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        width: auto;
+      }
+  
+    .btn-primary,
+    .btn-secondary {
+      width: 47%;
+      justify-content: center;
+    }
+    .hero-floating-card{
+        left: 0px;
+        right: auto;
+        top: auto;
+        bottom: -10px;
+    }
+  
+    .badge {
+      font-size: 0.65rem;
+    }
+    .how-bg-text {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(5rem, 15vw, 11rem);
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.025);
+        letter-spacing: -0.05em;
+        pointer-events: none;
+        white-space: nowrap;
+        user-select: none;
+        z-index: 0;
+      }
+
+      .benefit-card .icon-decorativo {
+        position: absolute;
+        right: 60px;
+        bottom: 25px;
+        opacity: 0.12;
+        pointer-events: none;
+      }
+      .benefit-card .icon-decorativo img {
+        display: none;
+      }
+  
+      .inline-stat{
+        display: none;
+      }
+    .step-card {
+      padding: 1.4rem !important;
+      position: relative;
+    }
+
+      .step-num {
+        position: relative;
+        bottom: 6%;
+        left: 37%;
+        font-size: 5.5rem;
+        font-weight: 900;
+        color: rgba(37, 100, 235, 0.123);
+        line-height: 1;
+        margin-bottom: 1rem;
+      }
+      .step-icon {
+        bottom: 6%;
+        left: 32%;
+        background: #242a39;
+        border-radius: 14px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 1.4rem;
+      }
+      .step-card h3 {
+        text-align: left;
+           position: relative;
+        bottom: 30%;
+        /* right: 20%; */
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+      }
+      .step-card p {
+        position: relative;
+        bottom: 30%;
+        text-align: left;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .step-card{
+        width: auto;
+        height: 220px;
+      }
+  
+    .how-header .section-subtitle {
+      font-size: 0.9rem !important;
+    }
+  
+    .benefits-header h2 {
+      font-size: 1.6rem !important;
+      margin-top: 2rem;
+    }
+  
+    .benefit-featured {
+      padding: 1.4rem !important;
+    }
+  
+    .cta-inner {
+      padding: 2rem 1.2rem !important;
+    }
+  
+    .footer-links {
+      gap: 0.6rem 1.2rem !important;
+    }
+
+.benefit-featured {
+  padding: 1rem !important;
+}
+.benefit-featured h3{
+  font-size: 1rem !important;
+} 
+
+.benefit-featured p{
+  font-size: 0.82rem !important;
+} 
+#beneficios{
+  padding: 0;
+}
+.benefit-card h3 {
+  font-size: 1rem !important;
+}
+  }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="navbar" id="navbar">
+      <div class="container">
+        <a href="index.html" class="nav-logo font-inter"
+          >Programando o Futuro</a
+        >
+        <nav>
+          <ul class="nav-links">
+            <li><a class="font-manrope" href="#inicio" class="active">Início</a></li>
+            <li><a class="font-manrope" href="#como-funciona">Como funciona</a></li>
+            <li><a class="font-manrope" href="#beneficios">Benefícios</a></li>
+          </ul>
+        </nav>
+        <a href="pages/login.html" class="btn-login font-manrope">Login / Cadastro</a>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section id="inicio">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-left">
+            <div class="hero-badge fade-up">
+              <span class="badge font-manrope"
+                >Plataforma Educacional Inteligente</span
+              >
+            </div>
+            <h1 class="hero-title fade-up fade-up-1 font-jakarta">
+              Descubra o caminho ideal para o seu
+              <span class="accent font-jakarta">futuro</span>
+            </h1>
+            <p class="hero-desc fade-up fade-up-2 font-manrope">
+              Um teste inteligente que ajuda estudantes a descobrir áreas de
+              carreira, caminhos de estudo e oportunidades para o futuro através
+              de análise comportamental e técnica.
+            </p>
+            <div class="hero-ctas fade-up fade-up-3">
+              <a href="pages/intro_teste.html" class="btn-primary font-jakarta">Começar Teste</a>
+              <a href="#como-funciona" class="btn-secondary font-jakarta"
+                >Saiba mais</a
+              >
+            </div>
+          </div>
+
+          <div class="hero-right fade-up fade-up-2">
+            <div class="hero-img-wrap">
+              <img src="assets/images/image.png" alt="Plataforma futurista" />
+              <div class="hero-floating-card">
+                <div class="floating-text">
+                  <img
+                    width="5"
+                    height="5"
+                    src="assets/images/icons/icon.png"
+                    alt=""
+                    class="icon"
+                  />
+                  <strong class="font-manrope">IA de Carreira</strong>
+                  <span class="font-manrope"
+                    >Milhares de perfis analisados</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section id="como-funciona">
+      <div class="how-bg-text font-jakarta">PROCESS</div>
+      <div class="container">
+        <div class="how-header">
+          <h2 class="section-title font-jakarta">Como funciona</h2>
+          <p class="section-subtitle font-manrope">
+            Três passos simples para mapear seu amanhã com precisão cirúrgica.
+          </p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card fade-up fade-up-1">
+            <div class="step-num font-jakarta">01</div>
+            <div class="step-icon">
+              <img
+                src="assets/images/icons/icon2.png"
+                alt="Perguntas"
+                width="22"
+                height="22"
+              />
+            </div>
+            <h3 class="font-jakarta">Responda Perguntas</h3>
+            <p class="font-manrope">
+              Inicie o diagnóstico através de um questionário dinâmico que
+              avalia habilidades, paixões e perfil psicológico.
+            </p>
+          </div>
+
+          <div class="step-card fade-up fade-up-2">
+            <div class="step-num font-jakarta">02</div>
+            <div class="step-icon">
+              <img
+                src="assets/images/icons/icon3.png"
+                alt="Resultado"
+                width="22"
+                height="22"
+              />
+            </div>
+            <h3 class="font-jakarta">Receba seu resultado</h3>
+            <p class="font-manrope">
+              Nossa IA processa milhares de pontos de dados para gerar um perfil
+              único sobre suas aptidões latentes.
+            </p>
+          </div>
+
+          <div class="step-card fade-up fade-up-3">
+            <div class="step-num font-jakarta">03</div>
+            <div class="step-icon">
+              <img
+                src="assets/images/icons/icon4.png"
+                alt="Mapa"
+                width="22"
+                height="22"
+              />
+            </div>
+            <h3 class="font-jakarta">Explore o seu mapa</h3>
+            <p class="font-manrope">
+              Tenha acesso a um roadmap detalhado com cursos, instituições e
+              carreiras que combinam com você.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENEFÍCIOS -->
+    <section id="beneficios">
+      <div class="container">
+        <div class="benefits-header">
+          <h2 class="font-jakarta">
+            Por que usar nossa plataforma?<span></span>
+          </h2>
+        </div>
+        <div class="benefits-grid">
+          <!-- Row 1, Col 1-2 (largo) -->
+          <div class="benefit-card benefit-card-large fade-up fade-up-1">
+            <div class="b-icon">
+              <img
+                src="assets/images/icons/icon5.png"
+                alt=""
+                width="30"
+                height="30"
+              />
+            </div>
+            <h3 class="font-jakarta">Resultado personalizado</h3>
+            <p class="font-manrope">
+              Não acreditamos em fórmulas prontas. Cada recomendação é
+              construída do zero baseada estritamente no seu DNA cognitivo e
+              comportamental.
+            </p>
+            <div class="icon-decorativo">
+              <img src="assets/images/icons/icon6.png" alt="" />
+            </div>
+          </div>
+
+          <!-- Row 1-2, Col 3 -->
+          <div class="benefit-featured fade-up fade-up-3">
+            <div class="feat-icon">
+              <img
+                src="assets/images/icons/icon7.png"
+                alt=""
+                width="30"
+                height="30"
+              />
+            </div>
+            <h3 class="font-jakarta">Mapa de carreira visual</h3>
+            <p class="font-manrope">
+              Visualize sua jornada através de gráficos interativos que conectam
+              o hoje ao amanhã.
+            </p>
+          </div>
+
+          <!-- Row 2, Col 1 -->
+          <div class="benefit-card fade-up fade-up-1">
+            <div class="b-icon">
+              <img
+                src="assets/images/icons/icon8.png"
+                alt=""
+                width="30"
+                height="30"
+              />
+            </div>
+            <h3 class="font-manrope">Próximos passos práticos</h3>
+            <p class="font-manrope">
+              Nada de teoria vazia. Entregamos uma lista de ações concretas para
+              você começar hoje mesmo.
+            </p>
+          </div>
+
+          <!-- Row 2, Col 2-3 (largo) -->
+          <div
+            class="benefit-card bg-image benefit-card-large-bottom fade-up fade-up-2"
+          >
+            <img src="assets/images/image1.png" alt="" class="card-bg" />
+            <div>
+            <div class="b-icon">
+              <img
+                src="assets/images/icons/icon9.png"
+                alt=""
+                width="37"
+                height="30"
+              />
+            </div>
+          
+            <h3 class="font-jakarta">Progresso salvo</h3>
+            <p class="font-manrope">
+              Suas descobertas ficam armazenadas na nuvem. Retorne a qualquer
+              momento para revisar seu roadmap ou atualizar suas preferências
+              conforme você cresce.
+            </p>
+          </div>
+            <div class="inline-stat">
+              <div class="stat-num font-manrope">100%</div>
+              <div class="stat-label font-manrope">Segurança Cloud</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta">
+      <div class="container">
+        <div class="cta-inner">
+          <h2 class="font-jakarta">Pronto para projetar seu futuro?</h2>
+          <p class="font-manrope">
+            Junte-se a milhares de estudantes que já encontraram seu propósito
+            através do nosso blueprint digital.
+          </p>
+          <a href="#" class="btn-white font-manrope">Começar Teste Gratuito</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div id="footer-placeholder"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+      redirecionarUsuarioLogado({ silencioso: true });
+
+      // Navbar scroll effect
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        navbar.classList.toggle("scrolled", window.scrollY > 40);
+      });
+
+      // Active nav link on scroll
+      const sections = document.querySelectorAll("section[id]");
+      const navLinks = document.querySelectorAll(".nav-links a");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              navLinks.forEach((l) => l.classList.remove("active"));
+              const active = document.querySelector(
+                `.nav-links a[href="#${e.target.id}"]`
+              );
+              if (active) active.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      sections.forEach((s) => observer.observe(s));
+
+ 
+    </script>
+
+    <script src="js/footer.js"></script>
+  </body>
+</html>

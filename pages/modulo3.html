@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Módulo 03 — Habilidades e Estilo</title>
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/fonts.css" />
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: #060b14;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(37, 99, 235, 0.1) 0%, transparent 65%);
+        }
+
+        .test-nav {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-logo {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #f0f6ff;
+            text-decoration: none;
+        }
+
+        .nav-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .nav-modulo-label {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: #3b82f6;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .nav-progress-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-progress-text span {
+            color: #3b82f6;
+        }
+
+        .btn-sair {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.3);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-sair:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .progress-bar-wrap {
+            position: relative;
+            z-index: 10;
+            padding: 0 2.5rem;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #2563eb;
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .question-wrap {
+            max-width: 620px;
+            width: 100%;
+        }
+
+        .question-card {
+            animation: fadeSlide 0.4s ease both;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeSlideBack {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question-card.going-back {
+            animation: fadeSlideBack 0.4s ease both;
+        }
+
+        .question-num {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #3b82f6;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(1.3rem, 3vw, 1.7rem);
+            font-weight: 800;
+            color: #f0f6ff;
+            line-height: 1.3;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            text-align: left;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option-btn:hover {
+            border-color: rgba(37, 99, 235, 0.4);
+            background: rgba(37, 99, 235, 0.06);
+            color: #f0f6ff;
+        }
+
+        .option-btn.selected {
+            border-color: #2563eb;
+            background: rgba(37, 99, 235, 0.12);
+            color: #f0f6ff;
+        }
+
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.2s;
+        }
+
+        .option-btn.selected .option-letter {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #fff;
+        }
+
+        .nav-btns {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .btn-voltar {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.75rem 1.4rem;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-voltar:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-voltar:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn-proximo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.8rem;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .btn-proximo.enabled {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .btn-proximo.enabled:hover {
+            background: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+        }
+
+        .page-footer {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .test-nav {
+                padding: 1rem 1.2rem;
+            }
+
+            .progress-bar-wrap {
+                padding: 0 1.2rem;
+            }
+
+            .nav-center {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow"></div>
+    <nav class="test-nav">
+        <a href="minha_jornada.html" class="nav-logo font-jakarta">Programando o Futuro</a>
+        <div class="nav-center">
+            <span class="nav-modulo-label font-jakarta">Módulo 03 — Habilidades e Estilo</span>
+            <span class="nav-progress-text font-jakarta">Pergunta <span id="navCurrent">1</span> de <span
+                    id="navTotal">8</span></span>
+        </div>
+        <button class="btn-sair font-manrope" onclick="sair()">Salvar e Sair</button>
+    </nav>
+    <div class="progress-bar-wrap">
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBar" style="width: 12.5%"></div>
+        </div>
+    </div>
+    <main>
+        <div class="question-wrap">
+            <div class="question-card" id="questionCard">
+                <div class="question-num font-jakarta" id="questionNum">Pergunta 01</div>
+                <h2 class="question-text font-jakarta" id="questionText"></h2>
+                <div class="options-list" id="optionsList"></div>
+                <div class="nav-btns">
+                    <button class="btn-voltar font-jakarta" id="btnVoltar" onclick="voltarPergunta()">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path d="M19 12H5M12 5l-7 7 7 7" />
+                        </svg>
+                        Voltar
+                    </button>
+                    <button class="btn-proximo font-jakarta" id="btnProximo">
+                        Próxima <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="page-footer font-jakarta">© 2026 Programando o Futuro</footer>
+    <script>
+        /*
+          TODO BACK-END:
+          GET /api/modulos/03/perguntas
+          POST /api/modulos/03/respostas { userId, respostas }
+          POST /api/modulos/03/finalizar → desbloqueia módulo 04
+        */
+        const perguntas = [
+  {
+    id: 1,
+    texto: "Qual dessas tarefas você executa com mais naturalidade?",
+    opcoes: [
+      { letra: "A", texto: "Ouvir, acolher e dar suporte emocional às pessoas" },
+      { letra: "B", texto: "Identificar erros, padrões e inconsistências com precisão" },
+      { letra: "C", texto: "Gerar ideias originais e soluções criativas para problemas" },
+      { letra: "D", texto: "Organizar informações, cronogramas e processos com clareza" }
+    ]
+  },
+  {
+    id: 2,
+    texto: "Como você se sente ao usar ferramentas digitais e tecnologia?",
+    opcoes: [
+      { letra: "A", texto: "Me adapto rápido e aprendo novas ferramentas com facilidade" },
+      { letra: "B", texto: "Uso o básico bem, mas não sou o mais técnico do grupo" },
+      { letra: "C", texto: "Tenho facilidade com lógica, código e sistemas" },
+      { letra: "D", texto: "Prefiro ferramentas criativas — design, edição, produção" }
+    ]
+  },
+  {
+    id: 3,
+    texto: "O que as pessoas mais pedem sua ajuda com frequência?",
+    opcoes: [
+      { letra: "A", texto: "Conselhos, apoio emocional ou orientação pessoal" },
+      { letra: "B", texto: "Resolver algo técnico — conserto, código, sistema" },
+      { letra: "C", texto: "Organizar, planejar ou montar estratégias" },
+      { letra: "D", texto: "Criar algo — apresentação, design, texto, vídeo" }
+    ]
+  },
+  {
+    id: 4,
+    texto: "Em qual dessas situações você se sente mais no seu elemento?",
+    opcoes: [
+      { letra: "A", texto: "Numa conversa difícil onde preciso ajudar alguém a tomar uma decisão" },
+      { letra: "B", texto: "Debugando um código, resolvendo um erro ou montando algo técnico" },
+      { letra: "C", texto: "Numa apresentação ou negociação onde preciso convencer alguém" },
+      { letra: "D", texto: "Num projeto criativo com liberdade total de expressão" }
+    ]
+  },
+  {
+    id: 5,
+    texto: "Como você lida com detalhes e precisão no seu trabalho?",
+    opcoes: [
+      { letra: "A", texto: "Sou muito detalhista — reviso tudo e não gosto de erros" },
+      { letra: "B", texto: "Me importo com qualidade mas não fico travado em detalhes" },
+      { letra: "C", texto: "Prefiro pensar no macro — estratégia, visão e resultado final" },
+      { letra: "D", texto: "Depende do projeto — quando é criativo, me aprofundo nos detalhes" }
+    ]
+  },
+  {
+    id: 6,
+    texto: "Você já teve alguma experiência prática com alguma dessas áreas?",
+    opcoes: [
+      { letra: "A", texto: "Cuidado de pessoas — saúde, educação, voluntariado, suporte emocional" },
+      { letra: "B", texto: "Tecnologia — código, automação, hardware, sistemas" },
+      { letra: "C", texto: "Gestão — projetos, times, finanças pessoais ou de empresa" },
+      { letra: "D", texto: "Criação — design, escrita, foto, vídeo, música ou redes sociais" }
+    ]
+  },
+  {
+    id: 7,
+    texto: "Qual dessas habilidades você considera que precisa desenvolver mais?",
+    opcoes: [
+      { letra: "A", texto: "Comunicação e relacionamento interpessoal" },
+      { letra: "B", texto: "Raciocínio lógico, matemática ou programação" },
+      { letra: "C", texto: "Visão estratégica, liderança e gestão" },
+      { letra: "D", texto: "Criatividade, estética e produção de conteúdo" }
+    ]
+  },
+  {
+    id: 8,
+    texto: "Se você fosse contratar alguém para um time, qual papel você preencheria melhor?",
+    opcoes: [
+      { letra: "A", texto: "O especialista humano — que entende e lida com as pessoas" },
+      { letra: "B", texto: "O especialista técnico — que resolve os problemas mais difíceis" },
+      { letra: "C", texto: "O estrategista — que define o rumo e toma as decisões certas" },
+      { letra: "D", texto: "O criativo — que dá vida, forma e identidade ao produto" }
+    ]
+  }
+];
+
+        const MODULO_ID = '03';
+        let currentQ = 1;
+        let respostas = {};
+        const params = new URLSearchParams(window.location.search);
+        const qParam = parseInt(params.get('q'));
+        if (qParam && qParam >= 1 && qParam <= perguntas.length) currentQ = qParam;
+        const saved = localStorage.getItem(`pf_modulo_${MODULO_ID}`);
+        if (saved) respostas = JSON.parse(saved);
+
+        function renderPergunta(going_back = false) {
+            const q = perguntas[currentQ - 1];
+            const card = document.getElementById('questionCard');
+            card.className = 'question-card' + (going_back ? ' going-back' : '');
+            document.getElementById('questionNum').textContent = `Pergunta ${String(currentQ).padStart(2, '0')}`;
+            document.getElementById('questionText').textContent = q.texto;
+            document.getElementById('navCurrent').textContent = currentQ;
+            document.getElementById('navTotal').textContent = perguntas.length;
+            document.getElementById('progressBar').style.width = `${(currentQ / perguntas.length) * 100}%`;
+            document.getElementById('btnVoltar').disabled = currentQ === 1;
+            const list = document.getElementById('optionsList');
+            list.innerHTML = '';
+            q.opcoes.forEach(op => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn font-manrope' + (respostas[currentQ] === op.letra ? ' selected' : '');
+                btn.innerHTML = `<div class="option-letter font-jakarta">${op.letra}</div><span>${op.texto}</span>`;
+                btn.onclick = (e) => selecionarOpcao(op.letra, e.currentTarget);
+                list.appendChild(btn);
+            });
+            atualizarBtnProximo();
+            history.replaceState(null, '', `?q=${currentQ}`);
+        }
+
+        function selecionarOpcao(letra, el) {
+            respostas[currentQ] = letra;
+            localStorage.setItem(`pf_modulo_${MODULO_ID}`, JSON.stringify(respostas));
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            atualizarBtnProximo();
+            setTimeout(() => { if (currentQ < perguntas.length) proximaPergunta(); else finalizarModulo(); }, 350);
+        }
+
+        function atualizarBtnProximo() {
+            const btn = document.getElementById('btnProximo');
+            const isLast = currentQ === perguntas.length;
+            btn.className = 'btn-proximo font-jakarta' + (respostas[currentQ] ? ' enabled' : '');
+            btn.innerHTML = isLast ? `Finalizar Módulo <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>` : `Próxima <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+            btn.onclick = isLast ? finalizarModulo : proximaPergunta;
+        }
+
+        function proximaPergunta() { if (!respostas[currentQ]) return; if (currentQ >= perguntas.length) { finalizarModulo(); return; } currentQ++; renderPergunta(false); }
+        function voltarPergunta() { if (currentQ <= 1) return; currentQ--; renderPergunta(true); }
+        function finalizarModulo() {
+            /* TODO BACK-END: POST /api/modulos/03/finalizar → desbloqueia módulo 04 */
+            localStorage.setItem(`pf_modulo_${MODULO_ID}`, JSON.stringify(respostas));
+            window.location.href = 'minha_jornada.html?modulo_concluido=03';
+        }
+        function sair() { localStorage.setItem(`pf_modulo_${MODULO_ID}`, JSON.stringify(respostas)); window.location.href = 'minha_jornada.html'; }
+        renderPergunta();
+    </script>
+    <script src="../js/api.js"></script>
+    <script src="../js/questionario-api.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Início — Programando o Futuro</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <link rel="stylesheet" href="../styles/sidebar.css" />
+  <style>
+
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1rem 0;
+      background: rgba(6,11,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.3s;
+    }
+    .navbar.scrolled { padding: 0.7rem 0; background: rgba(6,11,20,0.98); }
+    .navbar .container {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 1.5rem; color: #f0f6ff;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex; gap: 2.2rem; list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem; color: rgba(255,255,255,0.55);
+      text-decoration: none; transition: color 0.2s; position: relative;
+    }
+    .nav-links a.active { color: #f0f6ff; }
+    .nav-links a.active::after {
+      content: ''; position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px; background: #2563eb; border-radius: 2px;
+    }
+    .nav-links a:hover { color: #f0f6ff; }
+    .nav-user {
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .nav-user span {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem; color: rgba(255,255,255,0.6);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px;
+      background: #2563eb;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 0.8rem; color: #fff;
+      cursor: pointer;
+    }
+
+    /* ====== HERO ====== */
+    #inicio {
+      min-height: 80vh;
+      padding-top: 70px;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      position: relative; overflow: hidden;
+      background: var(--bg-primary, #060b14);
+    }
+    #inicio::before {
+      content: '';
+      position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(37,99,235,0.13) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 700px; padding: 3rem 1.5rem; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      background: rgba(37,99,235,0.1);
+      border: 1px solid rgba(37,99,235,0.25);
+      border-radius: 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.7rem; font-weight: 600;
+      color: #60a5fa; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1.8rem;
+    }
+    .hero-badge svg { flex-shrink: 0; }
+
+    .hero-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #f0f6ff;
+      margin-bottom: 1.2rem;
+    }
+    .hero-title .accent { color: #3b82f6; }
+
+    .hero-desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: 1rem; color: rgba(255,255,255,0.55);
+      line-height: 1.7; max-width: 480px; margin: 0 auto 2.5rem;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 0.85rem 2rem;
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.25s;
+    }
+    .btn-primary:hover {
+      background: #3b82f6; transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+    }
+    .btn-outline {
+      padding: 0.85rem 2rem;
+      background: transparent; color: #f0f6ff;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.25s;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+
+    /* ====== PROGRESS BANNER ====== */
+    .progress-banner {
+      background: var(--bg-primary, #060b14);
+      padding: 0 0 2rem;
+    }
+    .progress-banner .container {
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+    }
+    .banner-inner {
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .banner-left h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.05rem; font-weight: 700; color: #f0f6ff;
+      margin-bottom: 0.4rem;
+    }
+    .banner-status {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: 'Manrope', sans-serif; font-size: 0.75rem;
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #2E5BFF; flex-shrink: 0;
+    }
+    .status-text { color: #2E5BFF; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .status-sep { color: rgba(255,255,255,0.2); }
+    .status-hint { color: rgba(255,255,255,0.4); }
+
+    .btn-banner {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 1.5rem;
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 700;
+      color: #60a5fa; letter-spacing: 0.06em; text-transform: uppercase;
+      text-decoration: none; white-space: nowrap;
+      transition: all 0.2s; cursor: pointer;
+    }
+    .btn-banner:hover {
+      background: rgba(37,99,235,0.25);
+      border-color: rgba(37,99,235,0.5);
+    }
+
+    /* ====== POR QUE FAZER ====== */
+    #porque {
+      padding: 5rem 0 4rem;
+      background: var(--bg-secondary, #0d1424);
+      text-align: center;
+      padding-bottom: 10%;
+    }
+    #porque .container {
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+    }
+    .section-badge {
+      display: inline-block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      color: #60a5fa; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title-lg {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900; color: #f0f6ff;
+      letter-spacing: -0.03em; line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem; color: rgba(255,255,255,0.5);
+      max-width: 520px; margin: 0 auto 3.5rem;
+      line-height: 1.7;
+    }
+
+    /* Cards grid */
+    .why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.why-card {
+  background: rgba(17,24,39,0.8);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  height: 350px;
+
+}
+.why-card:hover {
+  border-color: rgba(37,99,235,0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+
+    /* Card 1 — col 1, rows 1-2 */
+    .why-card.tall {
+      grid-column: 1;
+      grid-row: 1 / 3;
+      display: flex; flex-direction: column;
+    }
+
+    /* Card do meio desce */
+.why-card-center {
+  margin-top: 4rem;
+}
+
+    /* Card 4 — col 3, rows 1-2 */
+    .why-card.tall-right {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      display: flex; flex-direction: column;
+    }
+
+    .why-icon {
+  width: 50px; height: 50px;
+  background: rgba(37,99,235,0.15);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: auto; /* ícone fica no topo, texto cai pro fundo */}
+
+
+
+.why-card h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.2rem; font-weight: 800;
+  color: #f0f6ff; text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 0.8rem;
+  line-height: 1.4;
+  position: relative;
+  text-align: left;
+  width: 250px;
+  top: 20%;
+}
+.why-card p {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.95rem; color: rgba(255,255,255,0.45);
+  line-height: 1.65;
+
+  position: relative;
+  text-align: left;
+  width: 250px;
+  top: 20%;
+}
+
+    /* Decorativo fundo nos cards tall */
+    .why-card.tall::after,
+    .why-card.tall-right::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: rgba(37,99,235,0.06);
+      border-radius: 50%;
+    }
+
+    /* Número decorativo */
+.why-num {
+  position: absolute;
+  bottom: -15px; right: -12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 9rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.04);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+    /* ====== FOOTER ====== */
+    footer {
+      background: var(--bg-secondary, #0d1424);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 2rem 0;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 0.95rem; color: #f0f6ff;
+    }
+    .footer-copy {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.72rem; color: rgba(255,255,255,0.25);
+      margin-top: 0.2rem;
+    }
+    .footer-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .footer-links a {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.8rem; color: rgba(255,255,255,0.3);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.6); }
+    .footer-socials { display: flex; gap: 0.6rem; }
+    .footer-socials a {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.3); transition: all 0.2s;
+    }
+    .footer-socials a:hover { border-color: #2563eb; color: #2563eb; }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up   { animation: fadeUp 0.6s ease both; }
+    .delay-1   { animation-delay: 0.1s; }
+    .delay-2   { animation-delay: 0.25s; }
+    .delay-3   { animation-delay: 0.4s; }
+
+   
+  </style>
+
+  <style #RESPONDIVE>
+     /* ====== RESPONSIVE ====== */
+     @media (max-width: 900px) {
+      .why-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .why-card.tall  { grid-column: 1; grid-row: auto; }
+      .why-card.center { grid-column: 2; grid-row: auto; }
+      .why-card.tall-right { grid-column: 1 / 3; grid-row: auto; }
+      
+    }
+    @media (max-width: 700px) {
+  .nav-links { display: none; }
+  .nav-user { display: flex; }
+  .hero-title { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+  .why-grid { grid-template-columns: 1fr; }
+  .why-card.tall, .why-card.center, .why-card.tall-right {
+    grid-column: 1; grid-row: auto;
+  }
+  .banner-inner { flex-direction: column; align-items: flex-start; }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+  .footer-links { flex-wrap: wrap; gap: 1rem; }
+  .why-card-center { margin-top: 0; }
+
+  .navbar .container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem; /* reduz o padding */
+  width: 100%;
+  max-width: 100%; /* remove o limite de 1200px no mobile */
+}
+
+  .status-text{
+    font-size: 0.58rem;
+    width: 200px;
+  }
+
+  .status-hint{
+    display: none;
+  }
+  .status-sep{
+    display: none;
+  }
+
+
+ @media (max-width: 400px) {
+   .nav-logo {
+    margin-right: 0; /* remove o margin fixo */
+    font-size: 0.9rem;
+  }
+
+   .hero-inner { 
+    position: absolute;
+     z-index: 1; 
+     max-width: 700px; 
+     padding: 3rem 1.5rem; 
+    top: 12%;}
+    .hero-title{
+      font-size: 2.8rem;
+    }
+    .hero-desc{
+      font-size: 0.9rem;
+    }
+
+    .btn-primary{
+      width: 40%;
+      height: 50px;
+      font-size: 0.8rem;
+       padding:  0.5rem 0rem;
+       text-align: center;
+       align-items: center;
+       justify-content: center;
+       display: flex;
+    }
+
+    .btn-outline{
+      width: 40%;
+      height: 50px;
+      font-size: 0.8rem;
+       padding:  0.5rem 0rem;
+       text-align: center;
+       align-items: center;
+       justify-content: center;
+       display: flex;
+    }
+  #inicio{
+    min-height: 70vh;
+  }
+
+  .section-title-lg{
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 3.8rem);
+      font-weight: 900; color: #f0f6ff;
+      letter-spacing: -0.03em; line-height: 1.1;
+      margin-bottom: 1rem;
+  }
+
+  .why-card {
+  background: rgba(17,24,39,0.8);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  height: 250px;
+
+}
+
+.why-icon {
+  width: 35px; height: 35px;
+  background: rgba(37,99,235,0.15);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: auto; /* ícone fica no topo, texto cai pro fundo */}
+
+
+
+.why-card h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem; font-weight: 800;
+  color: #f0f6ff; text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 0.8rem;
+  line-height: 1.4;
+  position: relative;
+  text-align: left;
+  width: 250px;
+  top: 20%;
+}
+.why-card p {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.85rem; color: rgba(255,255,255,0.45);
+  line-height: 1.65;
+
+  position: relative;
+  text-align: left;
+  width: 250px;
+  top: 20%;
+}
+
+.why-num {
+  position: absolute;
+  bottom: -15px; right: -12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 7rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.04);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+}
+
+
+
+
+}
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="nav-logo font-jakarta">Programando o Futuro</a>
+      
+      <!-- <button class="btn-hamburger" onclick="openSidebar()">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button> -->
+      <!-- <nav>
+        <ul class="nav-links">
+          <li><a href="#inicio" class="active">Início</a></li>
+          <li><a href="#">Mapa de Carreira</a></li>
+          <li><a href="#">Minha Jornada</a></li>
+          <li><a href="#">Oportunidades</a></li>
+        </ul>
+      </nav> -->
+      <div class="nav-user">
+        <span>Olá, Lucas</span>
+        <div class="nav-avatar">LG</div>
+      </div>
+    </div>
+
+ 
+
+  </header>
+
+
+
+  <!-- HERO -->
+  <section id="inicio">
+    <div class="hero-inner">
+      <div class="hero-badge fade-up">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        Primeiro Passo
+      </div>
+      <h1 class="hero-title fade-up delay-1">
+        Seu futuro<br>começa com<br>um <span class="accent">mapa</span>
+      </h1>
+      <p class="hero-desc fade-up delay-2">
+        Você ainda não descobriu qual área combina com você. O mapa leva 5 minutos e transforma sua visão de futuro.
+      </p>
+      <div class="hero-ctas fade-up delay-3">
+        <a href="intro_teste.html" class="btn-primary">Começar Teste</a>
+        <a href="#porque" class="btn-outline">Saiba mais</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER PROGRESSO -->
+  <div class="progress-banner">
+    <div class="container">
+      <div class="banner-inner">
+        <div class="banner-left">
+          <h3>Você está a 1 passo de descobrir seu caminho</h3>
+          <div class="banner-status">
+            <div class="status-dot"></div>
+            <span class="status-text">Mapa não iniciado</span>
+        
+            
+          </div>
+        </div>
+        <a href="intro_teste.html" class="btn-banner">
+          Começar Agora
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- POR QUE FAZER -->
+  <section id="porque">
+    <div class="container">
+
+      <h2 class="section-title-lg">Por que fazer o mapa?</h2>
+      <p class="section-desc">Nossa tecnologia analisa suas soft e hard skills para traçar um roteiro personalizado.</p>
+  
+      <div class="why-grid">
+  
+        <!-- Card 1 — esquerdo, alinhado ao topo -->
+        <div class="why-card fade-up delay-1">
+          <div class="why-icon">
+            <svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              <circle cx="11" cy="9" r="3"/>
+              <path d="M6.5 17.5c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/>
+            </svg>
+          </div>
+          <div class="why-num">01</div>
+          <h3>Descubra sua área ideal</h3>
+          <p>Esqueça a indecisão. Cruzamos seus interesses com as demandas reais do mercado de trabalho.</p>
+        </div>
+  
+        <!-- Card 2 — centro, mais baixo -->
+        <div class="why-card why-card-center fade-up delay-2">
+          <div class="why-icon">
+            <svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <div class="why-num">02</div>
+          <h3>Veja seu perfil profissional</h3>
+          <p>Entenda seus pontos fortes e onde você precisa focar para se destacar na multidão.</p>
+        </div>
+  
+        <!-- Card 3 — direito, alinhado ao topo -->
+        <div class="why-card fade-up delay-3">
+          <div class="why-icon">
+            <svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18M9 21V9"/>
+            </svg>
+          </div>
+          <div class="why-num">03</div>
+          <h3>Receba um plano de estudos</h3>
+          <p>Não estude às cegas. Tenha um roteiro estruturado do zero até sua primeira vaga.</p>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/api.js"></script>
+  <script>
+    protegerPagina({ precisaMapaFeito: false });
+  </script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+  </script>
+
+    <script src="../js/footer.js"></script>
+  
+
+
+</body>
+</html>

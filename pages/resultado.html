@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado — Programando o Futuro</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <style>
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: #060b14;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+
+    .bg-glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .bg-glow::before {
+      content: '';
+      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 600px;
+      background: radial-gradient(ellipse, rgba(37,99,235,0.15) 0%, transparent 65%);
+    }
+
+    /* ====== LOADING STATE ====== */
+    .loading-wrap {
+      position: relative; z-index: 1;
+      text-align: center; padding: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    /* Anel animado */
+    .loader-ring {
+      width: 80px; height: 80px;
+      border: 3px solid rgba(37,99,235,0.15);
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.5rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.6rem; letter-spacing: -0.02em;
+    }
+    .loading-desc {
+      font-size: 0.88rem; color: rgba(255,255,255,0.4);
+      margin-bottom: 2rem;
+    }
+
+    /* Steps de loading */
+    .loading-steps {
+      display: flex; flex-direction: column; gap: 0.7rem;
+      max-width: 320px; margin: 0 auto 2.5rem; text-align: left;
+    }
+    .loading-step {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.82rem; color: rgba(255,255,255,0.3);
+      transition: color 0.4s;
+    }
+    .loading-step.done { color: rgba(255,255,255,0.7); }
+    .loading-step.active { color: #60a5fa; }
+    .step-check {
+      width: 20px; height: 20px; flex-shrink: 0;
+      border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.4s;
+    }
+    .loading-step.done .step-check {
+      background: rgba(16,185,129,0.15);
+      border-color: #10b981;
+    }
+    .loading-step.active .step-check {
+      background: rgba(37,99,235,0.15);
+      border-color: #3b82f6;
+      animation: pulse 1s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(37,99,235,0); }
+    }
+
+    /* ====== RESULTADO STATE ====== */
+    .result-wrap {
+      display: none;
+      position: relative; z-index: 1;
+      text-align: center; padding: 2rem;
+      max-width: 560px; width: 100%;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .result-icon {
+      width: 80px; height: 80px;
+      background: rgba(16,185,129,0.12);
+      border: 2px solid rgba(16,185,129,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: scaleIn 0.5s ease both;
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      color: #10b981; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .result-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 900; color: #f0f6ff;
+      letter-spacing: -0.03em; line-height: 1.1;
+      margin-bottom: 0.8rem;
+    }
+    .result-title .accent { color: #3b82f6; }
+
+    .result-desc {
+      font-size: 0.9rem; color: rgba(255,255,255,0.5);
+      line-height: 1.7; margin-bottom: 2rem; max-width: 420px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    /* Preview da área */
+    .result-preview {
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 16px; padding: 1.5rem;
+      margin-bottom: 2rem; text-align: left;
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .preview-icon {
+      width: 52px; height: 52px; flex-shrink: 0;
+      background: rgba(37,99,235,0.12);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .preview-info {}
+    .preview-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      color: #3b82f6; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .preview-area {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.1rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.1rem;
+    }
+    .preview-pct {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.78rem; color: rgba(255,255,255,0.4);
+    }
+    .preview-pct span { color: #3b82f6; font-weight: 700; }
+
+    /* BTN */
+    .btn-ver-resultado {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 1rem 2.5rem;
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.25s; width: 100%; justify-content: center;
+    }
+    .btn-ver-resultado:hover {
+      background: #3b82f6; transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(37,99,235,0.4);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .result-title { font-size: 1.6rem; }
+      .loading-title { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <!-- LOADING -->
+  <div class="loading-wrap" id="loadingWrap">
+    <div class="loader-ring"></div>
+    <h2 class="loading-title font-jakarta">Analisando seu perfil...</h2>
+    <p class="loading-desc font-manrope">Nossa IA está processando suas respostas</p>
+
+    <!--
+      TODO BACK-END:
+      Os steps abaixo são visuais apenas.
+      O status real depende do processamento da API.
+      Endpoint: POST /api/teste/processar → retorna { area, percentual, ... }
+    -->
+    <div class="loading-steps" id="loadingSteps">
+      <div class="loading-step" id="step1">
+        <div class="step-check">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <span class="font-manrope">Lendo suas respostas</span>
+      </div>
+      <div class="loading-step" id="step2">
+        <div class="step-check"></div>
+        <span class="font-manrope">Mapeando seu perfil cognitivo</span>
+      </div>
+      <div class="loading-step" id="step3">
+        <div class="step-check"></div>
+        <span class="font-manrope">Cruzando com áreas do mercado</span>
+      </div>
+      <div class="loading-step" id="step4">
+        <div class="step-check"></div>
+        <span class="font-manrope">Gerando seu mapa de carreira</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-icon">
+      <svg width="32" height="32" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <div class="result-badge font-jakarta">Análise Concluída</div>
+
+    <h2 class="result-title font-jakarta">
+      Seu mapa está<br><span class="accent">pronto!</span>
+    </h2>
+    <p class="result-desc font-manrope">
+      Identificamos sua área ideal e criamos um plano de carreira personalizado. Veja tudo no seu painel.
+    </p>
+
+    <!--
+      TODO BACK-END:
+      Preencher com os dados retornados pela API:
+      - preview-area: nome da área principal
+      - preview-pct: percentual de compatibilidade
+    -->
+    <div class="result-preview">
+      <div class="preview-icon">
+        <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      <div class="preview-info">
+        <div class="preview-label font-jakarta">Sua área principal</div>
+        <!-- TODO BACK-END: substituir texto estático pelo retorno da API -->
+        <div class="preview-area font-jakarta" id="previewArea">Desenvolvimento Web</div>
+        <div class="preview-pct font-manrope"><span id="previewPct">87%</span> de compatibilidade</div>
+      </div>
+    </div>
+
+    <a href="inicial_mapa_feito.html " class="btn-ver-resultado font-jakarta">
+      Ver Meu Resultado Completo →
+    </a>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script>
+    /*
+      TODO BACK-END:
+      1. Ao carregar esta página, enviar as respostas para a API
+      2. Aguardar retorno com área e percentual
+      3. Popular previewArea e previewPct com dados reais
+      4. Limpar localStorage após envio bem-sucedido
+      
+      POST /api/teste/processar
+      Body: { userId, respostas: localStorage.getItem('pf_respostas') }
+      Response: { area, percentual, plano, cursos, ... }
+    */
+
+    // Simulação de loading steps
+    const steps = ['step1','step2','step3','step4'];
+    let stepIdx = 0;
+
+    // Ativa step 1 imediatamente
+    document.getElementById('step1').classList.add('active');
+
+    const interval = setInterval(() => {
+      // Marca atual como done
+      document.getElementById(steps[stepIdx]).classList.remove('active');
+      document.getElementById(steps[stepIdx]).classList.add('done');
+      stepIdx++;
+
+      if (stepIdx < steps.length) {
+        document.getElementById(steps[stepIdx]).classList.add('active');
+      } else {
+        clearInterval(interval);
+        // Mostra resultado após todos os steps
+        setTimeout(mostrarResultado, 600);
+      }
+    }, 900);
+
+    async function esperarResultado() {
+      const jobId = localStorage.getItem('pf_job_id');
+
+      if (jobId) {
+        for (let tentativa = 0; tentativa < 60; tentativa++) {
+          const data = await testeApi.status(jobId);
+
+          if (data.status === 'concluido') {
+            return testeApi.resultado();
+          }
+
+          if (data.status === 'erro') {
+            throw new Error('A IA não conseguiu gerar o resultado agora.');
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+        }
+
+        throw new Error('O resultado demorou mais que o esperado.');
+      }
+
+      return testeApi.resultado();
+    }
+
+    async function mostrarResultado() {
+      try {
+        const resultado = await esperarResultado();
+        localStorage.removeItem('pf_job_id');
+
+        document.getElementById('previewArea').textContent = resultado.areaPrincipal || 'Área recomendada';
+        document.getElementById('previewPct').textContent = `${resultado.percentualCompatibilidade || 0}%`;
+
+        const usuario = await authApi.me({ skipAuthRedirect: true });
+        auth.setUser(usuario);
+
+        document.getElementById('loadingWrap').style.display = 'none';
+        document.getElementById('resultWrap').style.display = 'block';
+      } catch (error) {
+        document.querySelector('.loading-title').textContent = 'Não foi possível concluir a análise';
+        document.querySelector('.loading-desc').textContent = error.message || 'Tente novamente em alguns instantes.';
+      }
+    }
+  </script>
+
+</body>
+</html>

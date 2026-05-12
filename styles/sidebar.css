@@ -1,0 +1,87 @@
+        /* SIDEBAR */
+        .sidebar-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 200;
+            backdrop-filter: blur(4px);
+        }
+        .sidebar {
+            position: fixed;
+            top: 0; right: -100%;
+            width: 280px; height: 100vh;
+            background: #0d1424;
+            border-left: 1px solid rgba(255,255,255,0.07);
+            z-index: 201;
+            padding: 1.5rem;
+            transition: right 0.3s ease;
+        }
+        .sidebar.open { right: 0; }
+        .sidebar-overlay.open { display: block; }
+        .sidebar-header {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .sidebar-logo {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700; font-size: 0.9rem; color: #f0f6ff;
+        }
+        .sidebar-close {
+            background: none; border: none;
+            color: rgba(255,255,255,0.5); cursor: pointer;
+        }
+        .sidebar-nav {
+            display: flex; flex-direction: column; gap: 0.rem;
+        }
+
+        .sidebar-nav a {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem; color: rgba(255,255,255,0.6);
+            text-decoration: none; padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: color 0.2s;
+        }
+        .sidebar-nav a:hover { color: #f0f6ff; }
+        .sidebar-user {
+            display: flex; align-items: center; gap: 0.8rem;
+            margin-top: auto;
+        }
+        .sidebar-user span {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.88rem; color: rgba(255,255,255,0.5);
+        }
+        
+        /* HAMBURGUER — aparece só no mobile */
+        .btn-hamburger {
+            display: none;
+            background: none; border: none;
+            color: #f0f6ff; cursor: pointer;
+            margin-left: 45%;
+        }
+        
+        @media (max-width: 700px) {
+            .nav-links{ display: none; }
+            .btn-hamburger { display: flex; }
+          }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 1.2rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+        .sidebar-user-name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #f0f6ff;
+        }
+        .sidebar-user-tag {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.7rem;
+            color: #3b82f6;
+            margin-top: 0.1rem;
+        }

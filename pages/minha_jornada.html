@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minha Jornada — Programando o Futuro</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <link rel="stylesheet" href="../styles/sidebar.css" />
+  <style>
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100; padding: 1rem 0;
+      background: rgba(6,11,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.3s;
+    }
+    .navbar.scrolled { padding: 0.7rem 0; background: rgba(6,11,20,0.98); }
+    .navbar .container {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+      flex-wrap: nowrap;
+    }
+    .nav-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 1rem; color: #f0f6ff;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem; color: rgba(255,255,255,0.55);
+      text-decoration: none; transition: color 0.2s; position: relative;
+    }
+    .nav-links a.active { color: #f0f6ff; }
+    .nav-links a.active::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 2px; background: #2563eb; border-radius: 2px;
+    }
+    .nav-links a:hover { color: #f0f6ff; }
+    .nav-user { display: flex; align-items: center; gap: 0.8rem; }
+    .nav-user span {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem; color: rgba(255,255,255,0.6);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; background: #2563eb;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 0.8rem; color: #fff; cursor: pointer;
+    }
+    .btn-hamburger {
+      display: none; background: none; border: none;
+      color: #f0f6ff; cursor: pointer; align-items: center;
+    }
+
+    /* ====== MAIN ====== */
+    main {
+      max-width: 1200px; margin: 0 auto;
+      padding: 110px 2rem 4rem;
+    }
+
+    /* ====== HERO ====== */
+    .page-hero {
+      margin-bottom: 3rem;
+    }
+    .page-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 900; color: #f0f6ff;
+      letter-spacing: -0.03em; line-height: 1.05;
+      margin-bottom: 1rem;
+    }
+    .page-desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem; color: rgba(255,255,255,0.5);
+      line-height: 1.7; max-width: 540px;
+    }
+
+    /* ====== MAIN GRID ====== */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ====== MÓDULOS GRID ====== */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    /* ====== MODULE CARD ====== */
+    .module-card {
+  background: rgba(17,24,39,0.9);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 1.6rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+    .module-card:hover { border-color: rgba(37,99,235,0.2); }
+    .module-card.done {
+      border-color: rgba(255,255,255,0.08);
+    }
+    .module-card.active {
+      border-color: rgba(37,99,235,0.3);
+      background: rgba(37,99,235,0.04);
+    }
+    .module-card.locked {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .module-card-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 0.8rem;
+    }
+    .module-number {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      color: #3b82f6; letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .module-card.locked .module-number { color: rgba(255,255,255,0.25); }
+    .module-icon {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.3);
+    }
+    .module-card.done .module-icon { color: #3b82f6; }
+    .module-card.active .module-icon { color: #3b82f6; }
+
+    .module-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.1rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.5rem;
+    }
+    .module-card.locked .module-title { color: rgba(255,255,255,0.35); }
+    .module-desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.78rem; color: rgba(255,255,255,0.45);
+      line-height: 1.5; margin-bottom: 1rem;
+      flex: 1;
+    }
+    .module-card.locked .module-desc { color: rgba(255,255,255,0.2); }
+
+    .module-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .module-status-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .module-card.done .module-status-text { color: rgba(255,255,255,0.4); }
+    .module-card.active .module-status-text { color: rgba(255,255,255,0.4); }
+    .module-arrow {
+      color: rgba(255,255,255,0.3);
+    }
+    .module-card.done .module-arrow { color: rgba(255,255,255,0.5); }
+    .module-card.active .module-arrow { color: #3b82f6; }
+
+    /* Barra de progresso no card ativo */
+    .module-progress-bar-wrap {
+      margin-top: 0.5rem; margin-bottom: 0.8rem;
+    }
+    .module-progress-bar-label {
+      display: flex; justify-content: space-between;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.6rem; font-weight: 700;
+      color: rgba(255,255,255,0.3); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 0.4rem;
+    }
+    .module-progress-bar-label span:last-child { color: #3b82f6; }
+    .module-progress-bar {
+      height: 3px; background: rgba(255,255,255,0.08);
+      border-radius: 2px; overflow: hidden;
+    }
+    .module-progress-bar-fill {
+      height: 100%; background: #2563eb; border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    /* ====== SIDEBAR DIREITA ====== */
+    .right-col { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    /* Progresso Geral */
+    .progress-card {
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 1.8rem 1.6rem;
+    }
+    .progress-card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Círculo SVG */
+    .progress-circle-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .progress-circle {
+      position: relative; width: 120px; height: 120px;
+    }
+    .progress-circle svg { transform: rotate(-90deg); }
+    .progress-circle-bg {
+      fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8;
+    }
+    .progress-circle-fill {
+      fill: none; stroke: #2563eb; stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      /* TODO BACK-END: stroke-dashoffset = 314 * (1 - percentual/100) */
+      stroke-dashoffset: 235.5; /* 25% → 314 * 0.75 */
+      transition: stroke-dashoffset 1s ease;
+    }
+    .progress-circle-label {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.6rem; font-weight: 900; color: #f0f6ff;
+    }
+
+    /* Stats row */
+    .progress-stats {
+      display: flex; flex-direction: column; gap: 0.7rem;
+      margin-bottom: 1.5rem;
+    }
+    .progress-stat-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .progress-stat-label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+    }
+    .progress-stat-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.88rem; font-weight: 700; color: #f0f6ff;
+    }
+
+    /* CTA btn */
+    .btn-cta {
+      width: 100%; padding: 1rem;
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: all 0.25s; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .btn-cta:hover {
+      background: #3b82f6; transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+    }
+
+    /* Milestone card */
+    .milestone-card {
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .milestone-header {
+      padding: 1rem 1.2rem 0.8rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .milestone-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      color: rgba(255,255,255,0.35); letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .milestone-img {
+      width: 100%; height: 160px;
+      object-fit: cover;
+      /* TODO BACK-END: imagem do próximo milestone vem da API */
+      background: linear-gradient(135deg, #0a1628 0%, #0d2040 40%, #0a2850 100%);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    /* placeholder visual enquanto imagem não é carregada */
+    .milestone-img-placeholder {
+      width: 100%; height: 160px;
+      background: linear-gradient(135deg, #060f20 0%, #0d2040 50%, #091a35 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .milestone-img-placeholder::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 80%, rgba(37,99,235,0.25) 0%, transparent 70%);
+    }
+    /* Pontinhos de rede no placeholder */
+    .milestone-network {
+      position: absolute; inset: 0; overflow: hidden;
+    }
+    .milestone-network svg {
+      width: 100%; height: 100%; opacity: 0.6;
+    }
+
+    .milestone-quote {
+      padding: 0.9rem 1.2rem 1.1rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.78rem; color: rgba(255,255,255,0.4);
+      line-height: 1.5; font-style: italic;
+    }
+
+    /* ====== FOOTER ====== */
+    footer {
+      background: rgba(13,20,36,0.95);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 2rem 0; margin-top: 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 0.95rem; color: #f0f6ff;
+    }
+    .footer-copy {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 0.2rem;
+    }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.8rem; color: rgba(255,255,255,0.3);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.6); }
+    .footer-socials { display: flex; gap: 0.6rem; }
+    .footer-socials a {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.3); transition: all 0.2s;
+    }
+    .footer-socials a:hover { border-color: #2563eb; color: #2563eb; }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.6s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.4s; }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 900px) {
+      .journey-grid { grid-template-columns: 1fr; }
+      .right-col { order: -1; }
+      .progress-circle-wrap { flex-direction: row; gap: 2rem; align-items: center; }
+    }
+    @media (max-width: 600px) {
+      .modules-grid { grid-template-columns: 1fr; }
+      .nav-links, .nav-user { display: none; }
+      .btn-hamburger { display: flex; }
+      .navbar .container { flex-wrap: nowrap; justify-content: space-between; padding: 0 1.2rem; }
+      .page-title { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="container">
+      <a href="inicial_mapa_feito.html" class="nav-logo font-jakarta">Programando o Futuro</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="inicial_mapa_feito.html" class="font-manrope">Início</a></li>
+          <li><a href="mapa_carreira.html" class="font-manrope">Mapa de Carreira</a></li>
+          <li><a href="minha_jornada.html" class="active font-manrope">Minha Jornada</a></li>
+          <li><a href="oportunidades.html" class="font-manrope">Oportunidades</a></li>
+        </ul>
+      </nav>
+      <div class="nav-user">
+        <!-- TODO BACK-END: nome e iniciais do usuário vêm da sessão/API -->
+        <span class="font-manrope">Olá, Lucas</span>
+        <div class="nav-avatar font-jakarta">LG</div>
+      </div>
+      <button class="btn-hamburger" onclick="openSidebar()">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <div class="page-hero fade-up">
+      <h1 class="page-title font-jakarta">Sua Jornada de Descoberta</h1>
+      <p class="page-desc font-manrope">
+        Cada passo que você dá é um novo bloco de código no seu futuro.<br>
+        Continue evoluindo para desbloquear novas possibilidades.
+      </p>
+    </div>
+
+    <!--
+      TODO BACK-END — JOURNEY GRID:
+      Toda a grade de módulos e sidebar devem ser populados via API.
+
+      Endpoints esperados:
+      - GET /api/jornada/:userId → retorna todos os módulos com status e progresso
+      - GET /api/jornada/:userId/progresso → retorna { percentual, modulosCompletos, totalModulos, habilidadesAtivas }
+      - GET /api/jornada/:userId/milestone → retorna próximo milestone { imagem, quote }
+
+      Campos esperados por módulo:
+      - id (string)
+      - numero: "01" | "02" | etc.
+      - titulo (string)
+      - descricao (string)
+      - status: "done" | "active" | "locked"
+      - progresso: number (0-100, usado só no active)
+    -->
+
+    <div class="journey-grid fade-up delay-1">
+
+      <!-- MÓDULOS -->
+      <div class="modules-grid">
+
+      <!-- Módulo 01 -->
+<a href="modulo1.html" class="module-card done">
+  <div>
+    <div class="module-card-top">
+      <div class="module-number font-jakarta">Módulo 01</div>
+      <div class="module-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+    </div>
+    <div class="module-title font-jakarta">Perfil Pessoal</div>
+    <div class="module-desc font-manrope">
+      Valores, motivações e jeito de trabalhar para a IA entender a base do seu perfil profissional.
+    </div>
+  </div>
+  <div class="module-footer">
+    <div class="module-status-text font-jakarta">Revisar respostas</div>
+    <div class="module-arrow">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </div>
+  </div>
+</a>
+
+<!-- Módulo 02 -->
+<a href="modulo2.html" class="module-card active">
+  <div>
+    <div class="module-card-top">
+      <div class="module-number font-jakarta">Módulo 02</div>
+      <div class="module-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="1"/>
+          <circle cx="19" cy="12" r="1"/>
+          <circle cx="5" cy="12" r="1"/>
+        </svg>
+      </div>
+    </div>
+    <div class="module-title font-jakarta">Interesses e Paixões</div>
+    <div class="module-desc font-manrope">
+      Temas, atividades e áreas que chamam sua atenção para refinar as recomendações de carreira.
+    </div>
+
+    <div class="module-progress-bar-wrap">
+      <div class="module-progress-bar-label font-jakarta">
+        <span>Progresso</span>
+        <span>65%</span>
+      </div>
+      <div class="module-progress-bar">
+        <div class="module-progress-bar-fill" style="width: 65%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module-footer">
+    <div class="module-status-text font-jakarta">Continuar</div>
+    <div class="module-arrow">
+      <svg width="16" height="16" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </div>
+  </div>
+</a>
+
+<!-- Módulo 03 -->
+<a href="modulo3.html" class="module-card">
+  <div>
+    <div class="module-card-top">
+      <div class="module-number font-jakarta">Módulo 03</div>
+      <div class="module-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="module-title font-jakarta">Habilidades e Estilo</div>
+    <div class="module-desc font-manrope">
+      Como você aprende, resolve problemas e usa suas habilidades naturais em projetos reais.
+    </div>
+  </div>
+
+  <div class="module-footer">
+    <div class="module-status-text font-jakarta">Responder módulo</div>
+    <div class="module-arrow">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </div>
+  </div>
+</a>
+
+<!-- Módulo 04 -->
+<a href="modulo4.html" class="module-card">
+  <div>
+    <div class="module-card-top">
+      <div class="module-number font-jakarta">Módulo 04</div>
+      <div class="module-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10Z"/>
+          <circle cx="12" cy="11" r="2"/>
+        </svg>
+      </div>
+    </div>
+    <div class="module-title font-jakarta">Vida e Contexto</div>
+    <div class="module-desc font-manrope">
+      Rotina, tempo disponível, realidade financeira e objetivos para transformar o mapa em um plano possível.
+    </div>
+  </div>
+
+  <div class="module-footer">
+    <div class="module-status-text font-jakarta">Responder módulo</div>
+    <div class="module-arrow">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </div>
+  </div>
+</a>
+
+      
+
+    
+
+      </div>
+
+      <!-- SIDEBAR DIREITA -->
+      <div class="right-col fade-up delay-2">
+
+        <!-- Progresso Geral -->
+        <!--
+          TODO BACK-END:
+          - GET /api/jornada/:userId/progresso
+          - Retorna: { percentual: 25, modulosCompletos: 1, totalModulos: 4, habilidadesAtivas: 3 }
+          - percentual → atualiza stroke-dashoffset do círculo: 314 * (1 - percentual/100)
+          - percentual → texto central do círculo
+          - modulosCompletos / totalModulos → exibir "1/4"
+          - habilidadesAtivas → exibir "3"
+        -->
+        <div class="progress-card">
+          <div class="progress-card-title font-jakarta">Progresso Geral</div>
+          <div class="progress-circle-wrap">
+            <div class="progress-circle">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle class="progress-circle-bg" cx="60" cy="60" r="50"/>
+                <circle class="progress-circle-fill" cx="60" cy="60" r="50"/>
+              </svg>
+              <div class="progress-circle-label font-jakarta">25%</div>
+            </div>
+          </div>
+
+          <div class="progress-stats">
+            <div class="progress-stat-row">
+              <span class="progress-stat-label font-manrope">Módulos Completos</span>
+              <span class="progress-stat-value font-jakarta">1/4</span>
+            </div>
+            <div class="progress-stat-row">
+              <span class="progress-stat-label font-manrope">Perguntas Iniciais</span>
+              <span class="progress-stat-value font-jakarta">5/10</span>
+            </div>
+          </div>
+
+          <!--
+            TODO BACK-END:
+            Botão redireciona para o módulo ativo atual.
+            href = "modulo.html?id=<moduloAtivoId>" ou para o questionário do módulo ativo.
+          -->
+          <a href="modulo2.html" class="btn-cta font-jakarta">
+            Continuar Módulo Atual 
+          </a>
+          
+        </div>
+
+        <!-- Próximo Milestone -->
+        <!--
+          TODO BACK-END:
+          - GET /api/jornada/:userId/milestone
+          - Retorna: { imagem: string (URL), quote: string }
+          - Substituir placeholder visual pela imagem da API
+          - Substituir texto da quote pela quote da API
+        -->
+        <div class="milestone-card fade-up delay-3">
+          <div class="milestone-header">
+            <svg width="14" height="14" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+            </svg>
+            <span class="milestone-label font-jakarta">Próximo Milestone</span>
+          </div>
+
+          <!-- TODO BACK-END: substituir por <img src="..." /> com a URL da API -->
+          <div class="milestone-img-placeholder">
+            <div class="milestone-network">
+              <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <radialGradient id="glow" cx="50%" cy="80%" r="50%">
+                    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="#0a1628" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+                <rect width="320" height="160" fill="#060f1e"/>
+                <ellipse cx="160" cy="130" rx="120" ry="60" fill="url(#glow)"/>
+                <!-- Linhas de rede -->
+                <g stroke="#38bdf8" stroke-opacity="0.15" stroke-width="0.5">
+                  <line x1="80" y1="120" x2="160" y2="80"/>
+                  <line x1="160" y1="80" x2="240" y2="110"/>
+                  <line x1="160" y1="80" x2="200" y2="40"/>
+                  <line x1="160" y1="80" x2="120" y2="50"/>
+                  <line x1="120" y1="50" x2="80" y2="70"/>
+                  <line x1="200" y1="40" x2="250" y2="60"/>
+                  <line x1="240" y1="110" x2="280" y2="90"/>
+                  <line x1="80" y1="120" x2="40" y2="100"/>
+                  <line x1="80" y1="70" x2="40" y2="50"/>
+                  <line x1="250" y1="60" x2="290" y2="40"/>
+                </g>
+                <!-- Pontos de rede -->
+                <g fill="#38bdf8">
+                  <circle cx="160" cy="80" r="3" opacity="0.8"/>
+                  <circle cx="120" cy="50" r="2" opacity="0.6"/>
+                  <circle cx="200" cy="40" r="2" opacity="0.6"/>
+                  <circle cx="80" cy="120" r="2" opacity="0.5"/>
+                  <circle cx="240" cy="110" r="2" opacity="0.5"/>
+                  <circle cx="80" cy="70" r="1.5" opacity="0.4"/>
+                  <circle cx="250" cy="60" r="1.5" opacity="0.4"/>
+                  <circle cx="40" cy="100" r="1.5" opacity="0.3"/>
+                  <circle cx="280" cy="90" r="1.5" opacity="0.3"/>
+                  <circle cx="40" cy="50" r="1" opacity="0.3"/>
+                  <circle cx="290" cy="40" r="1" opacity="0.3"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- TODO BACK-END: substituir texto por quote da API -->
+          <div class="milestone-quote font-manrope">
+            "O sucesso é a soma de pequenos esforços repetidos dia após dia."
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/footer.js"></script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    /*
+      TODO BACK-END:
+      Ao carregar a página, buscar dados da jornada do usuário:
+
+      1. GET /api/jornada/:userId/progresso
+         → Atualizar círculo de progresso (stroke-dashoffset e texto)
+         → Atualizar Módulos Completos e Habilidades Ativas
+
+      2. GET /api/jornada/:userId
+         → Renderizar módulos dinamicamente (done / active / locked)
+         → Módulo active → exibir barra de progresso com percentual correto
+
+      3. GET /api/jornada/:userId/milestone
+         → Substituir placeholder da imagem por <img src="imagem" />
+         → Substituir quote estática
+
+      Estrutura de retorno esperada para GET /api/jornada/:userId:
+      {
+        modulos: [
+          {
+            id: string,
+            numero: "01",
+            titulo: string,
+            descricao: string,
+            status: "done" | "active" | "locked",
+            progresso: number  // 0-100, relevante só se active
+          }
+        ]
+      }
+
+      Botão "Continuar Respondendo":
+      - href deve apontar para o módulo com status "active"
+      - Ex: "questionario.html?modulo=<id>"
+    */
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Começar Teste — Programando o Futuro</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <style>
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: #060b14;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* BG */
+    .bg-glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .bg-glow::before {
+      content: '';
+      position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 600px;
+      background: radial-gradient(ellipse, rgba(37,99,235,0.13) 0%, transparent 65%);
+    }
+
+    /* NAV */
+    .auth-nav {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 2.5rem;
+    }
+    .auth-nav .logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 1.5rem; color: #f0f6ff;
+      text-decoration: none;
+    }
+    .auth-nav .back-link {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.82rem; color: rgba(255,255,255,0.4);
+      text-decoration: none; transition: color 0.2s;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .auth-nav .back-link:hover { color: rgba(255,255,255,0.8); }
+
+    /* MAIN */
+    main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 2rem; position: relative; z-index: 1;
+    }
+
+    .intro-wrap {
+      max-width: 680px; width: 100%; text-align: center;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    /* Ícone topo */
+    .intro-icon {
+      width: 72px; height: 72px;
+      background: rgba(37,99,235,0.12);
+      border: 1px solid rgba(37,99,235,0.25);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.8rem;
+    }
+
+    .intro-badge {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      background: rgba(37,99,235,0.1);
+      border: 1px solid rgba(37,99,235,0.25);
+      border-radius: 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      color: #60a5fa; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .intro-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900; color: #f0f6ff;
+      letter-spacing: -0.03em; line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .intro-title .accent { color: #3b82f6; }
+
+    .intro-desc {
+      font-size: 0.95rem; color: rgba(255,255,255,0.5);
+      line-height: 1.7; max-width: 500px; margin: 0 auto 2.5rem;
+    }
+
+    /* Info cards */
+    .intro-info {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1rem; margin-bottom: 2.5rem;
+    }
+    .info-card {
+      background: rgba(17,24,39,0.8);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 1.2rem;
+      text-align: center;
+    }
+    .info-card .info-icon {
+      font-size: 1.4rem; margin-bottom: 0.5rem;
+      display: block;
+    }
+    .info-card strong {
+      display: block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.2rem;
+    }
+    .info-card span {
+      font-size: 0.75rem; color: rgba(255,255,255,0.4);
+    }
+
+    /* O que vai descobrir */
+    .intro-list {
+      background: rgba(17,24,39,0.7);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 1.5rem;
+      margin-bottom: 2.5rem; text-align: left;
+    }
+    .intro-list h4 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.7rem; font-weight: 700;
+      color: rgba(255,255,255,0.3); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .intro-list ul {
+      list-style: none; display: flex; flex-direction: column; gap: 0.7rem;
+    }
+    .intro-list ul li {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.88rem; color: rgba(255,255,255,0.65);
+    }
+    /* .intro-list ul li::before {
+      content: '';
+      width: 18px; height: 18px; flex-shrink: 0;
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    } */
+    .check-item { display: flex; align-items: center; gap: 0.8rem; }
+    .check-dot {
+      width: 18px; height: 18px; flex-shrink: 0;
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .check-dot svg { width: 10px; height: 10px; }
+
+    /* BTN */
+    .btn-comecar {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 1rem 2.5rem;
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.25s;
+    }
+    .btn-comecar:hover {
+      background: #3b82f6; transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(37,99,235,0.4);
+    }
+
+    .intro-note {
+      margin-top: 1rem;
+      font-size: 0.75rem; color: rgba(255,255,255,0.25);
+    }
+
+    /* FOOTER */
+    .page-footer {
+      position: relative; z-index: 2;
+      text-align: center; padding: 1.2rem;
+      font-size: 0.7rem; color: rgba(255,255,255,0.2);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 700px) {
+      .intro-info { grid-template-columns: 1fr; }
+      .auth-nav { padding: 1.2rem; }
+      .intro-title { font-size: 1.8rem; }
+       .auth-nav .logo {
+    margin-right: 0; /* remove o margin fixo */
+    font-size: 1rem;
+  }
+
+    .intro-desc{
+      font-size: 0.85rem;
+    }
+
+    /* Info cards */
+    .intro-info {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem; margin-bottom: 2.5rem;
+    }
+    .info-card {
+      background: rgba(17,24,39,0.8);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 1.2rem;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      width: 105px;
+      height: 120px;
+    }
+
+        .info-card strong {
+          margin-top: 0;
+      display: block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.1rem;
+    }
+    .info-card span {
+      font-size: 0.8rem; color: rgba(255,255,255,0.4);
+    }
+    
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <!-- NAV -->
+  <nav class="auth-nav">
+    <a href="inicial_logada.html" class="logo font-jakarta">Programando o Futuro</a>
+    <a href="inicial_logada.html" class="back-link font-manrope">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Voltar
+    </a>
+  </nav>
+
+  <main>
+    <div class="intro-wrap">
+
+      <div class="intro-icon">
+        <svg width="32" height="32" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+      </div>
+
+      <div class="intro-badge font-jakarta">Teste de Perfil</div>
+
+      <h1 class="intro-title font-jakarta">
+        Descubra sua área<br>em <span class="accent">5 minutos</span>
+      </h1>
+      <p class="intro-desc font-manrope">
+        Responda 10 perguntas sobre seus interesses, habilidades e estilo de trabalho. Nossa IA analisa seu perfil e gera um mapa de carreira personalizado.
+      </p>
+
+      <!-- Info cards -->
+<div class="intro-info">
+  <div class="info-card">
+    <span class="info-icon">
+      <svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+    </span>
+    <strong class="font-jakarta">5 min</strong>
+    <span class="font-manrope">Duração</span>
+  </div>
+  <div class="info-card">
+    <span class="info-icon">
+      <svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+        <rect x="5" y="2" width="14" height="20" rx="2"/>
+        <line x1="9" y1="7" x2="15" y2="7"/>
+        <line x1="9" y1="11" x2="15" y2="11"/>
+        <line x1="9" y1="15" x2="12" y2="15"/>
+      </svg>
+    </span>
+    <strong class="font-jakarta">10</strong>
+    <span class="font-manrope">Perguntas</span>
+  </div>
+  <div class="info-card">
+    <span class="info-icon">
+      <svg width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+    </span>
+    <strong class="font-jakarta">100%</strong>
+    <span class="font-manrope">Personalizado</span>
+  </div>
+</div>
+
+      <!-- O que vai descobrir -->
+      <div class="intro-list">
+        <h4 class="font-jakarta">O que você vai descobrir</h4>
+        <ul>
+          <li>
+            <div class="check-dot">
+              <svg fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="font-manrope">Sua área de carreira mais compatível</span>
+          </li>
+          <li>
+            <div class="check-dot">
+              <svg fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="font-manrope">Suas soft e hard skills em destaque</span>
+          </li>
+          <li>
+            <div class="check-dot">
+              <svg fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="font-manrope">Um plano de estudos personalizado</span>
+          </li>
+          <li>
+            <div class="check-dot">
+              <svg fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="font-manrope">Cursos e oportunidades que combinam com você</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CTA -->
+      <a href="perguntas.html?q=1" class="btn-comecar font-jakarta">
+        Começar Agora
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <p class="intro-note font-manrope">Suas respostas ficam salvas. Pode pausar e continuar depois.</p>
+
+    </div>
+  </main>
+
+
+
+</body>
+</html>
