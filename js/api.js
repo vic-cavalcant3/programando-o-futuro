@@ -3,7 +3,8 @@
 // Programando o Futuro
 // ============================================================
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://programando-o-futuro.onrender.com';
+
 
 // ── Token helpers ──────────────────────────────────────────
 const auth = {
