@@ -148,13 +148,21 @@
     }
     .skills-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .skill-tag {
-      padding: 0.3rem 0.8rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.75rem; color: rgba(255,255,255,0.6);
+    padding: 0.3rem 0.8rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem; color: rgba(255,255,255,0.6);
+  cursor: default;
+  transition: border-color 0.25s, box-shadow 0.25s, color 0.25s;
     }
+
+    .skill-tag:hover {
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.35), 0 0 2px rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
+}
 
     /* Card direito — respostas */
     .answers-card {
@@ -206,6 +214,8 @@
       border-radius: 18px; padding: 1.8rem;
       position: relative; overflow: hidden;
       transition: all 0.3s;
+      display: flex;
+  flex-direction: column;
     }
     .area-card:hover {
       border-color: rgba(37,99,235,0.25);
@@ -246,6 +256,7 @@
       margin-bottom: 0.6rem; letter-spacing: -0.01em;
     }
     .area-card p {
+    
       font-family: 'Manrope', sans-serif;
       font-size: 0.82rem; color: rgba(255,255,255,0.45);
       line-height: 1.6; margin-bottom: 1.5rem;
@@ -257,6 +268,7 @@
       font-size: 0.88rem; font-weight: 700;
       text-decoration: none; transition: all 0.25s; cursor: pointer;
       border: none;
+      margin-top: auto;
     }
     .btn-area.filled {
       background: #2563eb; color: #fff;
@@ -289,32 +301,54 @@
       margin-bottom: 1.5rem;
     }
     .study-focus strong { color: rgba(255,255,255,0.7); }
-    .study-items { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
-    .study-item {
-      display: flex; align-items: center; gap: 0.8rem;
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.88rem; color: rgba(255,255,255,0.7);
-    }
-    .study-radio {
-      width: 18px; height: 18px; border-radius: 50%;
-      border: 2px solid; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .study-radio.done { border-color: #2563eb; background: rgba(37,99,235,0.15); }
-    .study-radio.done::after {
-      content: ''; width: 6px; height: 6px;
-      background: #2563eb; border-radius: 50%;
-    }
-    .study-radio.pending { border-color: rgba(255,255,255,0.2); }
-    .btn-continuar {
-      display: block; width: 100%; padding: 0.9rem;
-      text-align: center; border-radius: 10px;
-      background: transparent; color: #3b82f6;
-      border: 1px solid rgba(37,99,235,0.3);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.9rem; font-weight: 700;
-      cursor: pointer; text-decoration: none; transition: all 0.25s;
-    }
+  .study-items { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
+
+.study-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+.study-item:hover { border-color: rgba(37,99,235,0.3); }
+.study-item.open { border-color: rgba(37,99,235,0.4); }
+
+.study-item-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.85rem 1.1rem;
+  gap: 0.8rem;
+}
+.study-item-header span {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.88rem; color: rgba(255,255,255,0.7);
+  line-height: 1.5; flex: 1;
+}
+.study-item-chevron {
+  color: rgba(255,255,255,0.3);
+  transition: transform 0.25s, color 0.25s;
+  flex-shrink: 0;
+}
+.study-item.open .study-item-chevron {
+  transform: rotate(180deg);
+  color: #3b82f6;
+}
+
+.study-item-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.25s;
+  padding: 0 1.1rem;
+}
+.study-item.open .study-item-body {
+  max-height: 200px;
+  padding: 0 1.1rem 1rem;
+}
+.study-item-body p {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.82rem; color: rgba(255,255,255,0.4);
+  line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 0.75rem; margin: 0;
+}
     .btn-continuar:hover { background: rgba(37,99,235,0.08); }
 
     /* ====== FOOTER ====== */
@@ -525,6 +559,18 @@
   </div>
 </div>
 
+<div class="area-overlay" id="respostasOverlay">
+  <div class="area-overlay-card">
+    <button class="overlay-close" onclick="document.getElementById('respostasOverlay').classList.remove('open')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <h2 class="overlay-title font-jakarta" style="font-size:1.3rem; margin-bottom:1.5rem">Suas respostas</h2>
+    <div id="todasRespostasList"></div>
+  </div>
+</div>
+
 
   <!-- NAVBAR -->
   <header class="navbar" id="navbar">
@@ -596,9 +642,9 @@
           O que você nos contou
         </h3>
         <div id="answersList"></div>
-        <a href="#" class="answers-link font-manrope">
-          Ver todas as respostas →
-        </a>
+       <a href="#" class="answers-link font-manrope" onclick="abrirTodasRespostas(event)">
+  Ver todas as respostas →
+</a>
       </div>
     </div>
 
@@ -732,31 +778,35 @@
       });
     }
 
-    function renderRespostas(respostas = []) {
-      const container = document.getElementById('answersList');
-      container.innerHTML = '';
-      const itens = respostas.slice(0, 3);
+   function renderRespostas(respostas = []) {
+  const container = document.getElementById('answersList');
+  container.innerHTML = '';
+  const itens = respostas.slice(0, 3);
 
-      if (!itens.length) {
-        const vazio = document.createElement('div');
-        vazio.className = 'answer-text font-manrope';
-        vazio.textContent = 'Suas respostas aparecerão aqui quando o teste estiver salvo.';
-        container.appendChild(vazio);
-        return;
-      }
+  if (!itens.length) {
+    const vazio = document.createElement('div');
+    vazio.className = 'answer-text font-manrope';
+    vazio.textContent = 'Suas respostas aparecerão aqui quando o teste estiver salvo.';
+    container.appendChild(vazio);
+    return;
+  }
 
-      itens.forEach((item) => {
-        const div = document.createElement('div');
-        div.className = 'answer-item';
-        div.innerHTML = `
-          <div class="answer-cat font-jakarta"></div>
-          <div class="answer-text font-manrope"></div>
-        `;
-        div.querySelector('.answer-cat').textContent = item.bloco || item.pergunta || 'Resposta';
-        div.querySelector('.answer-text').textContent = `"${item.resposta || 'Sem resposta'}"`;
-        container.appendChild(div);
-      });
-    }
+  itens.forEach((item) => {
+    // pula respostas muito curtas (ex: só idade, nome solto)
+    const resposta = String(item.resposta || '').trim();
+    if (resposta.length < 5) return;
+
+    const div = document.createElement('div');
+    div.className = 'answer-item';
+    div.innerHTML = `
+      <div class="answer-cat font-jakarta"></div>
+      <div class="answer-text font-manrope"></div>
+    `;
+    // usa a pergunta como label, não o bloco
+    div.querySelector('.answer-cat').textContent = item.pergunta || item.bloco || 'Resposta';
+div.querySelector('.answer-text').textContent = `"${item.resposta}"`;
+  });
+}
 
     function respostasDaIa(perfil) {
       const destaque = perfil?.respostasDestaque || {};
@@ -817,25 +867,36 @@
       });
     }
 
-    function renderPlano(perfil) {
-      document.getElementById('studyFocus').textContent = perfil.areaPrincipal || 'seu mapa de carreira';
-      const container = document.getElementById('studyItems');
-      container.innerHTML = '';
-      const passos = (perfil.proximosPassos || perfil.caminhos?.[0]?.passos || []).slice(0, 5);
+function renderPlano(perfil) {
+  document.getElementById('studyFocus').textContent = perfil.areaPrincipal || 'seu mapa de carreira';
+  const container = document.getElementById('studyItems');
+  container.innerHTML = '';
+  const passos = (perfil.proximosPassos || perfil.caminhos?.[0]?.passos || []).slice(0, 5);
+  if (!passos.length) passos.push({ titulo: 'Revisar seu resultado completo', descricao: 'Acesse o mapa de carreira e leia com atenção as áreas recomendadas.' });
 
-      if (!passos.length) passos.push('Revisar seu resultado completo', 'Escolher o primeiro curso recomendado');
+  passos.forEach((passo) => {
+    const titulo = typeof passo === 'string' ? passo : (passo.titulo || passo);
+    const descricao = typeof passo === 'string' ? null : (passo.descricao || null);
 
-      passos.forEach((passo, index) => {
-        const div = document.createElement('div');
-        div.className = 'study-item';
-        div.innerHTML = `
-          <div class="study-radio ${index === 0 ? 'done' : 'pending'}"></div>
-          <span class="font-manrope"></span>
-        `;
-        div.querySelector('span').textContent = passo;
-        container.appendChild(div);
+    const item = document.createElement('div');
+    item.className = 'study-item';
+    item.innerHTML = `
+      <div class="study-item-header">
+        <span class="font-manrope">${titulo}</span>
+        ${descricao ? `<svg class="study-item-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>` : ''}
+      </div>
+      ${descricao ? `<div class="study-item-body"><p class="font-manrope">${descricao}</p></div>` : ''}
+    `;
+
+    if (descricao) {
+      item.querySelector('.study-item-header').addEventListener('click', () => {
+        item.classList.toggle('open');
       });
     }
+
+    container.appendChild(item);
+  });
+}
 
     function openOverlay(index) {
       if (typeof index === 'string') {
@@ -900,8 +961,7 @@
         document.getElementById('compatFill').style.width = `${compat}%`;
 
         renderSkills(perfil.skills || []);
-        const respostasIa = respostasDaIa(perfil);
-        renderRespostas(respostasIa.length ? respostasIa : (respostasData.respostas || []));
+        renderRespostas(respostasData.respostas || []);
         renderAreas(perfil);
         renderPlano(perfil);
       } catch (error) {
@@ -914,6 +974,47 @@
     });
 
     carregarInicial();
+
+    async function abrirTodasRespostas(e) {
+  e.preventDefault();
+  const overlay = document.getElementById('respostasOverlay');
+  const container = document.getElementById('todasRespostasList');
+  container.innerHTML = '<p style="color:rgba(255,255,255,0.4); font-size:0.85rem">Carregando...</p>';
+  overlay.classList.add('open');
+
+  try {
+const data = await testeApi.respostasDestaque(22, false);
+
+    const respostas = data.respostas || [];
+    container.innerHTML = '';
+
+    if (!respostas.length) {
+      container.innerHTML = '<p style="color:rgba(255,255,255,0.4); font-size:0.85rem">Nenhuma resposta encontrada.</p>';
+      return;
+    }
+
+    respostas.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'answer-item';
+      div.style.marginBottom = '1.2rem';
+      div.innerHTML = `
+        <div class="answer-cat font-jakarta"></div>
+        <div class="answer-text font-manrope"></div>
+      `;
+      div.querySelector('.answer-cat').textContent = item.bloco || item.pergunta || 'Resposta';
+      div.querySelector('.answer-text').textContent = item.pergunta
+        ? `${item.pergunta}: "${item.resposta}"`
+        : `"${item.resposta}"`;
+      container.appendChild(div);
+    });
+  } catch (err) {
+    container.innerHTML = '<p style="color:rgba(255,255,255,0.4); font-size:0.85rem">Erro ao carregar respostas.</p>';
+  }
+}
+
+document.getElementById('respostasOverlay').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
   </script>
 
 </body>

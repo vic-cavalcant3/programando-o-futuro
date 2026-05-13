@@ -254,6 +254,116 @@
       box-shadow: 0 12px 30px rgba(37,99,235,0.4);
     }
 
+    /* ====== MINIGAME ====== */
+.minigame-wrap {
+  margin-top: 2rem;
+  background: rgba(17,24,39,0.7);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  padding: 1.5rem 1.2rem 1.2rem;
+  width: 100%; max-width: 340px;
+  margin-left: auto; margin-right: auto;
+}
+.minigame-hint {
+  font-size: 0.78rem; color: rgba(255,255,255,0.35);
+  margin-bottom: 1.2rem; text-align: center;
+}
+.minigame-core {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.mine-btn {
+  width: 90px; height: 90px;
+  background: rgba(37,99,235,0.12);
+  border: 2px solid rgba(37,99,235,0.3);
+  border-radius: 50%;
+  color: #3b82f6;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.08s, background 0.15s, border-color 0.15s;
+  position: relative; z-index: 1;
+  user-select: none;
+}
+.mine-btn:active {
+  transform: scale(0.88);
+  background: rgba(37,99,235,0.25);
+  border-color: rgba(37,99,235,0.6);
+}
+.mine-btn.leveled {
+  animation: levelPop 0.4s ease both;
+  border-color: #facc15;
+  color: #facc15;
+}
+@keyframes levelPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.mine-particles {
+  position: absolute; inset: 0; pointer-events: none;
+}
+.particle {
+  position: absolute;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.82rem; font-weight: 700;
+  color: #facc15;
+  animation: floatUp 0.8s ease forwards;
+  pointer-events: none;
+}
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-55px) scale(0.7); }
+}
+.mine-stats {
+  display: flex; justify-content: space-around; margin-bottom: 0.8rem;
+}
+.mine-stat { text-align: center; }
+.mine-stat-val {
+  display: block;
+  font-size: 1.2rem; font-weight: 800; color: #f0f6ff;
+  line-height: 1.1;
+}
+.mine-stat-label {
+  font-size: 0.65rem; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.mine-xp-bar {
+  width: 100%; height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px; overflow: hidden; margin-bottom: 1rem;
+}
+.mine-xp-fill {
+  height: 100%; background: #2563eb;
+  border-radius: 4px; width: 0%;
+  transition: width 0.3s ease;
+}
+.mine-upgrades {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.upgrade-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 0.9rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.upgrade-btn:hover:not(:disabled) {
+  border-color: rgba(37,99,235,0.3);
+  background: rgba(37,99,235,0.06);
+}
+.upgrade-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.upgrade-name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem; color: rgba(255,255,255,0.7);
+}
+.upgrade-cost {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem; font-weight: 700; color: #facc15;
+}
+
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -272,41 +382,60 @@
   <div class="bg-glow"></div>
 
   <!-- LOADING -->
-  <div class="loading-wrap" id="loadingWrap">
-    <div class="loader-ring"></div>
-    <h2 class="loading-title font-jakarta">Analisando seu perfil...</h2>
-    <p class="loading-desc font-manrope">Nossa IA está processando suas respostas</p>
+ <!-- LOADING -->
+<div class="loading-wrap" id="loadingWrap">
+  <div class="loader-ring"></div>
+  <h2 class="loading-title font-jakarta">Analisando seu perfil...</h2>
+  <p class="loading-desc font-manrope">Nossa IA está processando suas respostas</p>
 
-    <!--
-      TODO BACK-END:
-      Os steps abaixo são visuais apenas.
-      O status real depende do processamento da API.
-      Endpoint: POST /api/teste/processar → retorna { area, percentual, ... }
-    -->
-    <div class="loading-steps" id="loadingSteps">
-      <div class="loading-step" id="step1">
-        <div class="step-check">
-          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-        </div>
-        <span class="font-manrope">Lendo suas respostas</span>
-      </div>
-      <div class="loading-step" id="step2">
-        <div class="step-check"></div>
-        <span class="font-manrope">Mapeando seu perfil cognitivo</span>
-      </div>
-      <div class="loading-step" id="step3">
-        <div class="step-check"></div>
-        <span class="font-manrope">Cruzando com áreas do mercado</span>
-      </div>
-      <div class="loading-step" id="step4">
-        <div class="step-check"></div>
-        <span class="font-manrope">Gerando seu mapa de carreira</span>
-      </div>
+  <div class="loading-steps" id="loadingSteps">
+    <div class="loading-step" id="step1">
+      <div class="step-check"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="font-manrope">Lendo suas respostas</span>
+    </div>
+    <div class="loading-step" id="step2">
+      <div class="step-check"></div>
+      <span class="font-manrope">Mapeando seu perfil cognitivo</span>
+    </div>
+    <div class="loading-step" id="step3">
+      <div class="step-check"></div>
+      <span class="font-manrope">Cruzando com áreas do mercado</span>
+    </div>
+    <div class="loading-step" id="step4">
+      <div class="step-check"></div>
+      <span class="font-manrope">Gerando seu mapa de carreira</span>
     </div>
   </div>
 
+  <!-- MINI GAME -->
+  <!-- <div class="minigame-wrap">
+    <p class="minigame-hint font-manrope">Enquanto isso... mine seu futuro ⚡</p>
+    <div class="minigame-core">
+      <button class="mine-btn" id="mineBtn" onclick="mineClick()">
+        <svg width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      </button>
+      <div class="mine-particles" id="mineParticles"></div>
+    </div>
+    <div class="mine-stats">
+      <div class="mine-stat">
+        <span class="mine-stat-val font-jakarta" id="mineCoins">0</span>
+        <span class="mine-stat-label font-manrope">Coins</span>
+      </div>
+      <div class="mine-stat">
+        <span class="mine-stat-val font-jakarta" id="mineLevel">1</span>
+        <span class="mine-stat-label font-manrope">Nível</span>
+      </div>
+      <div class="mine-stat">
+        <span class="mine-stat-val font-jakarta" id="mineCps">0</span>
+        <span class="mine-stat-label font-manrope">CPS</span>
+      </div>
+    </div>
+    <div class="mine-xp-bar"><div class="mine-xp-fill" id="mineXpFill"></div></div>
+    <div class="mine-upgrades" id="mineUpgrades"></div>
+  </div> -->
+</div>
   <!-- RESULTADO -->
   <div class="result-wrap" id="resultWrap">
     <div class="result-icon">
@@ -476,7 +605,9 @@
         renderLista('secondaryAreas', resultado.areasSecundarias, (area) =>
           `${area.nome || 'Area recomendada'}${area.percentual ? ` - ${area.percentual}%` : ''}`
         );
-        renderLista('nextSteps', resultado.proximosPassos);
+        renderLista('nextSteps', resultado.proximosPassos, (passo) =>
+  typeof passo === 'string' ? passo : (passo.titulo || '')
+);
         renderLista('pathsList', resultado.caminhos, (caminho) =>
           `${caminho.titulo || 'Caminho recomendado'}${caminho.prazo ? ` (${caminho.prazo})` : ''}`
         );
@@ -495,6 +626,93 @@
     }
 
     mostrarResultado();
+
+
+    // ── MINIGAME ──────────────────────────────────────────────────────
+/*let coins = 0, level = 1, xp = 0, cps = 0;
+const xpNeeded = () => level * 15;
+
+const upgrades = [
+  { id: 'auto1', name: '⚡ Auto-miner I',  cost: 20,  cps: 1,  bought: false },
+  { id: 'auto2', name: '🔥 Auto-miner II', cost: 80,  cps: 5,  bought: false },
+  { id: 'auto3', name: '🚀 Turbo Miner',   cost: 250, cps: 20, bought: false },
+];
+
+function renderUpgrades() {
+  const wrap = document.getElementById('mineUpgrades');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  upgrades.forEach(u => {
+    const btn = document.createElement('button');
+    btn.className = 'upgrade-btn';
+    btn.disabled = coins < u.cost || u.bought;
+    btn.innerHTML = `<span class="upgrade-name">${u.bought ? '✅ ' : ''}${u.name}</span><span class="upgrade-cost">${u.bought ? 'Comprado' : u.cost + ' coins'}</span>`;
+    if (!u.bought) btn.onclick = () => buyUpgrade(u);
+    wrap.appendChild(btn);
+  });
+}
+
+function buyUpgrade(u) {
+  if (coins < u.cost || u.bought) return;
+  coins -= u.cost;
+  u.bought = true;
+  cps += u.cps;
+  document.getElementById('mineCps').textContent = cps;
+  updateCoinsDisplay();
+  renderUpgrades();
+}
+
+function spawnParticle(amount) {
+  const wrap = document.getElementById('mineParticles');
+  if (!wrap) return;
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.textContent = '+' + amount;
+  p.style.left = (35 + Math.random() * 30) + '%';
+  p.style.top = '20%';
+  wrap.appendChild(p);
+  setTimeout(() => p.remove(), 820);
+}
+
+function updateCoinsDisplay() {
+  const el = document.getElementById('mineCoins');
+  if (el) el.textContent = Math.floor(coins);
+}
+
+function gainXp(amount) {
+  xp += amount;
+  const needed = xpNeeded();
+  if (xp >= needed) {
+    xp -= needed;
+    level++;
+    document.getElementById('mineLevel').textContent = level;
+    const btn = document.getElementById('mineBtn');
+    if (btn) { btn.classList.add('leveled'); setTimeout(() => btn.classList.remove('leveled'), 420); }
+  }
+  const fill = document.getElementById('mineXpFill');
+  if (fill) fill.style.width = Math.min(100, (xp / xpNeeded()) * 100) + '%';
+}
+
+function mineClick() {
+  const gain = level;
+  coins += gain;
+  updateCoinsDisplay();
+  gainXp(1);
+  spawnParticle(gain);
+  renderUpgrades();
+}
+
+setInterval(() => {
+  if (cps > 0) {
+    coins += cps / 10;
+    updateCoinsDisplay();
+    gainXp(cps / 20);
+    renderUpgrades();
+  }
+}, 100);
+
+renderUpgrades();*/
+// ── FIM MINIGAME ──────────────────────────────────────────────────
   </script>
 </body>
 </html>
