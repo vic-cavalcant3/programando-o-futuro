@@ -5,7 +5,6 @@
 
 const API_URL = 'https://programando-o-futuro.onrender.com';
 
-
 // ── Token helpers ──────────────────────────────────────────
 const auth = {
   getToken:  ()      => localStorage.getItem('pf_token'),
