@@ -1,0 +1,59 @@
+{
+  "usuarios": {
+    "9269b32c-2c9d-4d28-b243-05be67b0d358": {
+      "id": "9269b32c-2c9d-4d28-b243-05be67b0d358",
+      "nome": "victor cavalcante",
+      "email": "victorrocha0223@gmail.com",
+      "senha": "251207",
+      "avatar_iniciais": "VC",
+      "aceite_lgpd": true,
+      "aceite_menor": false,
+      "teste_inicial_concluido": false,
+      "modulos_concluidos": [],
+      "criado_em": "2026-05-13T00:28:52.438031"
+    }
+  },
+  "respostas_teste": {
+    "9269b32c-2c9d-4d28-b243-05be67b0d358": {
+      "4": {
+        "valor": "E",
+        "textoLivre": ""
+      },
+      "5": {
+        "valor": "B",
+        "textoLivre": ""
+      },
+      "6": {
+        "valor": "A",
+        "textoLivre": ""
+      },
+      "7": {
+        "valor": "B",
+        "textoLivre": ""
+      },
+      "8": {
+        "valor": "A",
+        "textoLivre": ""
+      },
+      "9": {
+        "valor": "A",
+        "textoLivre": ""
+      },
+      "10": {
+        "valor": "C",
+        "textoLivre": ""
+      },
+      "11": {
+        "valor": "B",
+        "textoLivre": ""
+      },
+      "12": {
+        "valor": "B",
+        "textoLivre": ""
+      }
+    }
+  },
+  "respostas_modulos": {},
+  "perfis": {},
+  "contexto_livre": {}
+}

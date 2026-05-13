@@ -140,6 +140,7 @@ const authApi = {
 const testeApi = {
   perguntas:  ()             => api.get('/api/testeinicial/perguntas'),
   progresso:  ()             => api.get('/api/testeinicial/progresso'),
+  respostasDestaque: (limite = 3) => api.get(`/api/testeinicial/respostas/destaque?limite=${limite}`),
   salvarResposta: (perguntaId, valor, textoLivre = '') =>
     api.patch('/api/testeinicial/resposta', { perguntaId: String(perguntaId), valor, textoLivre }),
   finalizar: (respostas)     => api.post('/api/testeinicial/finalizar', { respostas }),

@@ -75,7 +75,7 @@
     .hero-section p {
       font-family: 'Manrope', sans-serif;
       font-size: 0.95rem; color: rgba(255,255,255,0.5);
-      line-height: 1.7; max-width: 480px;
+      line-height: 1.7; max-width: 780px;
     }
 
     /* ====== PROFILE GRID ====== */
@@ -539,8 +539,8 @@
         </ul>
       </nav>
       <div class="nav-user">
-        <span class="font-manrope">Olá, Lucas</span>
-        <div class="nav-avatar font-jakarta">LG</div>
+        <span class="font-manrope" id="navGreeting">Olá</span>
+        <div class="nav-avatar font-jakarta" id="navAvatar">PF</div>
       </div>
       <button class="btn-hamburger" onclick="openSidebar()">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -556,8 +556,8 @@
 
     <!-- HERO -->
     <div class="hero-section fade-up">
-      <h1 class="font-jakarta">Bem-vindo de volta, <span class="accent">Lucas!</span></h1>
-      <p class="font-manrope">Seu perfil está pronto. Veja suas áreas recomendadas e continue sua jornada de descoberta tecnológica.</p>
+      <h1 class="font-jakarta">Bem-vindo de volta, <span class="accent" id="heroName">aluno!</span></h1>
+      <p class="font-manrope" id="heroDesc">Seu perfil está pronto. Veja suas áreas recomendadas e continue sua jornada de descoberta tecnológica.</p>
     </div>
 
     <!-- PROFILE GRID -->
@@ -566,7 +566,7 @@
       <!-- Card perfil -->
       <div class="profile-card">
         <div class="profile-card-header">
-          <h2 class="font-jakarta">Lucas Gomes</h2>
+          <h2 class="font-jakarta" id="profileName">Seu perfil</h2>
           <div class="profile-shield">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -574,20 +574,16 @@
             </svg>
           </div>
         </div>
-        <div class="profile-tag font-jakarta">Desenvolvedor Front-End</div>
+        <div class="profile-tag font-jakarta" id="profileTag">Perfil em construção</div>
         <div class="compat-row">
           <span class="compat-label font-manrope">Compatibilidade Geral</span>
-          <span class="compat-pct font-jakarta">87%</span>
+          <span class="compat-pct font-jakarta" id="compatPct">0%</span>
         </div>
         <div class="progress-bar">
-          <div class="progress-fill" style="width: 87%"></div>
+          <div class="progress-fill" id="compatFill" style="width: 0%"></div>
         </div>
         <div class="skills-label font-jakarta">Hard Skills em Foco</div>
-        <div class="skills-tags">
-          <span class="skill-tag font-manrope">Pensamento Analítico</span>
-          <span class="skill-tag font-manrope">Comunicação</span>
-          <span class="skill-tag font-manrope">Resolução de Problemas</span>
-        </div>
+        <div class="skills-tags" id="skillsTags"></div>
       </div>
 
       <!-- Card respostas -->
@@ -599,18 +595,7 @@
           </svg>
           O que você nos contou
         </h3>
-        <div class="answer-item">
-          <div class="answer-cat font-jakarta">Preferência de Trabalho</div>
-          <div class="answer-text font-manrope">"Gosto de ver o resultado visual imediato do meu código."</div>
-        </div>
-        <div class="answer-item">
-          <div class="answer-cat font-jakarta">Ambiente Ideal</div>
-          <div class="answer-text font-manrope">"Times ágeis e colaborativos com foco em produto."</div>
-        </div>
-        <div class="answer-item">
-          <div class="answer-cat font-jakarta">Frequência de Estudo</div>
-          <div class="answer-text font-manrope">"Diariamente, prefiro aprender fazendo."</div>
-        </div>
+        <div id="answersList"></div>
         <a href="#" class="answers-link font-manrope">
           Ver todas as respostas →
         </a>
@@ -619,7 +604,7 @@
 
     <!-- ÁREAS RECOMENDADAS -->
     <h2 class="areas-title font-jakarta fade-up delay-2">Suas áreas recomendadas</h2>
-    <div class="areas-grid fade-up delay-2">
+    <div class="areas-grid fade-up delay-2" id="areasGrid">
 
       <div class="area-card first">
         <div class="area-card-top">
@@ -664,17 +649,8 @@
         </svg>
         <h3 class="font-jakarta">Plano de Estudos</h3>
       </div>
-      <p class="study-focus font-manrope">Focado em <strong>Engenharia &amp; Tecnologia</strong></p>
-      <div class="study-items">
-        <div class="study-item">
-          <div class="study-radio done"></div>
-          <span class="font-manrope">Cálculo Diferencial e Integral III</span>
-        </div>
-        <div class="study-item">
-          <div class="study-radio pending"></div>
-          <span class="font-manrope">Estruturas de Dados Avançadas</span>
-        </div>
-      </div>
+      <p class="study-focus font-manrope">Focado em <strong id="studyFocus">seu mapa de carreira</strong></p>
+      <div class="study-items" id="studyItems"></div>
       <a href="#" class="btn-continuar font-jakarta" onclick="window.location.href='minha_jornada.html'">Continuar Jornada</a>
     </div>
 
@@ -685,7 +661,7 @@
 
   <script src="../js/api.js"></script>
   <script>
-    protegerPagina({ precisaMapaFeito: true });
+    const paginaProtegida = protegerPagina({ precisaMapaFeito: true });
   </script>
   <script src="../js/sidebar.js"></script>
   <script src="../js/footer.js"></script>
@@ -696,20 +672,248 @@
       navbar.classList.toggle('scrolled', window.scrollY > 40);
     });
 
-    function openOverlay(title, pct, badge) {
-  document.getElementById('overlayTitle').textContent = title;
-  document.getElementById('overlayPct').textContent = pct + '% compatível com seu perfil';
-  document.getElementById('overlayBadge').textContent = badge || '';
-  document.getElementById('overlayBadge').style.display = badge ? 'inline-block' : 'none';
-  document.getElementById('areaOverlay').classList.add('open');
-}
-function closeOverlay() {
-  document.getElementById('areaOverlay').classList.remove('open');
-}
-// fecha clicando fora
-document.getElementById('areaOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeOverlay();
-});
+    let areasRecomendadas = [];
+    let perfilAtual = null;
+
+    function primeiroNome(nome = '') {
+      return String(nome).trim().split(/\s+/)[0] || 'aluno';
+    }
+
+    function iniciais(nome = '') {
+      const partes = String(nome).trim().split(/\s+/).filter(Boolean);
+      return partes.slice(0, 2).map((parte) => parte[0].toUpperCase()).join('') || 'PF';
+    }
+
+    function pct(valor) {
+      const numero = Number(valor || 0);
+      return Math.max(0, Math.min(100, Math.round(numero)));
+    }
+
+    function limitarTexto(texto, limite = 145) {
+      const valor = String(texto || '').replace(/\s+/g, ' ').trim();
+      if (valor.length <= limite) return valor;
+      return `${valor.slice(0, limite - 1).trim()}…`;
+    }
+
+    function criarTextoArea(area) {
+      if (area.justificativa) return limitarTexto(area.justificativa);
+      const caminho = (perfilAtual?.caminhos || []).find((item) =>
+        String(item.titulo || '').toLowerCase().includes(String(area.nome || '').toLowerCase())
+      );
+      if (caminho?.descricao) return limitarTexto(caminho.descricao);
+      const prefixo = area.principal ? 'Ficou em 1º lugar' : 'Também apareceu bem colocada';
+      return limitarTexto(`${prefixo} porque suas respostas indicam compatibilidade com ${area.nome}.`);
+    }
+
+    function resumoPerfil(perfil) {
+      if (perfil.perfilResumoClaro) return limitarTexto(perfil.perfilResumoClaro, 120);
+      const area = perfil.areaPrincipal || 'a área recomendada';
+      const skills = (perfil.skills || []).slice(0, 2).join(' e ');
+      if (skills) return limitarTexto(`Você combina com ${area} por mostrar força em ${skills}.`, 120);
+      return `Você combina com ${area} pelo conjunto das suas respostas.`;
+    }
+
+    function textoHeroInicial(perfil) {
+      const area = perfil.areaPrincipal || 'sua área principal';
+      return `Seu perfil aponta para ${area}. Veja as áreas mais compatíveis e os primeiros passos recomendados.`;
+    }
+
+    function renderSkills(skills = []) {
+      const container = document.getElementById('skillsTags');
+      container.innerHTML = '';
+      const itens = skills.slice(0, 5);
+      if (!itens.length) itens.push('Perfil em análise');
+
+      itens.forEach((skill) => {
+        const span = document.createElement('span');
+        span.className = 'skill-tag font-manrope';
+        span.textContent = skill;
+        container.appendChild(span);
+      });
+    }
+
+    function renderRespostas(respostas = []) {
+      const container = document.getElementById('answersList');
+      container.innerHTML = '';
+      const itens = respostas.slice(0, 3);
+
+      if (!itens.length) {
+        const vazio = document.createElement('div');
+        vazio.className = 'answer-text font-manrope';
+        vazio.textContent = 'Suas respostas aparecerão aqui quando o teste estiver salvo.';
+        container.appendChild(vazio);
+        return;
+      }
+
+      itens.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'answer-item';
+        div.innerHTML = `
+          <div class="answer-cat font-jakarta"></div>
+          <div class="answer-text font-manrope"></div>
+        `;
+        div.querySelector('.answer-cat').textContent = item.bloco || item.pergunta || 'Resposta';
+        div.querySelector('.answer-text').textContent = `"${item.resposta || 'Sem resposta'}"`;
+        container.appendChild(div);
+      });
+    }
+
+    function respostasDaIa(perfil) {
+      const destaque = perfil?.respostasDestaque || {};
+      return Object.entries(destaque)
+        .filter(([, resposta]) => String(resposta || '').trim())
+        .map(([chave, resposta]) => ({
+          bloco: chave.replace(/([A-Z])/g, ' $1').trim(),
+          resposta,
+        }));
+    }
+
+    function montarAreas(perfil) {
+      const principal = {
+        nome: perfil.areaPrincipal || 'Área recomendada',
+        percentual: pct(perfil.percentualCompatibilidade),
+        justificativa: perfil.areaPrincipalJustificativa || perfil.justificativaAreaPrincipal || '',
+        principal: true,
+      };
+      const secundarias = (perfil.areasSecundarias || []).map((area) => ({
+        nome: area.nome || 'Área secundária',
+        percentual: pct(area.percentual),
+        justificativa: area.justificativa || '',
+        principal: false,
+      }));
+      return [principal, ...secundarias].slice(0, 3);
+    }
+
+    function renderAreas(perfil) {
+      const container = document.getElementById('areasGrid');
+      areasRecomendadas = montarAreas(perfil);
+      container.innerHTML = '';
+
+      areasRecomendadas.forEach((area, index) => {
+        const card = document.createElement('div');
+        card.className = `area-card${index === 0 ? ' first' : ''}`;
+        card.innerHTML = `
+          <div class="area-card-top">
+            <span class="area-badge-first font-jakarta"></span>
+            <span class="area-pct font-manrope"></span>
+          </div>
+          <div class="area-num"></div>
+          <h3 class="font-jakarta"></h3>
+          <p class="font-manrope"></p>
+          <button class="btn-area font-jakarta" type="button">Ver mais</button>
+        `;
+        const badge = card.querySelector('.area-badge-first');
+        badge.textContent = index === 0 ? '1º Lugar' : '';
+        badge.style.display = index === 0 ? 'inline-block' : 'none';
+        card.querySelector('.area-pct').classList.add(index === 0 ? 'high' : 'mid');
+        card.querySelector('.area-pct').textContent = `${area.percentual}% compatível`;
+        card.querySelector('.area-num').textContent = String(index + 1).padStart(2, '0');
+        card.querySelector('h3').textContent = area.nome;
+        card.querySelector('p').textContent = criarTextoArea(area);
+        const btn = card.querySelector('button');
+        btn.classList.add(index === 0 ? 'filled' : 'outline');
+        btn.addEventListener('click', () => openOverlay(index));
+        container.appendChild(card);
+      });
+    }
+
+    function renderPlano(perfil) {
+      document.getElementById('studyFocus').textContent = perfil.areaPrincipal || 'seu mapa de carreira';
+      const container = document.getElementById('studyItems');
+      container.innerHTML = '';
+      const passos = (perfil.proximosPassos || perfil.caminhos?.[0]?.passos || []).slice(0, 5);
+
+      if (!passos.length) passos.push('Revisar seu resultado completo', 'Escolher o primeiro curso recomendado');
+
+      passos.forEach((passo, index) => {
+        const div = document.createElement('div');
+        div.className = 'study-item';
+        div.innerHTML = `
+          <div class="study-radio ${index === 0 ? 'done' : 'pending'}"></div>
+          <span class="font-manrope"></span>
+        `;
+        div.querySelector('span').textContent = passo;
+        container.appendChild(div);
+      });
+    }
+
+    function openOverlay(index) {
+      if (typeof index === 'string') {
+        const title = index;
+        const percent = pct(arguments[1]);
+        document.getElementById('overlayTitle').textContent = title;
+        document.getElementById('overlayPct').textContent = `${percent}% compatível com seu perfil`;
+        document.getElementById('overlayBadge').textContent = arguments[2] || '';
+        document.getElementById('overlayBadge').style.display = arguments[2] ? 'inline-block' : 'none';
+        document.getElementById('areaOverlay').classList.add('open');
+        return;
+      }
+
+      const area = areasRecomendadas[index] || areasRecomendadas[0];
+      if (!area) return;
+
+      document.getElementById('overlayTitle').textContent = area.nome;
+      document.getElementById('overlayPct').textContent = `${area.percentual}% compatível com seu perfil`;
+      document.getElementById('overlayBadge').textContent = index === 0 ? '1º Lugar' : '';
+      document.getElementById('overlayBadge').style.display = index === 0 ? 'inline-block' : 'none';
+      document.getElementById('overlayDesc').textContent = criarTextoArea(area);
+      document.getElementById('overlayWhy').textContent =
+        area.justificativa || resumoPerfil(perfilAtual || {}) || 'A IA identificou uma boa combinação entre suas respostas, interesses e contexto.';
+
+      const steps = document.getElementById('overlaySteps');
+      steps.innerHTML = '';
+      const passos = (perfilAtual?.proximosPassos || perfilAtual?.caminhos?.[0]?.passos || []).slice(0, 4);
+      (passos.length ? passos : ['Ver seu resultado completo', 'Começar pela primeira ação recomendada']).forEach((passo) => {
+        const li = document.createElement('li');
+        li.textContent = passo;
+        steps.appendChild(li);
+      });
+
+      document.getElementById('areaOverlay').classList.add('open');
+    }
+
+    function closeOverlay() {
+      document.getElementById('areaOverlay').classList.remove('open');
+    }
+
+    async function carregarInicial() {
+      const usuario = await paginaProtegida;
+      if (!usuario) return;
+
+      try {
+        const [perfil, respostasData] = await Promise.all([
+          perfilApi.get(),
+          testeApi.respostasDestaque(3),
+        ]);
+        perfilAtual = perfil;
+
+        const nome = usuario.nome || 'Aluno';
+        document.getElementById('navGreeting').textContent = `Olá, ${primeiroNome(nome)}`;
+        document.getElementById('navAvatar').textContent = usuario.avatar_iniciais || iniciais(nome);
+        document.getElementById('heroName').textContent = `${primeiroNome(nome)}!`;
+        document.getElementById('profileName').textContent = nome;
+        document.getElementById('profileTag').textContent = resumoPerfil(perfil);
+        document.getElementById('heroDesc').textContent = textoHeroInicial(perfil);
+
+        const compat = pct(perfil.percentualCompatibilidade);
+        document.getElementById('compatPct').textContent = `${compat}%`;
+        document.getElementById('compatFill').style.width = `${compat}%`;
+
+        renderSkills(perfil.skills || []);
+        const respostasIa = respostasDaIa(perfil);
+        renderRespostas(respostasIa.length ? respostasIa : (respostasData.respostas || []));
+        renderAreas(perfil);
+        renderPlano(perfil);
+      } catch (error) {
+        console.error('Erro ao carregar página inicial do mapa:', error);
+      }
+    }
+
+    document.getElementById('areaOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeOverlay();
+    });
+
+    carregarInicial();
   </script>
 
 </body>

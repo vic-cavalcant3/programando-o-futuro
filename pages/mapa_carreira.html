@@ -19,7 +19,7 @@
       transition: all 0.3s;
     }
     .navbar.scrolled { padding: 0.7rem 0; background: rgba(6,11,20,0.98); }
-    .navbar .container {
+    .navbar .container {  
       display: flex; align-items: center; justify-content: space-between;
       max-width: 1200px; margin: 0 auto; padding: 0 2rem;
       flex-wrap: nowrap;
@@ -133,7 +133,7 @@
     .timeline { display: flex; flex-direction: column; gap: 0; }
 
     .timeline-step {
-      display: flex; align-items: flex-start; gap: 1.2rem;
+      display: flex; align-items: flex-start; gap: 0.85rem;
       position: relative;
     }
 
@@ -141,7 +141,7 @@
     .timeline-step:not(:last-child)::after {
       content: '';
       position: absolute;
-      left: 31px; top: 72px;
+      left: 23px; top: 58px;
       width: 2px; height: calc(100% - 30px);
       background: rgba(255,255,255,0.06);
       z-index: 0;
@@ -149,7 +149,7 @@
     .timeline-step.done::after { background: rgba(37,99,235,0.3); }
 
     .step-icon-wrap {
-      width: 64px; height: 64px; flex-shrink: 0;
+      width: 48px; height: 48px; flex-shrink: 0;
       background: rgba(17,24,39,0.9);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
@@ -169,14 +169,17 @@
     .timeline-step.locked .step-icon-wrap {
       opacity: 0.4;
     }
+    .timeline-step.locked.active .step-icon-wrap {
+      opacity: 1;
+    }
 
     .step-content {
       flex: 1;
       background: rgba(17,24,39,0.9);
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 16px;
-      padding: 1.4rem 1.6rem;
-      margin-bottom: 1.2rem;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.8rem;
       cursor: pointer;
       transition: all 0.3s;
     }
@@ -190,19 +193,22 @@
     .timeline-step.locked .step-content {
       opacity: 0.5; cursor: not-allowed;
     }
+    .timeline-step.locked.active .step-content {
+      opacity: 1; cursor: pointer;
+    }
 
     .step-content h3 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1rem; font-weight: 800; color: #f0f6ff;
-      margin-bottom: 0.3rem;
+      font-size: 0.92rem; font-weight: 800; color: #f0f6ff;
+      margin-bottom: 0.22rem;
     }
     .timeline-step.locked .step-content h3 {
       color: rgba(255,255,255,0.4);
     }
     .step-content .step-sub {
       font-family: 'Manrope', sans-serif;
-      font-size: 0.78rem; color: #3b82f6;
-      margin-bottom: 0.7rem;
+      font-size: 0.74rem; color: #3b82f6;
+      margin-bottom: 0.55rem;
     }
     .timeline-step.locked .step-content .step-sub {
       color: rgba(255,255,255,0.25);
@@ -236,13 +242,13 @@
     .details-card {
       background: rgba(17,24,39,0.9);
       border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px;
-      padding: 2rem;
+      border-radius: 18px;
+      padding: 1.5rem;
       position: sticky;
       top: 90px;
     }
     .details-header {
-      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;
     }
     .details-icon {
       width: 48px; height: 48px;
@@ -254,7 +260,7 @@
     }
     .details-header h2 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.2rem; font-weight: 800; color: #f0f6ff;
+      font-size: 1.05rem; font-weight: 800; color: #f0f6ff;
       margin-bottom: 0.2rem;
     }
     .details-level {
@@ -263,7 +269,7 @@
       color: #3b82f6; letter-spacing: 0.1em; text-transform: uppercase;
     }
 
-    .details-section { margin-bottom: 1.5rem; }
+    .details-section { margin-bottom: 1.1rem; }
     .details-section-label {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.62rem; font-weight: 700;
@@ -277,9 +283,9 @@
       display: flex; align-items: center; gap: 0.8rem;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px; padding: 0.7rem 1rem;
+      border-radius: 10px; padding: 0.62rem 0.8rem;
       font-family: 'Manrope', sans-serif;
-      font-size: 0.85rem; color: rgba(255,255,255,0.65);
+      font-size: 0.78rem; color: rgba(255,255,255,0.65);
     }
     .study-item.done { color: rgba(255,255,255,0.4); text-decoration: line-through; }
     .study-check {
@@ -298,15 +304,37 @@
     }
     .study-check.pending { border-color: rgba(255,255,255,0.15); }
 
+    .step-done-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      width: 100%;
+      margin: 0 0 1.1rem;
+      padding: 0.75rem 0.85rem;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.18);
+      border-radius: 12px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.72);
+      cursor: pointer;
+    }
+    .step-done-toggle input {
+      width: 16px;
+      height: 16px;
+      accent-color: #10b981;
+      cursor: pointer;
+    }
+
     /* Stats row */
     .stats-row {
       display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.1rem;
     }
     .stat-box {
       background: rgba(37,99,235,0.08);
       border: 1px solid rgba(37,99,235,0.15);
-      border-radius: 12px; padding: 1rem;
+      border-radius: 12px; padding: 0.85rem;
     }
     .stat-box-label {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -316,18 +344,52 @@
     }
     .stat-box-value {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.1rem; font-weight: 800; color: #f0f6ff;
+      font-size: 0.95rem; font-weight: 800; color: #f0f6ff;
     }
 
     /* Ferramentas */
-    .tools-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .tools-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.1rem; }
     .tool-tag {
-      padding: 0.3rem 0.8rem;
+      padding: 0.28rem 0.65rem;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 8px;
       font-family: 'Manrope', sans-serif;
-      font-size: 0.75rem; color: rgba(255,255,255,0.6);
+      font-size: 0.7rem; color: rgba(255,255,255,0.6);
+    }
+
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-top: 1.4rem;
+    }
+    .recommendation-card {
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 1rem;
+    }
+    .recommendation-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #f0f6ff;
+      margin-bottom: 0.65rem;
+    }
+    .recommendation-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.48rem;
+    }
+    .recommendation-list li {
+      border-left: 2px solid rgba(37,99,235,0.45);
+      padding-left: 0.58rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.74rem;
+      color: rgba(255,255,255,0.62);
+      line-height: 1.38;
     }
 
     /* CTA btn */
@@ -393,6 +455,7 @@
     /* ====== RESPONSIVE ====== */
     @media (max-width: 900px) {
       .map-grid { grid-template-columns: 1fr; }
+      .recommendations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .details-card { position: static; }
       .page-hero { grid-template-columns: 1fr; }
       .progress-widget { width: fit-content; }
@@ -405,6 +468,7 @@
       }
       .page-title { font-size: clamp(1.8rem, 7vw, 2.4rem); }
       .stats-row { grid-template-columns: 1fr 1fr; }
+      .recommendations-grid { grid-template-columns: 1fr; }
       .footer-inner { flex-direction: column; align-items: flex-start; }
       .footer-links { flex-wrap: wrap; gap: 1rem; }
     }
@@ -425,8 +489,8 @@
         </ul>
       </nav>
       <div class="nav-user">
-        <span class="font-manrope">Olá, Lucas</span>
-        <div class="nav-avatar font-jakarta">LG</div>
+        <span class="font-manrope" id="navGreeting">Olá</span>
+        <div class="nav-avatar font-jakarta" id="navAvatar">PF</div>
       </div>
       <button class="btn-hamburger" onclick="openSidebar()">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -444,13 +508,13 @@
     <div class="page-hero fade-up">
       <div class="page-hero-left">
         <div class="page-label font-jakarta">Sua Jornada Evolutiva</div>
-        <h1 class="page-title font-jakarta">Seu Mapa:<br>Desenvolvimento Web</h1>
-        <p class="page-desc font-manrope">Navegue pelos módulos de conhecimento e visualize o caminho para se tornar um especialista de alto nível no mercado tecnológico.</p>
+        <h1 class="page-title font-jakarta" id="mapTitle">Seu Mapa:<br>Carregando...</h1>
+        <p class="page-desc font-manrope" id="mapDesc">Navegue pelos passos recomendados pela IA e visualize um caminho possível para sua carreira.</p>
       </div>
       <div class="progress-widget fade-up delay-1">
         <div class="progress-widget-info">
           <div class="progress-widget-label font-jakarta">Progresso Atual</div>
-          <div class="progress-widget-pct font-jakarta">32%</div>
+          <div class="progress-widget-pct font-jakarta" id="mapCompatPct">0%</div>
         </div>
         <div class="progress-widget-icon">
           <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
@@ -485,7 +549,7 @@
 
       <!-- TIMELINE -->
       <!-- TODO BACK-END: renderizar os steps dinamicamente com base na API -->
-      <div class="timeline">
+      <div class="timeline" id="timeline">
 
         <!-- Step 1 — Concluído -->
         <!-- TODO BACK-END: status "done" = classe "done" no timeline-step -->
@@ -570,6 +634,11 @@
           </div>
         </div>
 
+        <label class="step-done-toggle">
+          <input type="checkbox" id="stepDoneToggle" />
+          <span>Marcar esta etapa como concluída</span>
+        </label>
+
         <div class="details-section">
           <div class="details-section-label font-jakarta">O que estudar</div>
           <!-- TODO BACK-END: lista de estudos vem da API → { nome, concluido } -->
@@ -592,9 +661,9 @@
         </div>
 
         <div class="stats-row">
-          <!-- TODO BACK-END: salario e tempo vêm da API -->
+        
           <div class="stat-box">
-            <div class="stat-box-label font-jakarta">Salário Médio</div>
+            <div class="stat-box-label font-jakarta">Custo Médio</div>
             <div class="stat-box-value font-jakarta" id="detailsSalario">R$ 5k - 9k</div>
           </div>
           <div class="stat-box">
@@ -626,6 +695,29 @@
       </div>
 
     </div>
+
+    <div class="recommendations-grid fade-up delay-2">
+      <div class="recommendation-card">
+        <h3 class="font-jakarta">Caminhos possíveis</h3>
+        <ul class="recommendation-list" id="caminhosList"></ul>
+      </div>
+      <div class="recommendation-card">
+        <h3 class="font-jakarta">Faculdades recomendadas</h3>
+        <ul class="recommendation-list" id="faculdadesList"></ul>
+      </div>
+      <div class="recommendation-card">
+        <h3 class="font-jakarta">Cursos técnicos</h3>
+        <ul class="recommendation-list" id="cursosTecnicosList"></ul>
+      </div>
+      <div class="recommendation-card">
+        <h3 class="font-jakarta">Cursos online</h3>
+        <ul class="recommendation-list" id="cursosOnlineList"></ul>
+      </div>
+      <div class="recommendation-card">
+        <h3 class="font-jakarta">Programas do governo</h3>
+        <ul class="recommendation-list" id="programasList"></ul>
+      </div>
+    </div>
   </main>
 
   
@@ -633,6 +725,10 @@
   <div id="footer-placeholder"></div>
   
 
+  <script src="../js/api.js"></script>
+  <script>
+    const paginaProtegida = protegerPagina({ precisaMapaFeito: true });
+  </script>
   <script src="../js/sidebar.js"></script>
    <script src="../js/footer.js"></script>
   <script>
@@ -641,29 +737,207 @@
       navbar.classList.toggle('scrolled', window.scrollY > 40);
     });
 
-    function selectStep(step) {
-      /*
-        TODO BACK-END:
-        Buscar detalhes do step via API e popular o card da direita.
-        
-        Endpoint: GET /api/mapa/:userId/step/:stepId
-        
-        Resposta esperada:
-        {
-          titulo: string,
-          nivel: string,
-          estudos: [{ nome: string, concluido: boolean }],
-          salario: string,
-          tempo: string,
-          ferramentas: string[],
-          bloqueado: boolean
-        }
-        
-        Se bloqueado = true → mostrar mensagem de bloqueio no card.
-        Atualizar href do botão "Acessar Cursos": cursos.html?nivel=<stepId>
-      */
-      console.log('step selecionado:', step);
+    let perfilMapa = null;
+    let stepsMapa = [];
+    let selectedStepKey = null;
+    const MAPA_DONE_KEY = 'pf_mapa_etapas_concluidas';
+    let etapasConcluidas = carregarEtapasConcluidas();
+
+    function primeiroNome(nome = '') {
+      return String(nome).trim().split(/\s+/)[0] || 'aluno';
     }
+
+    function iniciais(nome = '') {
+      return String(nome).trim().split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join('') || 'PF';
+    }
+
+    function pct(valor) {
+      return Math.max(0, Math.min(100, Math.round(Number(valor || 0))));
+    }
+
+    function limitarTexto(texto = '', limite = 92) {
+      const limpo = String(texto || '').trim();
+      return limpo.length > limite ? `${limpo.slice(0, limite - 1).trim()}...` : limpo;
+    }
+
+    function carregarEtapasConcluidas() {
+      try {
+        return JSON.parse(localStorage.getItem(MAPA_DONE_KEY) || '{}');
+      } catch (_) {
+        return {};
+      }
+    }
+
+    function salvarEtapasConcluidas() {
+      localStorage.setItem(MAPA_DONE_KEY, JSON.stringify(etapasConcluidas));
+    }
+
+    function stepKey(step, index) {
+      return String(step?.id || `step-${index}`);
+    }
+
+    function statusVisual(step, index) {
+      return etapasConcluidas[stepKey(step, index)] ? 'done' : (step.status || 'locked');
+    }
+
+    function statusLabel(status) {
+      if (status === 'done') return ['concluido', 'Concluído'];
+      if (status === 'active') return ['atual', 'Atual'];
+      return ['bloqueado', 'Planejado'];
+    }
+
+    function textoVazio(texto) {
+      return texto || 'A IA ainda não retornou dados para esta seção.';
+    }
+
+    function textoHeroMapa(perfil) {
+      const area = perfil.areaPrincipal || 'sua área principal';
+      return `Veja a rota para ${area}: etapas, cursos e caminhos possíveis para começar com clareza.`;
+    }
+
+    function renderLista(id, itens, formatador) {
+      const el = document.getElementById(id);
+      el.innerHTML = '';
+      const lista = Array.isArray(itens) ? itens.slice(0, 4) : [];
+      if (!lista.length) {
+        const li = document.createElement('li');
+        li.textContent = 'Sem recomendações por enquanto.';
+        el.appendChild(li);
+        return;
+      }
+      lista.forEach((item) => {
+        const li = document.createElement('li');
+        const texto = formatador(item);
+        li.textContent = limitarTexto(texto);
+        li.title = texto;
+        el.appendChild(li);
+      });
+    }
+
+    function renderTimeline() {
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
+      stepsMapa.forEach((step, index) => {
+        const key = stepKey(step, index);
+        const visualStatus = statusVisual(step, index);
+        const [badgeClass, badgeText] = statusLabel(visualStatus);
+        const div = document.createElement('div');
+        div.className = `timeline-step ${visualStatus}`;
+        if (selectedStepKey === key) div.classList.add('active');
+        div.innerHTML = `
+          <div class="step-icon-wrap">
+            <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h3 class="font-jakarta"></h3>
+            <div class="step-sub font-manrope"></div>
+            <span class="step-badge font-jakarta"></span>
+          </div>
+        `;
+        div.querySelector('h3').textContent = step.titulo || `Etapa ${index + 1}`;
+        div.querySelector('.step-sub').textContent = step.sub || step.prazo || 'Passo do seu mapa';
+        const badge = div.querySelector('.step-badge');
+        badge.classList.add(badgeClass);
+        badge.textContent = badgeText;
+        div.addEventListener('click', () => selectStep(key));
+        timeline.appendChild(div);
+      });
+    }
+
+    function selectStep(stepId) {
+      const index = stepsMapa.findIndex((item, itemIndex) => stepKey(item, itemIndex) === String(stepId));
+      const step = stepsMapa[index] || stepsMapa[0];
+      if (!step) return;
+      selectedStepKey = stepKey(step, Math.max(index, 0));
+      renderTimeline();
+
+      document.getElementById('detailsTitle').textContent = step.titulo || 'Detalhes do passo';
+      document.getElementById('detailsLevel').textContent = step.prazo || step.status || 'Mapa de carreira';
+      document.getElementById('detailsSalario').textContent = perfilMapa?.caminhos?.[0]?.custo || 'A definir';
+      document.getElementById('detailsTempo').textContent = step.prazo || perfilMapa?.caminhos?.[0]?.prazo || 'A definir';
+
+      const doneToggle = document.getElementById('stepDoneToggle');
+      doneToggle.checked = Boolean(etapasConcluidas[selectedStepKey]);
+      doneToggle.onchange = () => {
+        if (doneToggle.checked) {
+          etapasConcluidas[selectedStepKey] = true;
+        } else {
+          delete etapasConcluidas[selectedStepKey];
+        }
+        salvarEtapasConcluidas();
+        renderTimeline();
+      };
+
+      const estudos = (perfilMapa?.caminhos?.[0]?.passos || perfilMapa?.proximosPassos || []).slice(0, 5);
+      const studyItems = document.getElementById('detailsStudyItems');
+      studyItems.innerHTML = '';
+      (estudos.length ? estudos : ['Revisar as recomendações da IA']).forEach((item, index) => {
+        const div = document.createElement('div');
+        const concluido = etapasConcluidas[selectedStepKey] && index === 0;
+        div.className = `study-item ${concluido ? 'done' : ''} font-manrope`;
+        div.innerHTML = `<div class="study-check ${concluido ? 'checked' : 'pending'}"></div>`;
+        div.append(document.createTextNode(limitarTexto(item, 110)));
+        div.title = item;
+        studyItems.appendChild(div);
+      });
+
+      const tools = document.getElementById('detailsTools');
+      tools.innerHTML = '';
+      const tags = [
+        ...(perfilMapa?.skills || []).slice(0, 4),
+        ...(perfilMapa?.cursos || []).slice(0, 2).map((curso) => curso.plataforma || curso.nome),
+      ].filter(Boolean);
+      (tags.length ? tags : ['ENEM', 'Cursos gratuitos']).forEach((tag) => {
+        const span = document.createElement('span');
+        span.className = 'tool-tag font-manrope';
+        span.textContent = tag;
+        tools.appendChild(span);
+      });
+    }
+
+    async function carregarMapa() {
+      const usuario = await paginaProtegida;
+      if (!usuario) return;
+
+      perfilMapa = await perfilApi.get();
+      stepsMapa = perfilMapa.mapaCarreira?.length ? perfilMapa.mapaCarreira : [
+        { id: 'inicio', titulo: perfilMapa.areaPrincipal || 'Área recomendada', sub: perfilMapa.perfilLabel || 'Primeiro passo', prazo: 'Agora', status: 'active' },
+      ];
+
+      document.getElementById('navGreeting').textContent = `Olá, ${primeiroNome(usuario.nome)}`;
+      document.getElementById('navAvatar').textContent = usuario.avatar_iniciais || iniciais(usuario.nome);
+      const mapTitle = document.getElementById('mapTitle');
+      mapTitle.innerHTML = 'Seu Mapa:<br>';
+      mapTitle.append(document.createTextNode(perfilMapa.areaPrincipal || 'Carreira recomendada'));
+      document.getElementById('mapDesc').textContent = textoHeroMapa(perfilMapa);
+      document.getElementById('mapCompatPct').textContent = `${pct(perfilMapa.percentualCompatibilidade)}%`;
+
+      renderTimeline();
+      const activeIndex = stepsMapa.findIndex((step) => step.status === 'active');
+      const firstIndex = activeIndex >= 0 ? activeIndex : 0;
+      selectStep(stepKey(stepsMapa[firstIndex], firstIndex));
+
+      renderLista('caminhosList', perfilMapa.caminhos, (item) =>
+        `${item.titulo || 'Caminho recomendado'} • ${item.prazo || 'Prazo a definir'} • ${item.dificuldade || 'Dificuldade a avaliar'}`
+      );
+      renderLista('faculdadesList', perfilMapa.faculdades, (item) =>
+        `${item.nome || 'Faculdade'} • ${item.cidade || 'Brasil'} • ${item.programa || item.tipo || 'A verificar'}`
+      );
+      renderLista('cursosTecnicosList', perfilMapa.cursosTecnicos, (item) =>
+        `${item.nome || 'Curso técnico'} • ${item.instituicao || 'Instituição'} • ${item.duracao || 'Duração a verificar'}`
+      );
+      renderLista('cursosOnlineList', perfilMapa.cursos, (item) =>
+        `${item.nome || 'Curso online'} • ${item.plataforma || 'Plataforma'} • ${item.gratuito ? 'Gratuito' : 'Pago'}`
+      );
+      renderLista('programasList', perfilMapa.programasGoverno, (item) =>
+        `${item.nome || 'Programa'} • ${item.comoAcessar || item.descricao || 'Veja o site oficial'}`
+      );
+    }
+
+    carregarMapa().catch((error) => console.error('Erro ao carregar mapa de carreira:', error));
   </script>
 
 </body>

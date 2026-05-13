@@ -558,8 +558,8 @@
         </ul>
       </nav> -->
       <div class="nav-user">
-        <span>Olá, Lucas</span>
-        <div class="nav-avatar">LG</div>
+        <span id="navGreeting">Olá</span>
+        <div class="nav-avatar" id="navAvatar">PF</div>
       </div>
     </div>
 
@@ -671,13 +671,30 @@
 
   <script src="../js/api.js"></script>
   <script>
-    protegerPagina({ precisaMapaFeito: false });
+    const usuarioLogado = protegerPagina({ precisaMapaFeito: false });
   </script>
   <script>
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
       navbar.classList.toggle('scrolled', window.scrollY > 40);
     });
+
+    function primeiroNome(nome = '') {
+      return String(nome).trim().split(/\s+/)[0] || 'aluno';
+    }
+
+    function iniciais(nome = '') {
+      return String(nome).trim().split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join('') || 'PF';
+    }
+
+    async function carregarHeaderUsuario() {
+      const usuario = await usuarioLogado;
+      if (!usuario) return;
+      document.getElementById('navGreeting').textContent = `Olá, ${primeiroNome(usuario.nome)}`;
+      document.getElementById('navAvatar').textContent = usuario.avatar_iniciais || iniciais(usuario.nome);
+    }
+
+    carregarHeaderUsuario().catch((error) => console.error('Erro ao carregar usuário:', error));
   </script>
 
     <script src="../js/footer.js"></script>

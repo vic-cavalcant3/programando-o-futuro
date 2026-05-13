@@ -13,7 +13,7 @@
       min-height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     .bg-glow {
@@ -79,6 +79,14 @@
       background: rgba(16,185,129,0.15);
       border-color: #10b981;
     }
+    .loading-step.done .step-check svg { display: none; }
+    .loading-step.done .step-check::after {
+      content: '';
+      width: 9px; height: 5px;
+      border-left: 2px solid #10b981;
+      border-bottom: 2px solid #10b981;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
     .loading-step.active .step-check {
       background: rgba(37,99,235,0.15);
       border-color: #3b82f6;
@@ -94,7 +102,7 @@
       display: none;
       position: relative; z-index: 1;
       text-align: center; padding: 2rem;
-      max-width: 560px; width: 100%;
+      max-width: 920px; width: 100%;
       animation: fadeUp 0.7s ease both;
     }
 
@@ -144,7 +152,7 @@
       background: rgba(17,24,39,0.9);
       border: 1px solid rgba(37,99,235,0.2);
       border-radius: 16px; padding: 1.5rem;
-      margin-bottom: 2rem; text-align: left;
+      margin-bottom: 1.2rem; text-align: left;
       display: flex; align-items: center; gap: 1.2rem;
     }
     .preview-icon {
@@ -172,6 +180,64 @@
     }
     .preview-pct span { color: #3b82f6; font-weight: 700; }
 
+    .result-message {
+      background: rgba(17,24,39,0.78);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      color: rgba(255,255,255,0.68);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+      padding: 1.2rem 1.4rem;
+      text-align: left;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.6rem;
+      text-align: left;
+    }
+    .result-card {
+      background: rgba(17,24,39,0.82);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 1.2rem;
+    }
+    .result-card h3 {
+      color: #f0f6ff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-bottom: 0.85rem;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .result-tag {
+      background: rgba(37,99,235,0.12);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.72);
+      font-size: 0.76rem;
+      padding: 0.35rem 0.65rem;
+    }
+    .result-list {
+      color: rgba(255,255,255,0.66);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      list-style: none;
+    }
+    .result-list li {
+      border-left: 2px solid rgba(37,99,235,0.45);
+      padding-left: 0.75rem;
+    }
+
     /* BTN */
     .btn-ver-resultado {
       display: inline-flex; align-items: center; gap: 0.6rem;
@@ -196,6 +262,8 @@
     @media (max-width: 480px) {
       .result-title { font-size: 1.6rem; }
       .loading-title { font-size: 1.2rem; }
+      .result-grid { grid-template-columns: 1fr; }
+      .result-preview { align-items: flex-start; }
     }
   </style>
 </head>
@@ -276,34 +344,43 @@
       </div>
     </div>
 
-    <a href="inicial_mapa_feito.html " class="btn-ver-resultado font-jakarta">
+    <p class="result-message font-manrope" id="resultMessage">
+      Sua análise personalizada aparecerá aqui.
+    </p>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <h3 class="font-jakarta">Habilidades identificadas</h3>
+        <div class="tag-list" id="skillsList"></div>
+      </div>
+      <div class="result-card">
+        <h3 class="font-jakarta">Áreas secundárias</h3>
+        <ul class="result-list font-manrope" id="secondaryAreas"></ul>
+      </div>
+      <div class="result-card">
+        <h3 class="font-jakarta">Próximos passos</h3>
+        <ul class="result-list font-manrope" id="nextSteps"></ul>
+      </div>
+      <div class="result-card">
+        <h3 class="font-jakarta">Caminhos recomendados</h3>
+        <ul class="result-list font-manrope" id="pathsList"></ul>
+      </div>
+    </div>
+
+    <a href="inicial_mapa_feito.html" class="btn-ver-resultado font-jakarta">
       Ver Meu Resultado Completo →
     </a>
   </div>
 
   <script src="../js/api.js"></script>
   <script>
-    /*
-      TODO BACK-END:
-      1. Ao carregar esta página, enviar as respostas para a API
-      2. Aguardar retorno com área e percentual
-      3. Popular previewArea e previewPct com dados reais
-      4. Limpar localStorage após envio bem-sucedido
-      
-      POST /api/teste/processar
-      Body: { userId, respostas: localStorage.getItem('pf_respostas') }
-      Response: { area, percentual, plano, cursos, ... }
-    */
-
-    // Simulação de loading steps
-    const steps = ['step1','step2','step3','step4'];
+    const steps = ['step1', 'step2', 'step3', 'step4'];
     let stepIdx = 0;
+    let visualCompleto = false;
 
-    // Ativa step 1 imediatamente
     document.getElementById('step1').classList.add('active');
 
     const interval = setInterval(() => {
-      // Marca atual como done
       document.getElementById(steps[stepIdx]).classList.remove('active');
       document.getElementById(steps[stepIdx]).classList.add('done');
       stepIdx++;
@@ -312,24 +389,63 @@
         document.getElementById(steps[stepIdx]).classList.add('active');
       } else {
         clearInterval(interval);
-        // Mostra resultado após todos os steps
-        setTimeout(mostrarResultado, 600);
+        visualCompleto = true;
       }
     }, 900);
+
+    function renderLista(id, itens, formatter) {
+      const el = document.getElementById(id);
+      el.innerHTML = '';
+      const valores = Array.isArray(itens) ? itens.filter(Boolean).slice(0, 4) : [];
+
+      if (!valores.length) {
+        const li = document.createElement('li');
+        li.textContent = 'A IA nao retornou dados para esta secao.';
+        el.appendChild(li);
+        return;
+      }
+
+      valores.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = formatter ? formatter(item) : String(item);
+        el.appendChild(li);
+      });
+    }
+
+    function renderTags(id, itens) {
+      const el = document.getElementById(id);
+      el.innerHTML = '';
+      const valores = Array.isArray(itens) ? itens.filter(Boolean).slice(0, 6) : [];
+
+      if (!valores.length) {
+        const span = document.createElement('span');
+        span.className = 'result-tag font-manrope';
+        span.textContent = 'Sem habilidades retornadas';
+        el.appendChild(span);
+        return;
+      }
+
+      valores.forEach((item) => {
+        const span = document.createElement('span');
+        span.className = 'result-tag font-manrope';
+        span.textContent = String(item);
+        el.appendChild(span);
+      });
+    }
 
     async function esperarResultado() {
       const jobId = localStorage.getItem('pf_job_id');
 
       if (jobId) {
         for (let tentativa = 0; tentativa < 60; tentativa++) {
-          const data = await testeApi.status(jobId);
+          const data = await testeApi.status(encodeURIComponent(jobId));
 
           if (data.status === 'concluido') {
             return testeApi.resultado();
           }
 
           if (data.status === 'erro') {
-            throw new Error('A IA não conseguiu gerar o resultado agora.');
+            throw new Error(data.erro || 'A IA nao conseguiu gerar o resultado agora.');
           }
 
           await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -344,22 +460,41 @@
     async function mostrarResultado() {
       try {
         const resultado = await esperarResultado();
+
+        while (!visualCompleto) {
+          await new Promise((resolve) => setTimeout(resolve, 120));
+        }
+
         localStorage.removeItem('pf_job_id');
 
-        document.getElementById('previewArea').textContent = resultado.areaPrincipal || 'Área recomendada';
+        document.getElementById('previewArea').textContent = resultado.areaPrincipal || 'Area recomendada';
         document.getElementById('previewPct').textContent = `${resultado.percentualCompatibilidade || 0}%`;
+        document.getElementById('resultMessage').textContent =
+          resultado.mensagemPersonalizada || resultado.perfilLabel || 'A IA gerou sua analise personalizada com base nas suas respostas.';
+
+        renderTags('skillsList', resultado.skills);
+        renderLista('secondaryAreas', resultado.areasSecundarias, (area) =>
+          `${area.nome || 'Area recomendada'}${area.percentual ? ` - ${area.percentual}%` : ''}`
+        );
+        renderLista('nextSteps', resultado.proximosPassos);
+        renderLista('pathsList', resultado.caminhos, (caminho) =>
+          `${caminho.titulo || 'Caminho recomendado'}${caminho.prazo ? ` (${caminho.prazo})` : ''}`
+        );
 
         const usuario = await authApi.me({ skipAuthRedirect: true });
         auth.setUser(usuario);
 
+        document.body.style.justifyContent = 'flex-start';
+        document.body.style.padding = '3rem 0';
         document.getElementById('loadingWrap').style.display = 'none';
         document.getElementById('resultWrap').style.display = 'block';
       } catch (error) {
-        document.querySelector('.loading-title').textContent = 'Não foi possível concluir a análise';
+        document.querySelector('.loading-title').textContent = 'Nao foi possivel concluir a analise';
         document.querySelector('.loading-desc').textContent = error.message || 'Tente novamente em alguns instantes.';
       }
     }
-  </script>
 
+    mostrarResultado();
+  </script>
 </body>
 </html>
