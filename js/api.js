@@ -130,6 +130,8 @@ const authApi = {
     return apiFetch('/api/auth/me', { skipAuthRedirect: options.skipAuthRedirect });
   },
 
+  atualizarPerfil: (dados) => api.patch('/api/auth/perfil', dados),
+
   logout() {
     auth.clear();
     window.location.href = determinarLoginPath();

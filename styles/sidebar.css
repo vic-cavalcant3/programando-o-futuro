@@ -85,3 +85,14 @@
             color: #3b82f6;
             margin-top: 0.1rem;
         }
+        .sidebar-avatar {
+            width: 42px; height: 42px; background: #2563eb;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; font-weight: 900; color: #fff; flex-shrink: 0;
+        }
+        .sidebar-user-email {
+            font-size: 0.7rem; color: rgba(255,255,255,0.35);
+        }
+        .sidebar-divider {
+            height: 1px; background: rgba(255,255,255,0.06); margin: 0 1.2rem 0.5rem;
+        }

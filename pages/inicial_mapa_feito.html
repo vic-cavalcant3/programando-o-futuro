@@ -520,6 +520,28 @@
       text-decoration: none; flex-shrink: 0;
     }
 }
+    .perfil-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 500; align-items: center; justify-content: center; padding: 1.5rem; }
+    .perfil-overlay.open { display: flex; }
+    .perfil-card { background: #0d1424; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 2rem; width: 100%; max-width: 440px; position: relative; animation: fadeUp 0.3s ease both; max-height: 90vh; overflow-y: auto; }
+    .perfil-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; transition: color 0.2s; }
+    .perfil-close:hover { color: #fff; }
+    .perfil-avatar-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; }
+    .perfil-avatar { width: 72px; height: 72px; background: #2563eb; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem; }
+    .perfil-nome-display { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; color: #f0f6ff; }
+    .perfil-email-display { font-family: 'Manrope', sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+    .perfil-form-group { margin-bottom: 1rem; }
+    .perfil-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem; display: block; }
+    .perfil-input { width: 100%; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #f0f6ff; font-family: 'Manrope', sans-serif; font-size: 0.88rem; transition: border-color 0.2s; }
+    .perfil-input:focus { outline: none; border-color: rgba(37,99,235,0.5); }
+    .perfil-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 1.2rem 0; }
+    .perfil-section-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.8rem; }
+    .perfil-btn-salvar { width: 100%; padding: 0.85rem; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 0.6rem; }
+    .perfil-btn-salvar:hover { background: #3b82f6; transform: translateY(-1px); }
+    .perfil-btn-sair { width: 100%; padding: 0.75rem; background: transparent; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .perfil-btn-sair:hover { border-color: rgba(239,68,68,0.4); color: #f87171; }
+    .perfil-msg { font-family: 'Manrope', sans-serif; font-size: 0.78rem; text-align: center; margin-bottom: 0.8rem; min-height: 1.2rem; }
+    .perfil-msg.ok { color: #10b981; }
+    .perfil-msg.erro { color: #f87171; }
   </style>
 </head>
 <body>
@@ -586,7 +608,7 @@
       </nav>
       <div class="nav-user">
         <span class="font-manrope" id="navGreeting">Olá</span>
-        <div class="nav-avatar font-jakarta" id="navAvatar">PF</div>
+        <div class="nav-avatar font-jakarta" id="navAvatar" onclick="abrirPerfil()" style="cursor:pointer">PF</div>
       </div>
       <button class="btn-hamburger" onclick="openSidebar()">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -697,7 +719,7 @@
       </div>
       <p class="study-focus font-manrope">Focado em <strong id="studyFocus">seu mapa de carreira</strong></p>
       <div class="study-items" id="studyItems"></div>
-      <a href="#" class="btn-continuar font-jakarta" onclick="window.location.href='minha_jornada.html'">Continuar Jornada</a>
+      
     </div>
 
   </main>
@@ -1015,6 +1037,82 @@ const data = await testeApi.respostasDestaque(22, false);
 document.getElementById('respostasOverlay').addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('open');
 });
+  </script>
+
+  <div class="perfil-overlay" id="perfilOverlay" onclick="fecharPerfil(event)">
+    <div class="perfil-card">
+      <button class="perfil-close" onclick="fecharPerfil()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="perfil-avatar-wrap">
+        <div class="perfil-avatar font-jakarta" id="perfilAvatar">PF</div>
+        <div class="perfil-nome-display font-jakarta" id="perfilNomeDisplay">Carregando...</div>
+        <div class="perfil-email-display font-manrope" id="perfilEmailDisplay"></div>
+      </div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Nome completo</label><input class="perfil-input font-manrope" id="perfilNomeInput" type="text" placeholder="Seu nome completo" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Email</label><input class="perfil-input font-manrope" id="perfilEmailInput" type="email" placeholder="seu@email.com" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Cidade</label><input class="perfil-input font-manrope" id="perfilCidadeInput" type="text" placeholder="Ex: São Paulo - SP" /></div>
+      <div class="perfil-divider"></div>
+      <div class="perfil-section-title font-jakarta">Alterar senha</div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Senha atual</label><input class="perfil-input font-manrope" id="perfilSenhaAtual" type="password" placeholder="••••••••" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Nova senha</label><input class="perfil-input font-manrope" id="perfilSenhaNova" type="password" placeholder="••••••••" /></div>
+      <div class="perfil-msg font-manrope" id="perfilMsg"></div>
+      <button class="perfil-btn-salvar font-jakarta" onclick="salvarPerfil()">Salvar alterações</button>
+      <button class="perfil-btn-sair font-jakarta" onclick="sairDaConta()">Sair da conta</button>
+    </div>
+  </div>
+
+  <script>
+  function abrirPerfil() {
+    const usuario = auth.getUser();
+    if (!usuario) return;
+    document.getElementById('perfilAvatar').textContent = usuario.avatar_iniciais || '??';
+    document.getElementById('perfilNomeDisplay').textContent = usuario.nome || '';
+    document.getElementById('perfilEmailDisplay').textContent = usuario.email || '';
+    document.getElementById('perfilNomeInput').value = usuario.nome || '';
+    document.getElementById('perfilEmailInput').value = usuario.email || '';
+    document.getElementById('perfilCidadeInput').value = usuario.cidade || '';
+    document.getElementById('perfilSenhaAtual').value = '';
+    document.getElementById('perfilSenhaNova').value = '';
+    document.getElementById('perfilMsg').textContent = '';
+    document.getElementById('perfilMsg').className = 'perfil-msg font-manrope';
+    document.getElementById('perfilOverlay').classList.add('open');
+  }
+  function fecharPerfil(e) {
+    if (!e || e.target === document.getElementById('perfilOverlay')) {
+      document.getElementById('perfilOverlay').classList.remove('open');
+    }
+  }
+  async function salvarPerfil() {
+    const msgEl = document.getElementById('perfilMsg');
+    msgEl.textContent = 'Salvando...';
+    msgEl.className = 'perfil-msg font-manrope';
+    try {
+      const dados = {
+        nome: document.getElementById('perfilNomeInput').value.trim(),
+        email: document.getElementById('perfilEmailInput').value.trim(),
+        cidade: document.getElementById('perfilCidadeInput').value.trim(),
+      };
+      const senhaAtual = document.getElementById('perfilSenhaAtual').value;
+      const senhaNova = document.getElementById('perfilSenhaNova').value;
+      if (senhaNova) { dados.senha_atual = senhaAtual; dados.senha_nova = senhaNova; }
+      const usuario = await authApi.atualizarPerfil(dados);
+      auth.setUser(usuario);
+      document.getElementById('perfilAvatar').textContent = usuario.avatar_iniciais || '??';
+      document.getElementById('perfilNomeDisplay').textContent = usuario.nome || '';
+      document.getElementById('perfilEmailDisplay').textContent = usuario.email || '';
+      const navAvatar = document.getElementById('navAvatar');
+      const navGreeting = document.getElementById('navGreeting');
+      if (navAvatar) navAvatar.textContent = usuario.avatar_iniciais || '??';
+      if (navGreeting) navGreeting.textContent = `Olá, ${usuario.nome.split(' ')[0]}`;
+      msgEl.textContent = 'Salvo com sucesso!';
+      msgEl.className = 'perfil-msg font-manrope ok';
+    } catch (err) {
+      msgEl.textContent = err?.erro || 'Erro ao salvar. Tente novamente.';
+      msgEl.className = 'perfil-msg font-manrope erro';
+    }
+  }
+  function sairDaConta() { authApi.logout(); }
   </script>
 
 </body>
