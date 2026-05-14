@@ -3,3 +3,6 @@ uvicorn
 httpx
 python-dotenv
 PyJWT
+aiomysql==0.2.0
+PyMySQL==1.1.1
+cryptography==42.0.5
