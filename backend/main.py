@@ -562,7 +562,7 @@ async def admin_reset(senha: str):
     return {"resetado": True}
         
 # ══════════════════════════════════════════════════════════════════════════════
-       
+
 @app.get("/", include_in_schema=False)
 def serve_index():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
@@ -953,3 +953,4 @@ app.mount("/js",       StaticFiles(directory=os.path.join(BASE_DIR, "js")),     
 app.mount("/styles",   StaticFiles(directory=os.path.join(BASE_DIR, "styles")),   name="styles")
 app.mount("/assets",   StaticFiles(directory=os.path.join(BASE_DIR, "assets")),   name="assets")
 app.mount("/partials", StaticFiles(directory=os.path.join(BASE_DIR, "partials")), name="partials")
+app.mount("/assets", StaticFiles(directory=os.path.join(BASE_DIR, "assets")), name="assets")
