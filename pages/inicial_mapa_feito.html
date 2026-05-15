@@ -964,7 +964,7 @@ function renderPlano(perfil) {
       if (!usuario) return;
 
       try {
-        cconst [perfilResult, respostasData] = await Promise.all([
+        const [perfilResult, respostasData] = await Promise.all([
   perfilApi.get().catch(() => null),
   testeApi.respostasDestaque(3),
 ]);
@@ -999,7 +999,7 @@ const perfil = perfilResult;
     carregarInicial();
 
 
-    
+
 async function abrirTodasRespostas(e) {
   e.preventDefault();
   const overlay = document.getElementById('respostasOverlay');
