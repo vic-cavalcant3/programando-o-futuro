@@ -475,6 +475,10 @@ def formatar_resposta_teste(pergunta: dict, resposta: dict) -> dict:
         "resposta": texto_resposta,
     }
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ADMIN
+# ══════════════════════════════════════════════════════════════════════════════
 @app.get("/api/admin/usuarios")
 async def admin_usuarios(senha: str):
     if senha != os.getenv("ADMIN_SECRET", "25107Senai"):
@@ -483,8 +487,82 @@ async def admin_usuarios(senha: str):
         async with conn.cursor(aiomysql.DictCursor) as cur:
             await cur.execute("SELECT id, nome, email, teste_inicial_concluido, modulos_concluidos, criado_em FROM usuarios")
             return await cur.fetchall()
+
+@app.get("/api/admin/dados")
+async def admin_dados(senha: str):
+    if senha != os.getenv("ADMIN_SECRET", ""):
+        raise HTTPException(status_code=403)
+    async with db_pool.acquire() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cur:
+            await cur.execute("SELECT COUNT(*) as total FROM usuarios")
+            total_usuarios = (await cur.fetchone())["total"]
+            await cur.execute("SELECT COUNT(*) as total FROM perfis")
+            total_perfis = (await cur.fetchone())["total"]
+            await cur.execute("SELECT COUNT(*) as total FROM respostas_teste")
+            total_respostas = (await cur.fetchone())["total"]
+            await cur.execute("SELECT COUNT(*) as total FROM jobs WHERE status='concluido'")
+            total_jobs = (await cur.fetchone())["total"]
+            await cur.execute("SELECT id, nome, email, teste_inicial_concluido, modulos_concluidos, criado_em FROM usuarios ORDER BY criado_em DESC")
+            usuarios = await cur.fetchall()
+            await cur.execute("SELECT j.id, j.usuario_id, j.status, j.erro, j.criado_em, u.nome FROM jobs j LEFT JOIN usuarios u ON j.usuario_id=u.id ORDER BY j.criado_em DESC LIMIT 50")
+            jobs = await cur.fetchall()
+            await cur.execute("SELECT p.usuario_id, p.criado_em, p.atualizado_em, u.nome, JSON_UNQUOTE(JSON_EXTRACT(p.dados, '$.areaPrincipal')) as area FROM perfis p LEFT JOIN usuarios u ON p.usuario_id=u.id ORDER BY p.criado_em DESC")
+            perfis = await cur.fetchall()
+            for u in usuarios:
+                u["modulos_concluidos"] = json.loads(u["modulos_concluidos"]) if isinstance(u["modulos_concluidos"], str) else (u["modulos_concluidos"] or [])
+                u["teste_inicial_concluido"] = bool(u["teste_inicial_concluido"])
+                if u["criado_em"]: u["criado_em"] = u["criado_em"].isoformat()
+            for j in jobs:
+                if j["criado_em"]: j["criado_em"] = j["criado_em"].isoformat()
+            for p in perfis:
+                if p["criado_em"]: p["criado_em"] = p["criado_em"].isoformat()
+                if p["atualizado_em"]: p["atualizado_em"] = p["atualizado_em"].isoformat()
+    return {
+        "metricas": {"usuarios": total_usuarios, "perfis": total_perfis, "respostas": total_respostas, "jobs_concluidos": total_jobs},
+        "usuarios": usuarios, "jobs": jobs, "perfis": perfis
+    }
+
+@app.get("/api/admin/respostas/{usuario_id}")
+async def admin_respostas_usuario(usuario_id: str, senha: str):
+    if senha != os.getenv("ADMIN_SECRET", ""):
+        raise HTTPException(status_code=403)
+    async with db_pool.acquire() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cur:
+            await cur.execute("SELECT pergunta_id, valor, texto_livre, criado_em FROM respostas_teste WHERE usuario_id=%s ORDER BY CAST(pergunta_id AS UNSIGNED)", (usuario_id,))
+            respostas = await cur.fetchall()
+            await cur.execute("SELECT dados FROM perfis WHERE usuario_id=%s", (usuario_id,))
+            perfil = await cur.fetchone()
+            for r in respostas:
+                if r["criado_em"]: r["criado_em"] = r["criado_em"].isoformat()
+    return {
+        "respostas": respostas,
+        "perfil_ia": json.loads(perfil["dados"]) if perfil else None
+    }
+
+@app.delete("/api/admin/usuario/{usuario_id}")
+async def admin_deletar_usuario(usuario_id: str, senha: str):
+    if senha != os.getenv("ADMIN_SECRET", ""):
+        raise HTTPException(status_code=403)
+    async with db_pool.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute("DELETE FROM usuarios WHERE id=%s", (usuario_id,))
+    return {"deletado": True}
+
+@app.delete("/api/admin/reset")
+async def admin_reset(senha: str):
+    if senha != os.getenv("ADMIN_SECRET", ""):
+        raise HTTPException(status_code=403)
+    async with db_pool.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute("DELETE FROM perfis")
+            await cur.execute("DELETE FROM jobs")
+            await cur.execute("DELETE FROM respostas_modulo")
+            await cur.execute("DELETE FROM respostas_teste")
+            await cur.execute("DELETE FROM usuarios")
+    return {"resetado": True}
         
-        
+# ══════════════════════════════════════════════════════════════════════════════
+       
 @app.get("/", include_in_schema=False)
 def serve_index():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))

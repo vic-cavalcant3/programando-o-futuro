@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Programando o Futuro</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #060b14; min-height: 100vh; font-family: 'Manrope', sans-serif; }
+
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .login-card { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 380px; }
+    .login-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; font-weight: 700; color: #3b82f6; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+    .login-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 900; color: #f0f6ff; margin-bottom: 0.3rem; }
+    .login-sub { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 1.8rem; }
+    .login-input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #f0f6ff; font-size: 0.9rem; margin-bottom: 1rem; transition: border-color 0.2s; }
+    .login-input:focus { outline: none; border-color: rgba(37,99,235,0.5); }
+    .btn-primary { width: 100%; padding: 0.85rem; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #3b82f6; transform: translateY(-1px); }
+    .login-err { color: #f87171; font-size: 0.78rem; text-align: center; margin-top: 0.8rem; min-height: 1rem; }
+
+    .dashboard { display: none; max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+    .dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .dash-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; font-weight: 900; color: #f0f6ff; letter-spacing: -0.02em; }
+    .dash-title span { color: #3b82f6; }
+    .dash-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .btn-danger { padding: 0.6rem 1.2rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; color: #f87171; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+    .btn-outline { padding: 0.6rem 1.2rem; background: transparent; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: rgba(255,255,255,0.5); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-outline:hover { border-color: rgba(37,99,235,0.4); color: #60a5fa; }
+
+    .metrics-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 2rem; }
+    .metric-card { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 1.2rem; }
+    .metric-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.6rem; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .metric-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 900; color: #f0f6ff; }
+    .metric-value.blue { color: #3b82f6; }
+
+    .section-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; color: #f0f6ff; margin-bottom: 1rem; margin-top: 2rem; }
+    .table-wrap { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; overflow: hidden; margin-bottom: 1.5rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
+    td { font-family: 'Manrope', sans-serif; font-size: 0.8rem; color: rgba(255,255,255,0.65); padding: 0.85rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .badge-green { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+    .badge-blue { background: rgba(37,99,235,0.12); color: #60a5fa; border: 1px solid rgba(37,99,235,0.2); }
+    .badge-red { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .badge-gray { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.08); }
+    .btn-sm { padding: 0.3rem 0.7rem; background: transparent; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: rgba(255,255,255,0.4); font-size: 0.7rem; cursor: pointer; transition: all 0.2s; }
+    .btn-sm:hover { border-color: rgba(37,99,235,0.4); color: #60a5fa; }
+    .btn-sm-danger { padding: 0.3rem 0.7rem; background: transparent; border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; color: #f87171; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; }
+    .btn-sm-danger:hover { background: rgba(239,68,68,0.1); }
+
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 200; align-items: center; justify-content: center; padding: 1.5rem; }
+    .overlay.open { display: flex; }
+    .overlay-card { background: #0d1424; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 1.8rem; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative; }
+    .overlay-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; color: #f0f6ff; margin-bottom: 1.2rem; }
+    .overlay-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; }
+    .overlay-close:hover { color: #fff; }
+    .resp-item { padding: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 0.5rem; }
+    .resp-id { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.6rem; font-weight: 700; color: #3b82f6; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.2rem; }
+    .resp-val { font-size: 0.82rem; color: rgba(255,255,255,0.65); }
+    .ia-section { margin-top: 1rem; padding: 1rem; background: rgba(37,99,235,0.05); border: 1px solid rgba(37,99,235,0.15); border-radius: 12px; }
+    .ia-area { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; color: #f0f6ff; margin-bottom: 0.3rem; }
+    .ia-pct { font-size: 0.78rem; color: #3b82f6; margin-bottom: 0.8rem; }
+    .ia-msg { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+    @media (max-width: 750px) { .metrics-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px) { .metrics-grid { grid-template-columns: 1fr 1fr; } .dash-title { font-size: 1.3rem; } }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login-wrap" id="loginWrap">
+    <div class="login-card">
+      <div class="login-logo font-jakarta">Programando o Futuro</div>
+      <h1 class="login-title font-jakarta">Painel Admin</h1>
+      <p class="login-sub font-manrope">Acesso restrito — insira a senha de administrador</p>
+      <input class="login-input font-manrope" id="senhaInput" type="password" placeholder="Senha de administrador"
+        onkeydown="if(event.key==='Enter') entrar()" />
+      <button class="btn-primary font-jakarta" onclick="entrar()">Entrar</button>
+      <div class="login-err font-manrope" id="loginErr"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <div class="dash-header">
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.65rem;font-weight:700;color:#3b82f6;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.3rem">Programando o Futuro</div>
+        <h1 class="dash-title font-jakarta">Painel <span>Admin</span></h1>
+      </div>
+      <div class="dash-actions">
+        <button class="btn-outline font-jakarta" onclick="recarregar()">↻ Atualizar</button>
+        <button class="btn-danger font-jakarta" onclick="confirmarReset()">⚠ Limpar Banco</button>
+      </div>
+    </div>
+
+    <!-- MÉTRICAS -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Usuários</div>
+        <div class="metric-value blue font-jakarta" id="mUsuarios">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Perfis Gerados</div>
+        <div class="metric-value blue font-jakarta" id="mPerfis">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Respostas</div>
+        <div class="metric-value font-jakarta" id="mRespostas">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Jobs Concluídos</div>
+        <div class="metric-value font-jakarta" id="mJobs">—</div>
+      </div>
+    </div>
+
+    <!-- USUÁRIOS -->
+    <div class="section-title font-jakarta">Usuários cadastrados</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Teste</th>
+            <th>Módulos</th>
+            <th>Cadastro</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tUsuarios"></tbody>
+      </table>
+    </div>
+
+    <!-- PERFIS -->
+    <div class="section-title font-jakarta">Perfis gerados pela IA</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Área Principal</th>
+            <th>Gerado em</th>
+            <th>Atualizado</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tPerfis"></tbody>
+      </table>
+    </div>
+
+    <!-- JOBS -->
+    <div class="section-title font-jakarta">Jobs de processamento</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuário</th>
+            <th>Status</th>
+            <th>Erro</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody id="tJobs"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OVERLAY DETALHES -->
+  <div class="overlay" id="detalhesOverlay" onclick="if(event.target===this)fecharDetalhes()">
+    <div class="overlay-card">
+      <button class="overlay-close" onclick="fecharDetalhes()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="overlay-title font-jakarta" id="detalhesTitle">Detalhes</div>
+      <div id="detalhesBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const API = 'https://programando-o-futuro.onrender.com';
+    let senhaAdmin = '';
+
+    async function entrar() {
+      const senha = document.getElementById('senhaInput').value.trim();
+      if (!senha) return;
+      document.getElementById('loginErr').textContent = 'Verificando...';
+      try {
+        const res = await fetch(`${API}/api/admin/dados?senha=${encodeURIComponent(senha)}`);
+        if (res.status === 403) { document.getElementById('loginErr').textContent = 'Senha incorreta.'; return; }
+        if (!res.ok) throw new Error();
+        senhaAdmin = senha;
+        const data = await res.json();
+        document.getElementById('loginWrap').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        renderDados(data);
+      } catch {
+        document.getElementById('loginErr').textContent = 'Erro ao conectar. Tente novamente.';
+      }
+    }
+
+    async function recarregar() {
+      const res = await fetch(`${API}/api/admin/dados?senha=${encodeURIComponent(senhaAdmin)}`);
+      const data = await res.json();
+      renderDados(data);
+    }
+
+    function renderDados(data) {
+      document.getElementById('mUsuarios').textContent = data.metricas.usuarios;
+      document.getElementById('mPerfis').textContent = data.metricas.perfis;
+      document.getElementById('mRespostas').textContent = data.metricas.respostas;
+      document.getElementById('mJobs').textContent = data.metricas.jobs_concluidos;
+      renderUsuarios(data.usuarios);
+      renderPerfis(data.perfis);
+      renderJobs(data.jobs);
+    }
+
+    function formatDate(str) {
+      if (!str) return '—';
+      return new Date(str).toLocaleString('pt-BR');
+    }
+
+    function renderUsuarios(usuarios) {
+      const tbody = document.getElementById('tUsuarios');
+      tbody.innerHTML = '';
+      if (!usuarios.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:rgba(255,255,255,0.2)">Nenhum usuário</td></tr>'; return; }
+      usuarios.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span style="color:#f0f6ff;font-weight:600">${u.nome}</span></td>
+          <td>${u.email}</td>
+          <td>${u.teste_inicial_concluido ? '<span class="badge badge-green">Concluído</span>' : '<span class="badge badge-gray">Pendente</span>'}</td>
+          <td><span class="badge badge-blue">${(u.modulos_concluidos||[]).length}/4</span></td>
+          <td style="color:rgba(255,255,255,0.4);font-size:0.75rem">${formatDate(u.criado_em)}</td>
+          <td style="display:flex;gap:0.4rem">
+            <button class="btn-sm" onclick="verRespostas('${u.id}','${u.nome}')">Ver respostas</button>
+            <button class="btn-sm-danger" onclick="deletarUsuario('${u.id}','${u.nome}')">Deletar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderPerfis(perfis) {
+      const tbody = document.getElementById('tPerfis');
+      tbody.innerHTML = '';
+      if (!perfis.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.2)">Nenhum perfil</td></tr>'; return; }
+      perfis.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="color:#f0f6ff;font-weight:600">${p.nome||'—'}</td>
+          <td><span class="badge badge-blue">${p.area||'—'}</span></td>
+          <td style="color:rgba(255,255,255,0.4);font-size:0.75rem">${formatDate(p.criado_em)}</td>
+          <td style="color:rgba(255,255,255,0.4);font-size:0.75rem">${formatDate(p.atualizado_em)}</td>
+          <td><button class="btn-sm" onclick="verPerfilIA('${p.usuario_id}','${p.nome}')">Ver perfil IA</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderJobs(jobs) {
+      const tbody = document.getElementById('tJobs');
+      tbody.innerHTML = '';
+      if (!jobs.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.2)">Nenhum job</td></tr>'; return; }
+      jobs.forEach(j => {
+        const badgeClass = j.status==='concluido'?'badge-green':j.status==='erro'?'badge-red':'badge-gray';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-size:0.7rem;color:rgba(255,255,255,0.3)">${j.id.slice(0,8)}...</td>
+          <td style="color:#f0f6ff">${j.nome||j.usuario_id.slice(0,8)}</td>
+          <td><span class="badge ${badgeClass}">${j.status}</span></td>
+          <td style="font-size:0.75rem;color:#f87171">${j.erro||'—'}</td>
+          <td style="color:rgba(255,255,255,0.4);font-size:0.75rem">${formatDate(j.criado_em)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function verRespostas(uid, nome) {
+      document.getElementById('detalhesTitle').textContent = `Respostas de ${nome}`;
+      document.getElementById('detalhesBody').innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem">Carregando...</p>';
+      document.getElementById('detalhesOverlay').classList.add('open');
+      const res = await fetch(`${API}/api/admin/respostas/${uid}?senha=${encodeURIComponent(senhaAdmin)}`);
+      const data = await res.json();
+      let html = '';
+      (data.respostas||[]).forEach(r => {
+        html += `<div class="resp-item">
+          <div class="resp-id">Pergunta ${r.pergunta_id}</div>
+          <div class="resp-val">${r.valor||'—'}${r.texto_livre?` <span style="color:rgba(255,255,255,0.35)">— ${r.texto_livre}</span>`:''}</div>
+        </div>`;
+      });
+      if (data.perfil_ia) {
+        html += `<div class="ia-section">
+          <div class="ia-area font-jakarta">${data.perfil_ia.areaPrincipal||'—'}</div>
+          <div class="ia-pct">${data.perfil_ia.percentualCompatibilidade||0}% compatível</div>
+          <div class="ia-msg">${data.perfil_ia.mensagemPersonalizada||'—'}</div>
+        </div>`;
+      }
+      document.getElementById('detalhesBody').innerHTML = html || '<p style="color:rgba(255,255,255,0.3)">Sem respostas</p>';
+    }
+
+    async function verPerfilIA(uid, nome) {
+      document.getElementById('detalhesTitle').textContent = `Perfil IA — ${nome}`;
+      document.getElementById('detalhesBody').innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem">Carregando...</p>';
+      document.getElementById('detalhesOverlay').classList.add('open');
+      const res = await fetch(`${API}/api/admin/respostas/${uid}?senha=${encodeURIComponent(senhaAdmin)}`);
+      const data = await res.json();
+      const p = data.perfil_ia;
+      if (!p) { document.getElementById('detalhesBody').innerHTML = '<p style="color:rgba(255,255,255,0.3)">Sem perfil gerado</p>'; return; }
+      let html = `
+        <div class="ia-section" style="margin-bottom:1rem">
+          <div class="ia-area font-jakarta">${p.areaPrincipal||'—'}</div>
+          <div class="ia-pct">${p.percentualCompatibilidade||0}% compatível</div>
+          <div class="ia-msg">${p.mensagemPersonalizada||'—'}</div>
+        </div>`;
+      if (p.skills?.length) html += `<div style="margin-bottom:1rem"><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.6rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.4rem">${p.skills.map(s=>`<span style="padding:0.2rem 0.6rem;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);border-radius:6px;font-size:0.72rem;color:#60a5fa">${s}</span>`).join('')}</div></div>`;
+      if (p.proximosPassos?.length) html += `<div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.6rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">Próximos Passos</div>${p.proximosPassos.slice(0,4).map(ps=>`<div class="resp-item"><div class="resp-val">${typeof ps==='string'?ps:(ps.titulo||'')}</div></div>`).join('')}</div>`;
+      document.getElementById('detalhesBody').innerHTML = html;
+    }
+
+    async function deletarUsuario(uid, nome) {
+      if (!confirm(`Deletar o usuário "${nome}" e todos os dados? Essa ação não pode ser desfeita.`)) return;
+      await fetch(`${API}/api/admin/usuario/${uid}?senha=${encodeURIComponent(senhaAdmin)}`, { method: 'DELETE' });
+      recarregar();
+    }
+
+    async function confirmarReset() {
+      if (!confirm('⚠ ATENÇÃO: Isso vai apagar TODOS os dados do banco. Tem certeza?')) return;
+      if (!confirm('Tem ABSOLUTA certeza? Essa ação é irreversível.')) return;
+      await fetch(`${API}/api/admin/reset?senha=${encodeURIComponent(senhaAdmin)}`, { method: 'DELETE' });
+      alert('Banco limpo com sucesso!');
+      recarregar();
+    }
+
+    function fecharDetalhes() {
+      document.getElementById('detalhesOverlay').classList.remove('open');
+    }
+  </script>
+</body>
+</html>
