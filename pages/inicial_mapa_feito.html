@@ -964,10 +964,11 @@ function renderPlano(perfil) {
       if (!usuario) return;
 
       try {
-        const [perfil, respostasData] = await Promise.all([
-          perfilApi.get(),
-          testeApi.respostasDestaque(3),
-        ]);
+        cconst [perfilResult, respostasData] = await Promise.all([
+  perfilApi.get().catch(() => null),
+  testeApi.respostasDestaque(3),
+]);
+const perfil = perfilResult;
         perfilAtual = perfil;
 
         const nome = usuario.nome || 'Aluno';
@@ -997,7 +998,7 @@ function renderPlano(perfil) {
 
     carregarInicial();
 
-    async function abrirTodasRespostas(e) {
+async function abrirTodasRespostas(e) {
   e.preventDefault();
   const overlay = document.getElementById('respostasOverlay');
   const container = document.getElementById('todasRespostasList');
@@ -1023,10 +1024,8 @@ const data = await testeApi.respostasDestaque(22, false);
         <div class="answer-cat font-jakarta"></div>
         <div class="answer-text font-manrope"></div>
       `;
-      div.querySelector('.answer-cat').textContent = item.bloco || item.pergunta || 'Resposta';
-      div.querySelector('.answer-text').textContent = item.pergunta
-        ? `${item.pergunta}: "${item.resposta}"`
-        : `"${item.resposta}"`;
+      div.querySelector('.answer-cat').textContent = item.pergunta || item.bloco || 'Resposta';
+      div.querySelector('.answer-text').textContent = `"${item.resposta}"`;
       container.appendChild(div);
     });
   } catch (err) {
