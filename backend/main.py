@@ -948,6 +948,46 @@ async def jornada_prog(usuario: dict = Depends(get_usuario)):
     return {"percentual": round((c/4)*100), "modulosCompletos": c, "totalModulos": 4,
             "habilidadesAtivas": dados.get("skills", []) if dados else []}
 
+
+@app.post("/api/vagas")
+async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
+    profissao = body.get("profissao", "")
+    localizacao = body.get("localizacao", "Brasil")
+    api_key = os.getenv("JSEARCH_API_KEY", "")
+    
+    if not api_key:
+        raise HTTPException(status_code=500, detail="JSEARCH_API_KEY não configurada")
+    if not profissao:
+        raise HTTPException(status_code=400, detail="Profissão não informada")
+
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            resp = await client.get(
+                "https://jsearch.p.rapidapi.com/search",
+                headers={
+                    "X-RapidAPI-Key": api_key,
+                    "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
+                },
+                params={
+                    "query": f"{profissao} {localizacao}",
+                    "num_pages": "1",
+                    "date_posted": "month"
+                }
+            )
+        data = resp.json()
+        vagas = []
+        for job in data.get("data", [])[:6]:
+            vagas.append({
+                "titulo": job.get("job_title", ""),
+                "empresa": job.get("employer_name", ""),
+                "localizacao": f"{job.get('job_city', '')} {job.get('job_country', '')}".strip(),
+                "link": job.get("job_apply_link", "#"),
+                "descricao": (job.get("job_description", "")[:200] + "...") if job.get("job_description") else ""
+            })
+        return vagas
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Erro ao buscar vagas: {str(e)}")
+
 # ── Arquivos estáticos (deve ficar após todas as rotas) ────────────────────────
 app.mount("/js",       StaticFiles(directory=os.path.join(BASE_DIR, "js")),       name="js")
 app.mount("/styles",   StaticFiles(directory=os.path.join(BASE_DIR, "styles")),   name="styles")

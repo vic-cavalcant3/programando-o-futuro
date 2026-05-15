@@ -9,308 +9,91 @@
   <link rel="stylesheet" href="../styles/sidebar.css" />
   <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
   <style>
-
-    /* ====== NAVBAR ====== */
-    .navbar {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100; padding: 1rem 0;
-      background: rgba(6,11,20,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      transition: all 0.3s;
-    }
+    * { box-sizing: border-box; }
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 0; background: rgba(6,11,20,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06); transition: all 0.3s; }
     .navbar.scrolled { padding: 0.7rem 0; background: rgba(6,11,20,0.98); }
-    .navbar .container {
-      display: flex; align-items: center; justify-content: space-between;
-      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
-      flex-wrap: nowrap;
-    }
-    .nav-logo {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700; font-size: 1rem; color: #f0f6ff;
-      text-decoration: none; flex-shrink: 0;
-    }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 2rem; flex-wrap: nowrap; }
+    .nav-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1rem; color: #f0f6ff; text-decoration: none; flex-shrink: 0; }
     .nav-links { display: flex; gap: 2.2rem; list-style: none; }
-    .nav-links a {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.88rem; color: rgba(255,255,255,0.55);
-      text-decoration: none; transition: color 0.2s; position: relative;
-    }
+    .nav-links a { font-family: 'Manrope', sans-serif; font-size: 0.88rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; position: relative; }
     .nav-links a.active { color: #f0f6ff; }
-    .nav-links a.active::after {
-      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-      height: 2px; background: #2563eb; border-radius: 2px;
-    }
+    .nav-links a.active::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 2px; background: #2563eb; border-radius: 2px; }
     .nav-links a:hover { color: #f0f6ff; }
     .nav-user { display: flex; align-items: center; gap: 0.8rem; }
-    .nav-user span {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.88rem; color: rgba(255,255,255,0.6);
-    }
-    .nav-avatar {
-      width: 36px; height: 36px; background: #2563eb;
-      border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700; font-size: 0.8rem; color: #fff; cursor: pointer;
-    }
-    .btn-hamburger {
-      display: none; background: none; border: none;
-      color: #f0f6ff; cursor: pointer; align-items: center;
-    }
+    .nav-user span { font-family: 'Manrope', sans-serif; font-size: 0.88rem; color: rgba(255,255,255,0.6); }
+    .nav-avatar { width: 36px; height: 36px; background: #2563eb; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.8rem; color: #fff; cursor: pointer; }
+    .btn-hamburger { display: none; background: none; border: none; color: #f0f6ff; cursor: pointer; align-items: center; }
+    main { max-width: 1200px; margin: 0 auto; padding: 110px 2rem 4rem; }
 
-    /* ====== MAIN ====== */
-    main {
-      max-width: 1200px; margin: 0 auto;
-      padding: 110px 2rem 4rem;
-    }
+    /* HERO */
+    .hero { margin-bottom: 2.5rem; }
+    .hero-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.68rem; font-weight: 700; color: #3b82f6; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .hero-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; color: #f0f6ff; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 0.8rem; }
+    .hero-title span { color: #3b82f6; }
+    .hero-desc { font-family: 'Manrope', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 520px; }
 
-    /* ====== HERO ====== */
-    .page-hero {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-    .page-label {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.68rem; font-weight: 700;
-      color: #3b82f6; letter-spacing: 0.12em;
-      text-transform: uppercase; margin-bottom: 0.9rem;
-    }
-    .page-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
-      font-weight: 900; color: #f0f6ff;
-      letter-spacing: -0.03em; line-height: 1.05;
-      margin-bottom: 1rem;
-    }
-    .page-title span { color: #2563eb; }
-    .page-desc {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.92rem; color: rgba(255,255,255,0.45);
-      line-height: 1.7; max-width: 440px;
-    }
+    /* ÁREA CHIP */
+    .area-chip { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.5rem 1rem; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.25); border-radius: 20px; margin-top: 1rem; }
+    .area-chip-label { font-family: 'Manrope', sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+    .area-chip-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem; font-weight: 700; color: #60a5fa; }
 
-    /* Filtros */
-    .filters {
-      display: flex; gap: 0.6rem;
-      align-self: flex-end;
-      padding-bottom: 0.4rem;
-    }
-    .filter-btn {
-      padding: 0.55rem 1.2rem;
-      border-radius: 10px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.82rem; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: transparent;
-      color: rgba(255,255,255,0.5);
-    }
-    .filter-btn.active {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: #fff;
-    }
-    .filter-btn:hover:not(.active) {
-      border-color: rgba(255,255,255,0.2);
-      color: #f0f6ff;
-    }
+    /* BUSCA */
+    .search-bar { display: flex; gap: 0.8rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .search-input { flex: 1; min-width: 200px; padding: 0.75rem 1rem; background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #f0f6ff; font-family: 'Manrope', sans-serif; font-size: 0.88rem; transition: border-color 0.2s; }
+    .search-input:focus { outline: none; border-color: rgba(37,99,235,0.4); }
+    .search-input::placeholder { color: rgba(255,255,255,0.25); }
+    .btn-buscar { padding: 0.75rem 1.5rem; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .btn-buscar:hover { background: #3b82f6; }
+    .btn-buscar:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* ====== CARDS GRID ====== */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.2rem;
-      margin-bottom: 2.5rem;
-    }
+    /* ESTADO */
+    .state-box { text-align: center; padding: 4rem 2rem; }
+    .state-box p { font-family: 'Manrope', sans-serif; font-size: 0.88rem; color: rgba(255,255,255,0.3); margin-top: 0.8rem; }
+    .loader { width: 40px; height: 40px; border: 3px solid rgba(37,99,235,0.15); border-top-color: #2563eb; border-radius: 50%; margin: 0 auto 1rem; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ====== JOB CARD ====== */
-    .job-card {
-      background: rgba(17,24,39,0.9);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 1.6rem;
-      display: flex; flex-direction: column;
-      gap: 1rem;
-      transition: all 0.3s;
-      position: relative;
-    }
-    .job-card:hover {
-      border-color: rgba(37,99,235,0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
+    /* GRID */
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 2rem; }
+    .job-card { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: all 0.3s; }
+    .job-card:hover { border-color: rgba(37,99,235,0.25); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .job-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; }
+    .job-icon { width: 42px; height: 42px; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .job-badge { padding: 0.22rem 0.65rem; border-radius: 6px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid; white-space: nowrap; }
+    .badge-remoto { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.2); }
+    .badge-presencial { background: rgba(37,99,235,0.1); color: #60a5fa; border-color: rgba(37,99,235,0.2); }
+    .job-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.98rem; font-weight: 800; color: #f0f6ff; margin-bottom: 0.25rem; line-height: 1.3; }
+    .job-company { font-family: 'Manrope', sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.25rem; }
+    .job-location { font-family: 'Manrope', sans-serif; font-size: 0.75rem; color: rgba(255,255,255,0.3); display: flex; align-items: center; gap: 0.35rem; }
+    .job-desc { font-family: 'Manrope', sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.4); line-height: 1.55; }
+    .btn-candidatar { display: block; width: 100%; padding: 0.8rem; background: #2563eb; color: #fff; border: none; border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; text-decoration: none; text-align: center; transition: all 0.25s; margin-top: auto; }
+    .btn-candidatar:hover { background: #3b82f6; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
 
-    .job-star {
-      position: absolute; top: 1rem; right: 1rem;
-      color: #f59e0b;
-    }
-
-    .job-card-top {
-      display: flex; align-items: flex-start; justify-content: space-between;
-    }
-    .job-icon {
-      width: 44px; height: 44px;
-      background: rgba(37,99,235,0.12);
-      border: 1px solid rgba(37,99,235,0.2);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .job-badge {
-      padding: 0.25rem 0.7rem;
-      border-radius: 6px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      border: 1px solid;
-    }
-    .job-badge.estagio {
-      background: rgba(37,99,235,0.12);
-      color: #60a5fa;
-      border-color: rgba(37,99,235,0.25);
-    }
-    .job-badge.jovem-aprendiz {
-      background: rgba(16,185,129,0.1);
-      color: #34d399;
-      border-color: rgba(16,185,129,0.2);
-    }
-    .job-badge.estagio-premium {
-      background: rgba(245,158,11,0.1);
-      color: #fbbf24;
-      border-color: rgba(245,158,11,0.2);
-    }
-
-    .job-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.05rem; font-weight: 800; color: #f0f6ff;
-      margin-bottom: 0.3rem;
-    }
-    .job-company {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.8rem; color: rgba(255,255,255,0.4);
-    }
-    .job-desc {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.8rem; color: rgba(255,255,255,0.4);
-      line-height: 1.5; margin-top: 0.4rem;
-    }
-
-    .job-tags {
-      display: flex; flex-wrap: wrap; gap: 0.4rem;
-    }
-    .job-tag {
-      padding: 0.2rem 0.6rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 6px;
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.72rem; color: rgba(255,255,255,0.5);
-    }
-
-    .btn-candidatar {
-      display: block; width: 100%; padding: 0.85rem;
-      background: #2563eb; color: #fff;
-      border: none; border-radius: 10px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.78rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      cursor: pointer; text-decoration: none; text-align: center;
-      transition: all 0.25s; margin-top: auto;
-    }
-    .btn-candidatar:hover {
-      background: #3b82f6; transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(37,99,235,0.4);
-    }
-
-    /* ====== VER MAIS ====== */
-    .load-more-wrap {
-      display: flex; justify-content: center;
-      margin-bottom: 3rem;
-    }
-    .btn-load-more {
-      padding: 0.85rem 2rem;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.88rem; font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      cursor: pointer; transition: all 0.2s;
-      display: flex; align-items: center; gap: 0.6rem;
-    }
-    .btn-load-more:hover {
-      border-color: rgba(255,255,255,0.25);
-      color: #f0f6ff;
-    }
-
-    /* ====== FOOTER ====== */
-    footer {
-      background: rgba(13,20,36,0.95);
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding: 2rem 0; margin-top: 2rem;
-    }
-    .footer-inner {
-      max-width: 1200px; margin: 0 auto; padding: 0 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 1rem;
-    }
-    .footer-logo {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700; font-size: 0.95rem; color: #f0f6ff;
-    }
-    .footer-copy {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 0.2rem;
-    }
+    /* FOOTER */
+    footer { background: rgba(13,20,36,0.95); border-top: 1px solid rgba(255,255,255,0.05); padding: 2rem 0; margin-top: 2rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.95rem; color: #f0f6ff; }
+    .footer-copy { font-family: 'Manrope', sans-serif; font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 0.2rem; }
     .footer-links { display: flex; gap: 2rem; list-style: none; }
-    .footer-links a {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.8rem; color: rgba(255,255,255,0.3);
-      text-decoration: none; transition: color 0.2s;
-    }
+    .footer-links a { font-family: 'Manrope', sans-serif; font-size: 0.8rem; color: rgba(255,255,255,0.3); text-decoration: none; }
     .footer-links a:hover { color: rgba(255,255,255,0.6); }
-    .footer-socials { display: flex; gap: 0.6rem; }
-    .footer-socials a {
-      width: 32px; height: 32px;
-      border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,0.3); transition: all 0.2s;
-    }
-    .footer-socials a:hover { border-color: #2563eb; color: #2563eb; }
 
-    /* ====== ANIMATIONS ====== */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .fade-up { animation: fadeUp 0.6s ease both; }
     .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.25s; }
 
-    /* ====== RESPONSIVE ====== */
-    @media (max-width: 900px) {
-      .cards-grid { grid-template-columns: 1fr 1fr; }
-      .page-hero { grid-template-columns: 1fr; }
-      .filters { align-self: flex-start; }
-    }
+    @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 600px) {
       .cards-grid { grid-template-columns: 1fr; }
       .nav-links, .nav-user { display: none; }
       .btn-hamburger { display: flex; }
-      .navbar .container { flex-wrap: nowrap; justify-content: space-between; padding: 0 1.2rem; }
-      .page-title { font-size: clamp(1.8rem, 7vw, 2.4rem); }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
-      .footer-links { flex-wrap: wrap; gap: 1rem; }
+      .navbar .container { padding: 0 1.2rem; }
     }
+
+    /* PERFIL OVERLAY */
     .perfil-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 500; align-items: center; justify-content: center; padding: 1.5rem; }
     .perfil-overlay.open { display: flex; }
     .perfil-card { background: #0d1424; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 2rem; width: 100%; max-width: 440px; position: relative; animation: fadeUp 0.3s ease both; max-height: 90vh; overflow-y: auto; }
-    .perfil-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; transition: color 0.2s; }
+    .perfil-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; }
     .perfil-close:hover { color: #fff; }
     .perfil-avatar-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; }
     .perfil-avatar { width: 72px; height: 72px; background: #2563eb; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem; }
@@ -318,385 +101,69 @@
     .perfil-email-display { font-family: 'Manrope', sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.4); }
     .perfil-form-group { margin-bottom: 1rem; }
     .perfil-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem; display: block; }
-    .perfil-input { width: 100%; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #f0f6ff; font-family: 'Manrope', sans-serif; font-size: 0.88rem; transition: border-color 0.2s; }
+    .perfil-input { width: 100%; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #f0f6ff; font-family: 'Manrope', sans-serif; font-size: 0.88rem; }
     .perfil-input:focus { outline: none; border-color: rgba(37,99,235,0.5); }
     .perfil-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 1.2rem 0; }
     .perfil-section-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.8rem; }
-    .perfil-btn-salvar { width: 100%; padding: 0.85rem; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 0.6rem; }
-    .perfil-btn-salvar:hover { background: #3b82f6; transform: translateY(-1px); }
-    .perfil-btn-sair { width: 100%; padding: 0.75rem; background: transparent; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .perfil-btn-salvar { width: 100%; padding: 0.85rem; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; margin-bottom: 0.6rem; }
+    .perfil-btn-salvar:hover { background: #3b82f6; }
+    .perfil-btn-sair { width: 100%; padding: 0.75rem; background: transparent; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
     .perfil-btn-sair:hover { border-color: rgba(239,68,68,0.4); color: #f87171; }
-    .perfil-msg { font-family: 'Manrope', sans-serif; font-size: 0.78rem; text-align: center; margin-bottom: 0.8rem; min-height: 1.2rem; }
+    .perfil-msg { font-family: 'Manrope', sans-serif; font-size: 0.78rem; text-align: center; margin-bottom: 0.8rem; min-height: 1rem; }
     .perfil-msg.ok { color: #10b981; }
     .perfil-msg.erro { color: #f87171; }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <header class="navbar" id="navbar">
     <div class="container">
       <a href="inicial_mapa_feito.html" class="nav-logo font-jakarta">Programando o Futuro</a>
       <nav>
         <ul class="nav-links">
           <li><a href="inicial_mapa_feito.html" class="font-manrope">Início</a></li>
-               <li><a href="mapa_carreira.html" class="font-manrope">Mapa de Carreira</a></li>
+          <li><a href="mapa_carreira.html" class="font-manrope">Mapa de Carreira</a></li>
           <li><a href="minha_jornada.html" class="font-manrope">Minha Jornada</a></li>
-     
           <li><a href="oportunidades.html" class="active font-manrope">Oportunidades</a></li>
         </ul>
       </nav>
       <div class="nav-user">
-        <!-- TODO BACK-END: nome e iniciais do usuário vêm da sessão -->
-        <span class="font-manrope">Olá, Lucas</span>
+        <span class="font-manrope" id="navGreeting">Olá</span>
         <div class="nav-avatar font-jakarta" id="navAvatar" onclick="abrirPerfil()" style="cursor:pointer">PF</div>
       </div>
       <button class="btn-hamburger" onclick="openSidebar()">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
       </button>
     </div>
   </header>
 
   <main>
-
-    <!-- HERO + FILTROS -->
-    <div class="page-hero fade-up">
-      <div>
-        <div class="page-label font-jakarta">Carreiras &amp; Futuro</div>
-        <h1 class="page-title font-jakarta">Oportunidades no<br><span>Mercado</span></h1>
-        <p class="page-desc font-manrope">
-          Conectamos talentos em ascensão às empresas que estão
-          moldando o amanhã. Encontre o seu próximo desafio técnico ou
-          criativo aqui.
-        </p>
-      </div>
-
-      <!--
-        TODO BACK-END:
-        Ao clicar num filtro → POST /api/oportunidades/recomendar
-        body: { userId, categoria, page: 1 }
-        Re-renderizar o grid com animação de fade.
-      -->
-      <div class="filters" id="filters">
-        <button class="filter-btn active font-jakarta" data-cat="desenvolvimento" onclick="setFilter(this)">Desenvolvimento</button>
-        <button class="filter-btn font-jakarta" data-cat="design" onclick="setFilter(this)">Design</button>
-        <button class="filter-btn font-jakarta" data-cat="dados" onclick="setFilter(this)">Dados</button>
+    <div class="hero fade-up">
+      <div class="hero-label font-jakarta">Mercado de Trabalho</div>
+      <h1 class="hero-title font-jakarta">Vagas para <span id="heroArea">sua área</span></h1>
+      <p class="hero-desc font-manrope">Vagas reais do mercado selecionadas de acordo com o seu perfil e área recomendada pela IA.</p>
+      <div class="area-chip" id="areaChip" style="display:none">
+        <span class="area-chip-label font-manrope">Sua área:</span>
+        <span class="area-chip-value font-jakarta" id="areaChipValue">—</span>
       </div>
     </div>
 
-    <!--
-      TODO BACK-END — CARDS GRID:
-      Gerado dinamicamente via API + IA.
-
-      Endpoint:
-      POST /api/oportunidades/recomendar
-      body: { userId: string, categoria: string, page: number }
-
-      A IA analisa o perfil do usuário (respostas dos módulos da jornada)
-      e retorna oportunidades ranqueadas por relevância.
-
-      Campos por oportunidade:
-      {
-        id: string,
-        titulo: string,
-        empresa: string,
-        tipo: "estagio" | "jovem-aprendiz" | "estagio-premium",
-        tags: string[],
-        descricao?: string,
-        destaque: boolean,
-        icone: "code" | "design" | "data" | "backend" | "security" | "mobile",
-        link: string
-      }
-
-      Mapeamento tipo → badge:
-        "estagio"         → azul   "Estágio"
-        "jovem-aprendiz"  → verde  "Jovem Aprendiz"
-        "estagio-premium" → amarelo "Estágio Premium"
-
-      Ver função renderCards() no script abaixo.
-    -->
-    <div class="cards-grid fade-up delay-1" id="cardsGrid">
-
-      <!-- Card 1 -->
-      <div class="job-card">
-        <div class="job-card-top">
-          <div class="job-icon">
-            <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
-              <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-            </svg>
-          </div>
-          <span class="job-badge estagio font-jakarta">Estágio</span>
-        </div>
-        <div>
-          <div class="job-title font-jakarta">Desenvolvedor Frontend Jr</div>
-          <div class="job-company font-manrope">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            TechNova Solutions
-          </div>
-        </div>
-        <div class="job-tags">
-          <span class="job-tag font-manrope">React</span>
-          <span class="job-tag font-manrope">Tailwind</span>
-          <span class="job-tag font-manrope">Remote</span>
-        </div>
-        <a href="#" class="btn-candidatar font-jakarta">Candidatar-se</a>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="job-card">
-        <div class="job-card-top">
-          <div class="job-icon">
-            <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-            </svg>
-          </div>
-          <span class="job-badge jovem-aprendiz font-jakarta">Jovem Aprendiz</span>
-        </div>
-        <div>
-          <div class="job-title font-jakarta">UX/UI Designer</div>
-          <div class="job-company font-manrope">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            Creative Flow Studio
-          </div>
-        </div>
-        <div class="job-tags">
-          <span class="job-tag font-manrope">Figma</span>
-          <span class="job-tag font-manrope">Design Systems</span>
-        </div>
-        <a href="#" class="btn-candidatar font-jakarta">Candidatar-se</a>
-      </div>
-
-      <!-- Card 3 — Destaque -->
-      <div class="job-card">
-        <div class="job-star">
-          <svg width="16" height="16" fill="#f59e0b" viewBox="0 0 24 24">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-          </svg>
-        </div>
-        <div class="job-card-top">
-          <div class="job-icon">
-            <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
-              <ellipse cx="12" cy="5" rx="9" ry="3"/>
-              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-            </svg>
-          </div>
-          <span class="job-badge estagio-premium font-jakarta">Estágio Premium</span>
-        </div>
-        <div>
-          <div class="job-title font-jakarta">Analista de Dados</div>
-          <div class="job-company font-manrope">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            Global Insight Corp
-          </div>
-          <div class="job-desc font-manrope">Trabalhe com big data e inteligência artificial aplicada ao setor financeiro internacional.</div>
-        </div>
-        <div class="job-tags"></div>
-        <a href="#" class="btn-candidatar font-jakarta">Candidatar-se</a>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="job-card">
-        <div class="job-card-top">
-          <div class="job-icon">
-            <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-            </svg>
-          </div>
-          <span class="job-badge estagio font-jakarta">Estágio</span>
-        </div>
-        <div>
-          <div class="job-title font-jakarta">Backend Developer (Go/Node)</div>
-          <div class="job-company font-manrope">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            CloudScale
-          </div>
-        </div>
-        <div class="job-tags">
-          <span class="job-tag font-manrope">Go</span>
-          <span class="job-tag font-manrope">Kubernetes</span>
-        </div>
-        <a href="#" class="btn-candidatar font-jakarta">Candidatar-se</a>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="job-card">
-        <div class="job-card-top">
-          <div class="job-icon">
-            <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <span class="job-badge jovem-aprendiz font-jakarta">Jovem Aprendiz</span>
-        </div>
-        <div>
-          <div class="job-title font-jakarta">Cybersecurity Trainee</div>
-          <div class="job-company font-manrope">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            SafeNet Guard
-          </div>
-        </div>
-        <div class="job-tags">
-          <span class="job-tag font-manrope">Linux</span>
-          <span class="job-tag font-manrope">Networks</span>
-        </div>
-        <a href="#" class="btn-candidatar font-jakarta">Candidatar-se</a>
-      </div>
-
-      <!-- Card 6 -->
-      <div class="job-card">
-        <div class="job-card-top">
-          <div class="job-icon">
-            <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-              <line x1="12" y1="18" x2="12.01" y2="18"/>
-            </svg>
-          </div>
-          <span class="job-badge estagio font-jakarta">Estágio</span>
-        </div>
-        <div>
-          <div class="job-title font-jakarta">Mobile Developer (Flutter)</div>
-          <div class="job-company font-manrope">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            AppVision
-          </div>
-        </div>
-        <div class="job-tags">
-          <span class="job-tag font-manrope">Flutter</span>
-          <span class="job-tag font-manrope">Dart</span>
-        </div>
-        <a href="#" class="btn-candidatar font-jakarta">Candidatar-se</a>
-      </div>
-
+    <div class="search-bar fade-up delay-1">
+      <input class="search-input font-manrope" id="searchInput" type="text" placeholder="Buscar por cargo, área ou empresa..." />
+      <button class="btn-buscar font-jakarta" id="btnBuscar" onclick="buscarVagas()">Buscar Vagas</button>
     </div>
 
-    <!-- VER MAIS -->
-    <!--
-      TODO BACK-END:
-      Ao clicar → page++ → append novos cards.
-      Esconder botão se hasMore = false.
-    -->
-    <div class="load-more-wrap fade-up delay-2">
-      <button class="btn-load-more font-jakarta" onclick="loadMore()">
-        Ver mais oportunidades
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
+    <div id="stateBox" class="state-box" style="display:none">
+      <div class="loader" id="loader" style="display:none"></div>
+      <p class="font-manrope" id="stateMsg"></p>
     </div>
 
+    <div class="cards-grid fade-up delay-1" id="cardsGrid"></div>
   </main>
 
-  <!-- FOOTER -->
   <div id="footer-placeholder"></div>
-
-  <script src="../js/sidebar.js"></script>
-  <script src="../js/footer.js"></script>
-  <script>
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-    });
-
-    let currentCat = 'desenvolvimento';
-    let currentPage = 1;
-
-    function setFilter(btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentCat = btn.dataset.cat;
-      currentPage = 1;
-
-      /*
-        TODO BACK-END:
-        const res = await fetch('/api/oportunidades/recomendar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: SESSION.userId, categoria: currentCat, page: 1 })
-        });
-        const { oportunidades } = await res.json();
-        renderCards(oportunidades);
-      */
-      console.log('filtro:', currentCat);
-    }
-
-    function loadMore() {
-      currentPage++;
-      /*
-        TODO BACK-END:
-        const res = await fetch('/api/oportunidades/recomendar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: SESSION.userId, categoria: currentCat, page: currentPage })
-        });
-        const { oportunidades, hasMore } = await res.json();
-        appendCards(oportunidades);
-        if (!hasMore) document.querySelector('.btn-load-more').style.display = 'none';
-      */
-      console.log('carregar página:', currentPage);
-    }
-
-    /*
-      TODO BACK-END — renderCards / appendCards:
-
-      Mapeamento icone → SVG innerHTML:
-      const ICONS = {
-        code:     '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
-        design:   '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>',
-        data:     '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>',
-        backend:  '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
-        security: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
-        mobile:   '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>'
-      };
-
-      Mapeamento tipo → { classe, label }:
-      const BADGES = {
-        'estagio':         { cls: 'estagio',         label: 'Estágio' },
-        'jovem-aprendiz':  { cls: 'jovem-aprendiz',  label: 'Jovem Aprendiz' },
-        'estagio-premium': { cls: 'estagio-premium', label: 'Estágio Premium' }
-      };
-
-      function buildCard(o) {
-        const badge = BADGES[o.tipo];
-        const icon  = ICONS[o.icone];
-        return `
-          <div class="job-card">
-            ${o.destaque ? '<div class="job-star"><svg width="16" height="16" fill="#f59e0b" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>' : ''}
-            <div class="job-card-top">
-              <div class="job-icon">
-                <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">${icon}</svg>
-              </div>
-              <span class="job-badge ${badge.cls} font-jakarta">${badge.label}</span>
-            </div>
-            <div>
-              <div class="job-title font-jakarta">${o.titulo}</div>
-              <div class="job-company font-manrope">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-                ${o.empresa}
-              </div>
-              ${o.descricao ? `<div class="job-desc font-manrope">${o.descricao}</div>` : ''}
-            </div>
-            <div class="job-tags">
-              ${o.tags.map(t => `<span class="job-tag font-manrope">${t}</span>`).join('')}
-            </div>
-            <a href="${o.link}" class="btn-candidatar font-jakarta">Candidatar-se</a>
-          </div>
-        `;
-      }
-
-      function renderCards(oportunidades) {
-        document.getElementById('cardsGrid').innerHTML = oportunidades.map(buildCard).join('');
-      }
-
-      function appendCards(oportunidades) {
-        document.getElementById('cardsGrid').insertAdjacentHTML('beforeend', oportunidades.map(buildCard).join(''));
-      }
-    */
-  </script>
 
   <div class="perfil-overlay" id="perfilOverlay" onclick="fecharPerfil(event)">
     <div class="perfil-card">
@@ -708,71 +175,166 @@
         <div class="perfil-nome-display font-jakarta" id="perfilNomeDisplay">Carregando...</div>
         <div class="perfil-email-display font-manrope" id="perfilEmailDisplay"></div>
       </div>
-      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Nome completo</label><input class="perfil-input font-manrope" id="perfilNomeInput" type="text" placeholder="Seu nome completo" /></div>
-      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Email</label><input class="perfil-input font-manrope" id="perfilEmailInput" type="email" placeholder="seu@email.com" /></div>
-      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Cidade</label><input class="perfil-input font-manrope" id="perfilCidadeInput" type="text" placeholder="Ex: São Paulo - SP" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Nome completo</label><input class="perfil-input font-manrope" id="perfilNomeInput" type="text" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Email</label><input class="perfil-input font-manrope" id="perfilEmailInput" type="email" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Cidade</label><input class="perfil-input font-manrope" id="perfilCidadeInput" type="text" /></div>
       <div class="perfil-divider"></div>
       <div class="perfil-section-title font-jakarta">Alterar senha</div>
-      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Senha atual</label><input class="perfil-input font-manrope" id="perfilSenhaAtual" type="password" placeholder="••••••••" /></div>
-      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Nova senha</label><input class="perfil-input font-manrope" id="perfilSenhaNova" type="password" placeholder="••••••••" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Senha atual</label><input class="perfil-input font-manrope" id="perfilSenhaAtual" type="password" /></div>
+      <div class="perfil-form-group"><label class="perfil-label font-jakarta">Nova senha</label><input class="perfil-input font-manrope" id="perfilSenhaNova" type="password" /></div>
       <div class="perfil-msg font-manrope" id="perfilMsg"></div>
       <button class="perfil-btn-salvar font-jakarta" onclick="salvarPerfil()">Salvar alterações</button>
       <button class="perfil-btn-sair font-jakarta" onclick="sairDaConta()">Sair da conta</button>
     </div>
   </div>
 
+  <script src="../js/api.js"></script>
+  <script>const paginaProtegida = protegerPagina({ precisaMapaFeito: true });</script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/footer.js"></script>
   <script>
-  function abrirPerfil() {
-    const usuario = auth.getUser();
-    if (!usuario) return;
-    document.getElementById('perfilAvatar').textContent = usuario.avatar_iniciais || '??';
-    document.getElementById('perfilNomeDisplay').textContent = usuario.nome || '';
-    document.getElementById('perfilEmailDisplay').textContent = usuario.email || '';
-    document.getElementById('perfilNomeInput').value = usuario.nome || '';
-    document.getElementById('perfilEmailInput').value = usuario.email || '';
-    document.getElementById('perfilCidadeInput').value = usuario.cidade || '';
-    document.getElementById('perfilSenhaAtual').value = '';
-    document.getElementById('perfilSenhaNova').value = '';
-    document.getElementById('perfilMsg').textContent = '';
-    document.getElementById('perfilMsg').className = 'perfil-msg font-manrope';
-    document.getElementById('perfilOverlay').classList.add('open');
-  }
-  function fecharPerfil(e) {
-    if (!e || e.target === document.getElementById('perfilOverlay')) {
-      document.getElementById('perfilOverlay').classList.remove('open');
-    }
-  }
-  async function salvarPerfil() {
-    const msgEl = document.getElementById('perfilMsg');
-    msgEl.textContent = 'Salvando...';
-    msgEl.className = 'perfil-msg font-manrope';
-    try {
-      const dados = {
-        nome: document.getElementById('perfilNomeInput').value.trim(),
-        email: document.getElementById('perfilEmailInput').value.trim(),
-        cidade: document.getElementById('perfilCidadeInput').value.trim(),
-      };
-      const senhaAtual = document.getElementById('perfilSenhaAtual').value;
-      const senhaNova = document.getElementById('perfilSenhaNova').value;
-      if (senhaNova) { dados.senha_atual = senhaAtual; dados.senha_nova = senhaNova; }
-      const usuario = await authApi.atualizarPerfil(dados);
-      auth.setUser(usuario);
-      document.getElementById('perfilAvatar').textContent = usuario.avatar_iniciais || '??';
-      document.getElementById('perfilNomeDisplay').textContent = usuario.nome || '';
-      document.getElementById('perfilEmailDisplay').textContent = usuario.email || '';
-      const navAvatar = document.getElementById('navAvatar');
-      const navGreeting = document.getElementById('navGreeting');
-      if (navAvatar) navAvatar.textContent = usuario.avatar_iniciais || '??';
-      if (navGreeting) navGreeting.textContent = `Olá, ${usuario.nome.split(' ')[0]}`;
-      msgEl.textContent = 'Salvo com sucesso!';
-      msgEl.className = 'perfil-msg font-manrope ok';
-    } catch (err) {
-      msgEl.textContent = err?.erro || 'Erro ao salvar. Tente novamente.';
-      msgEl.className = 'perfil-msg font-manrope erro';
-    }
-  }
-  function sairDaConta() { authApi.logout(); }
-  </script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+    });
 
+    const fn = n => String(n||'').trim().split(/\s+/)[0]||'aluno';
+    const ini = n => String(n||'').trim().split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join('')||'PF';
+
+    function mostrarEstado(loading, msg) {
+      const box = document.getElementById('stateBox');
+      const loader = document.getElementById('loader');
+      const stateMsg = document.getElementById('stateMsg');
+      if (!msg && !loading) { box.style.display = 'none'; return; }
+      box.style.display = 'block';
+      loader.style.display = loading ? 'block' : 'none';
+      stateMsg.textContent = msg || '';
+    }
+
+    function renderVagas(vagas) {
+      const grid = document.getElementById('cardsGrid');
+      grid.innerHTML = '';
+      if (!vagas.length) {
+        mostrarEstado(false, 'Nenhuma vaga encontrada. Tente buscar por outra área.');
+        return;
+      }
+      mostrarEstado(false, '');
+      vagas.forEach(v => {
+        const card = document.createElement('div');
+        card.className = 'job-card';
+        card.innerHTML = `
+          <div class="job-card-top">
+            <div class="job-icon">
+              <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              </svg>
+            </div>
+            <span class="job-badge ${v.remoto ? 'badge-remoto' : 'badge-presencial'} font-jakarta">${v.remoto ? 'Remoto' : 'Presencial'}</span>
+          </div>
+          <div>
+            <div class="job-title font-jakarta"></div>
+            <div class="job-company font-manrope">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              <span></span>
+            </div>
+            <div class="job-location font-manrope">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>
+              <span></span>
+            </div>
+          </div>
+          <div class="job-desc font-manrope"></div>
+          <a class="btn-candidatar font-jakarta" target="_blank" rel="noopener">Ver vaga →</a>
+        `;
+        card.querySelector('.job-title').textContent = v.titulo;
+        card.querySelector('.job-company span').textContent = v.empresa;
+        card.querySelector('.job-location span').textContent = v.localizacao || 'Brasil';
+        card.querySelector('.job-desc').textContent = v.descricao;
+        card.querySelector('.btn-candidatar').href = v.link || '#';
+        grid.appendChild(card);
+      });
+    }
+
+    async function buscarVagas(profissaoAuto) {
+      const query = profissaoAuto || document.getElementById('searchInput').value.trim();
+      if (!query) return;
+      const btn = document.getElementById('btnBuscar');
+      btn.disabled = true;
+      mostrarEstado(true, 'Buscando vagas no mercado...');
+      document.getElementById('cardsGrid').innerHTML = '';
+      try {
+        const vagas = await api.post('/api/vagas', { profissao: query, localizacao: 'Brasil' });
+        renderVagas(vagas);
+      } catch (err) {
+        mostrarEstado(false, 'Erro ao buscar vagas. Verifique sua conexão e tente novamente.');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') buscarVagas();
+    });
+
+    async function carregarPagina() {
+      const usuario = await paginaProtegida;
+      if (!usuario) return;
+      document.getElementById('navGreeting').textContent = `Olá, ${fn(usuario.nome)}`;
+      document.getElementById('navAvatar').textContent = usuario.avatar_iniciais || ini(usuario.nome);
+      try {
+        const perfil = await perfilApi.get();
+        const area = perfil.areaPrincipal || '';
+        if (area) {
+          document.getElementById('heroArea').textContent = area;
+          document.getElementById('areaChipValue').textContent = area;
+          document.getElementById('areaChip').style.display = 'inline-flex';
+          document.getElementById('searchInput').value = area;
+          await buscarVagas(area);
+        } else {
+          mostrarEstado(false, 'Complete seu perfil para ver vagas personalizadas.');
+        }
+      } catch {
+        mostrarEstado(false, 'Complete o questionário para ver vagas da sua área.');
+      }
+    }
+
+    carregarPagina();
+
+    function abrirPerfil() {
+      const u = auth.getUser();
+      if (!u) return;
+      document.getElementById('perfilAvatar').textContent = u.avatar_iniciais||'??';
+      document.getElementById('perfilNomeDisplay').textContent = u.nome||'';
+      document.getElementById('perfilEmailDisplay').textContent = u.email||'';
+      document.getElementById('perfilNomeInput').value = u.nome||'';
+      document.getElementById('perfilEmailInput').value = u.email||'';
+      document.getElementById('perfilCidadeInput').value = u.cidade||'';
+      document.getElementById('perfilSenhaAtual').value = '';
+      document.getElementById('perfilSenhaNova').value = '';
+      document.getElementById('perfilMsg').textContent = '';
+      document.getElementById('perfilOverlay').classList.add('open');
+    }
+    function fecharPerfil(e) {
+      if (!e || e.target === document.getElementById('perfilOverlay')) document.getElementById('perfilOverlay').classList.remove('open');
+    }
+    async function salvarPerfil() {
+      const msgEl = document.getElementById('perfilMsg');
+      msgEl.textContent = 'Salvando...'; msgEl.className = 'perfil-msg font-manrope';
+      try {
+        const dados = { nome: document.getElementById('perfilNomeInput').value.trim(), email: document.getElementById('perfilEmailInput').value.trim(), cidade: document.getElementById('perfilCidadeInput').value.trim() };
+        const sa = document.getElementById('perfilSenhaAtual').value;
+        const sn = document.getElementById('perfilSenhaNova').value;
+        if (sn) { dados.senha_atual = sa; dados.senha_nova = sn; }
+        const u = await authApi.atualizarPerfil(dados);
+        auth.setUser(u);
+        document.getElementById('perfilAvatar').textContent = u.avatar_iniciais||'??';
+        document.getElementById('perfilNomeDisplay').textContent = u.nome||'';
+        document.getElementById('perfilEmailDisplay').textContent = u.email||'';
+        const na = document.getElementById('navAvatar'); const ng = document.getElementById('navGreeting');
+        if (na) na.textContent = u.avatar_iniciais||'??';
+        if (ng) ng.textContent = `Olá, ${u.nome.split(' ')[0]}`;
+        msgEl.textContent = 'Salvo!'; msgEl.className = 'perfil-msg font-manrope ok';
+      } catch (err) { msgEl.textContent = err?.erro||'Erro ao salvar.'; msgEl.className = 'perfil-msg font-manrope erro'; }
+    }
+    function sairDaConta() { authApi.logout(); }
+  </script>
 </body>
 </html>
