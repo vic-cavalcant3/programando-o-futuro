@@ -949,10 +949,10 @@ function renderPlano(perfil) {
       steps.innerHTML = '';
       const passos = (perfilAtual?.proximosPassos || perfilAtual?.caminhos?.[0]?.passos || []).slice(0, 4);
       (passos.length ? passos : ['Ver seu resultado completo', 'Começar pela primeira ação recomendada']).forEach((passo) => {
-        const li = document.createElement('li');
-        li.textContent = passo;
-        steps.appendChild(li);
-      });
+  const li = document.createElement('li');
+  li.textContent = typeof passo === 'string' ? passo : (passo.titulo || passo.descricao || JSON.stringify(passo));
+  steps.appendChild(li);
+});
 
       document.getElementById('areaOverlay').classList.add('open');
     }

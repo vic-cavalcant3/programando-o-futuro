@@ -1033,8 +1033,9 @@
       document.querySelector('.progress-circle-fill').style.strokeDashoffset = 314 * (1 - percentual / 100);
       document.getElementById('modulesStat').textContent = `${data.modulosCompletos || 0}/${data.totalModulos || 4}`;
       document.getElementById('questionsStat').textContent =
-  `${data.perguntasRespondidas || 0}/${data.totalPerguntas || 22}`;
-      document.getElementById('skillsStat').textContent = Array.isArray(data.habilidadesAtivas) ? data.habilidadesAtivas.length : 0;
+    `${data.perguntasRespondidas || 0}/${data.totalPerguntas || 22}`;
+     const skillsEl = document.getElementById('skillsStat');
+        if (skillsEl) skillsEl.textContent = Array.isArray(data.habilidadesAtivas) ? data.habilidadesAtivas.length : 0;
     }
 
     async function carregarJornada() {
