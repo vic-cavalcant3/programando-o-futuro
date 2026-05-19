@@ -97,6 +97,9 @@
       </div>
       <div class="dash-actions">
         <button class="btn-outline font-jakarta" onclick="recarregar()">↻ Atualizar</button>
+        <!-- NOVO BOTÃO ↓ -->
+        <button class="btn-outline font-jakarta" onclick="gerarRelatorio()" id="btnRelatorio">📄 Relatório PDF</button>
+        <!-- FIM NOVO BOTÃO -->
         <button class="btn-danger font-jakarta" onclick="confirmarReset()">⚠ Limpar Banco</button>
       </div>
     </div>
@@ -343,6 +346,232 @@
     function fecharDetalhes() {
       document.getElementById('detalhesOverlay').classList.remove('open');
     }
+
+
+
+    // ── RELATÓRIO PDF ──────────────────────────────────────────────────────────
+let _dadosCache = null; // guardamos os dados do último carregamento
+
+const _renderDadosOrig = renderDados;
+function renderDados(data) {
+  _dadosCache = data;
+  _renderDadosOrig(data);
+}
+
+async function gerarRelatorio() {
+  const btn = document.getElementById('btnRelatorio');
+  btn.textContent = '⏳ Gerando...';
+  btn.disabled = true;
+
+  // Carrega jsPDF dinamicamente (só na primeira vez)
+  if (!window.jspdf) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  // Garante que temos dados
+  let dados = _dadosCache;
+  if (!dados) {
+    const res = await fetch(`${API}/api/admin/dados?senha=${encodeURIComponent(senhaAdmin)}`);
+    dados = await res.json();
+    _dadosCache = dados;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  const azul   = [37,  99, 235];
+  const cinza  = [100, 116, 139];
+  const escuro = [15,  23,  42];
+  const branco = [255, 255, 255];
+  const W = 210, M = 18;
+  let y = 0;
+
+  // ── CABEÇALHO ──
+  doc.setFillColor(...azul);
+  doc.rect(0, 0, W, 36, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(...branco);
+  doc.text('Programando o Futuro', M, 15);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Relatório Administrativo', M, 22);
+  const agora = new Date().toLocaleString('pt-BR');
+  doc.text(`Gerado em: ${agora}`, M, 29);
+  y = 46;
+
+  // ── MÉTRICAS ──
+  function bloco(label, valor, x, bx) {
+    doc.setFillColor(241, 245, 249);
+    doc.roundedRect(bx, y, 40, 22, 3, 3, 'F');
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...cinza);
+    doc.text(label, bx + 5, y + 9);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...azul);
+    doc.text(String(valor), bx + 5, y + 19);
+  }
+
+  const m = dados.metricas;
+  bloco('USUÁRIOS',        m.usuarios,         0, M);
+  bloco('PERFIS IA',       m.perfis,           0, M + 44);
+  bloco('RESPOSTAS',       m.respostas,        0, M + 88);
+  bloco('JOBS CONCLUÍDOS', m.jobs_concluidos,  0, M + 132);
+  y += 32;
+
+  // ── LINHA SEPARADORA ──
+  function separador(titulo) {
+    doc.setFillColor(...azul);
+    doc.rect(M, y, 4, 7, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...escuro);
+    doc.text(titulo, M + 7, y + 5.5);
+    y += 12;
+  }
+
+  // ── TABELA USUÁRIOS ──
+  separador('Usuários Cadastrados');
+
+  const thBg = [230, 238, 255];
+  const cols = [62, 38, 22, 22, 30]; // larguras
+  const xs = [M, M+62, M+100, M+122, M+144];
+  const headers = ['Email', 'Nome', 'Teste', 'Módulos', 'Cadastro'];
+
+  doc.setFillColor(...thBg);
+  doc.rect(M, y, W - M*2, 8, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...azul);
+  headers.forEach((h, i) => doc.text(h, xs[i] + 2, y + 5.5));
+  y += 8;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  dados.usuarios.forEach((u, idx) => {
+    if (y > 270) { doc.addPage(); y = 18; }
+    if (idx % 2 === 0) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(M, y, W - M*2, 7, 'F');
+    }
+    doc.setTextColor(...escuro);
+    const email = u.email.length > 30 ? u.email.slice(0, 28) + '…' : u.email;
+    doc.text(email,                          xs[0] + 2, y + 5);
+    doc.text((u.nome||'').slice(0,18),       xs[1] + 2, y + 5);
+    doc.text(u.teste_inicial_concluido ? 'Sim' : 'Não', xs[2] + 2, y + 5);
+    doc.text(`${(u.modulos_concluidos||[]).length}/4`, xs[3] + 2, y + 5);
+    const dt = u.criado_em ? new Date(u.criado_em).toLocaleDateString('pt-BR') : '—';
+    doc.text(dt,                             xs[4] + 2, y + 5);
+    y += 7;
+  });
+  if (!dados.usuarios.length) {
+    doc.setTextColor(...cinza);
+    doc.text('Nenhum usuário cadastrado.', M + 2, y + 5);
+    y += 7;
+  }
+  y += 6;
+
+  // ── JOBS ──
+  if (y > 240) { doc.addPage(); y = 18; }
+  separador('Jobs de Processamento');
+
+  const jHeaders = ['ID', 'Usuário', 'Status', 'Erro', 'Data'];
+  const jXs = [M, M+22, M+70, M+100, M+155];
+
+  doc.setFillColor(...thBg);
+  doc.rect(M, y, W - M*2, 8, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...azul);
+  jHeaders.forEach((h, i) => doc.text(h, jXs[i] + 2, y + 5.5));
+  y += 8;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  dados.jobs.forEach((j, idx) => {
+    if (y > 270) { doc.addPage(); y = 18; }
+    if (idx % 2 === 0) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(M, y, W - M*2, 7, 'F');
+    }
+    const cor = j.status === 'concluido' ? [16,185,129] : j.status === 'erro' ? [239,68,68] : cinza;
+    doc.setTextColor(...escuro);
+    doc.text(j.id.slice(0,8),                             jXs[0] + 2, y + 5);
+    doc.text((j.nome||j.usuario_id||'').slice(0,20),      jXs[1] + 2, y + 5);
+    doc.setTextColor(...cor);
+    doc.text(j.status,                                    jXs[2] + 2, y + 5);
+    doc.setTextColor(...escuro);
+    doc.text((j.erro||'—').slice(0,28),                   jXs[3] + 2, y + 5);
+    const dt2 = j.criado_em ? new Date(j.criado_em).toLocaleDateString('pt-BR') : '—';
+    doc.text(dt2,                                         jXs[4] + 2, y + 5);
+    y += 7;
+  });
+  if (!dados.jobs.length) {
+    doc.setTextColor(...cinza);
+    doc.text('Nenhum job registrado.', M + 2, y + 5);
+    y += 7;
+  }
+
+  // ── RESUMO JOBS ──
+  y += 6;
+  if (y > 250) { doc.addPage(); y = 18; }
+  separador('Resumo de Jobs');
+
+  const totalJobs = dados.jobs.length;
+  const concluidos = dados.jobs.filter(j => j.status === 'concluido').length;
+  const erros      = dados.jobs.filter(j => j.status === 'erro').length;
+  const pendentes  = totalJobs - concluidos - erros;
+
+  const resumos = [
+    { label: 'Total de jobs',  valor: totalJobs,   cor: azul },
+    { label: 'Concluídos',     valor: concluidos,  cor: [16,185,129] },
+    { label: 'Com erro',       valor: erros,        cor: [239,68,68] },
+    { label: 'Outros/Pend.',   valor: pendentes,    cor: cinza },
+  ];
+
+  resumos.forEach((r, i) => {
+    const bx = M + i * 44;
+    doc.setFillColor(241, 245, 249);
+    doc.roundedRect(bx, y, 40, 22, 3, 3, 'F');
+    doc.setFontSize(7.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...cinza);
+    doc.text(r.label, bx + 4, y + 9);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...r.cor);
+    doc.text(String(r.valor), bx + 4, y + 19);
+  });
+  y += 32;
+
+  // ── RODAPÉ ──
+  const totalPags = doc.internal.pages.length - 1;
+  for (let p = 1; p <= totalPags; p++) {
+    doc.setPage(p);
+    doc.setFillColor(241, 245, 249);
+    doc.rect(0, 285, W, 12, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(...cinza);
+    doc.text('Programando o Futuro — Relatório Confidencial', M, 292);
+    doc.text(`Página ${p} de ${totalPags}`, W - M, 292, { align: 'right' });
+  }
+
+  // ── DOWNLOAD ──
+  const nomeArq = `relatorio_${new Date().toISOString().slice(0,10)}.pdf`;
+  doc.save(nomeArq);
+
+  btn.textContent = '📄 Relatório PDF';
+  btn.disabled = false;
+}
+// ── FIM RELATÓRIO PDF ──────────────────────────────────────────────────────
   </script>
 </body>
 </html>
