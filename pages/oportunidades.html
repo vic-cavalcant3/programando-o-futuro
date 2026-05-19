@@ -112,10 +112,206 @@
     .perfil-msg { font-family: 'Manrope', sans-serif; font-size: 0.78rem; text-align: center; margin-bottom: 0.8rem; min-height: 1rem; }
     .perfil-msg.ok { color: #10b981; }
     .perfil-msg.erro { color: #f87171; }
+
+    /* =========================
+   PÁGINA EM CONSTRUÇÃO
+========================= */
+
+body {
+  overflow: hidden;
+}
+
+/* desfoca conteúdo */
+main,
+.navbar,
+footer,
+#footer-placeholder {
+  filter: blur(10px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* overlay */
+.construction-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background:
+    radial-gradient(circle at top, rgba(37,99,235,0.18), transparent 45%),
+    rgba(3,8,18,0.72);
+
+  backdrop-filter: blur(14px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem;
+}
+
+/* card */
+.construction-card {
+  width: 100%;
+  max-width: 520px;
+
+  background: rgba(13,20,36,0.96);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 28px;
+
+  padding: 3rem 2.2rem;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 80px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(37,99,235,0.08);
+}
+
+/* ícone */
+.construction-icon {
+  width: 78px;
+  height: 78px;
+
+  margin: 0 auto 1.5rem;
+
+  border-radius: 24px;
+
+  background: rgba(37,99,235,0.12);
+
+  border: 1px solid rgba(37,99,235,0.25);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #60a5fa;
+}
+
+/* label */
+.construction-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: #3b82f6;
+
+  margin-bottom: 0.9rem;
+}
+
+/* título */
+.construction-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+
+  color: #f0f6ff;
+
+  margin-bottom: 1rem;
+}
+
+.construction-title span {
+  color: #3b82f6;
+}
+
+/* descrição */
+.construction-desc {
+  font-size: 0.92rem;
+  line-height: 1.8;
+
+  color: rgba(255,255,255,0.45);
+
+  max-width: 420px;
+
+  margin: 0 auto 2rem;
+}
+
+/* botão */
+.construction-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.95rem 1.5rem;
+
+  border-radius: 14px;
+
+  background: #2563eb;
+
+  color: #fff;
+
+  text-decoration: none;
+
+  font-size: 0.82rem;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  transition: all 0.25s ease;
+}
+
+.construction-btn:hover {
+  background: #3b82f6;
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 30px rgba(37,99,235,0.35);
+}
+
+/* mobile */
+@media (max-width: 600px) {
+  .construction-card {
+    padding: 2.4rem 1.4rem;
+    border-radius: 24px;
+  }
+
+  .construction-icon {
+    width: 68px;
+    height: 68px;
+  }
+
+  .construction-desc {
+    font-size: 0.85rem;
+  }
+}
   </style>
 </head>
 <body>
 
+  <!-- OVERLAY EM CONSTRUÇÃO -->
+<div class="construction-overlay">
+  <div class="construction-card">
+    <div class="construction-icon">
+      <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M14.7 6.3a1 1 0 0 0-1.4 0l-7 7a1 1 0 0 0 0 1.4l3 3a1 1 0 0 0 1.4 0l7-7a1 1 0 0 0 0-1.4z"/>
+        <path d="M16 3l5 5"/>
+        <path d="M2 22l6-6"/>
+      </svg>
+    </div>
+
+    <div class="construction-label font-jakarta">
+      Em desenvolvimento
+    </div>
+
+    <h1 class="construction-title font-jakarta">
+      Página em <span>construção</span>
+    </h1>
+
+    <p class="construction-desc font-manrope">
+      Estamos preparando essa área com vagas reais e recomendações inteligentes para sua carreira.
+      Volte em breve.
+    </p>
+
+    <a href="inicial_mapa_feito.html" class="construction-btn font-jakarta">
+      Voltar ao início
+    </a>
+  </div>
+</div>
   <header class="navbar" id="navbar">
     <div class="container">
       <a href="inicial_mapa_feito.html" class="nav-logo font-jakarta">Programando o Futuro</a>

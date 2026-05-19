@@ -748,10 +748,19 @@
               <span class="progress-stat-label font-manrope">Módulos Completos</span>
               <span class="progress-stat-value font-jakarta" id="modulesStat">0/4</span>
             </div>
-            <div class="progress-stat-row">
+            <!-- <div class="progress-stat-row">
               <span class="progress-stat-label font-manrope">Habilidades Ativas</span>
               <span class="progress-stat-value font-jakarta" id="skillsStat">0</span>
-            </div>
+            </div> -->
+            <div class="progress-stat-row">
+  <span class="progress-stat-label font-manrope">
+    Perguntas iniciais respondidas
+  </span>
+
+  <span class="progress-stat-value font-jakarta" id="questionsStat">
+    0/22
+  </span>
+</div>
           </div>
 
           <!--
@@ -892,9 +901,11 @@
       return 'Bloqueado';
     }
 
-    function moduloHref(modulo) {
-      return modulo.status === 'locked' ? '#' : `modulo${Number(modulo.id)}.html`;
-    }
+ function moduloHref(modulo) {
+  return modulo.status === 'locked'
+    ? '#'
+    : `modulo${Number(modulo.numero || modulo.id)}.html`;
+}
 
     function renderModulos(modulos = []) {
       const grid = document.getElementById('modulesGrid');
@@ -1021,6 +1032,8 @@
       document.getElementById('progressCircleLabel').textContent = `${percentual}%`;
       document.querySelector('.progress-circle-fill').style.strokeDashoffset = 314 * (1 - percentual / 100);
       document.getElementById('modulesStat').textContent = `${data.modulosCompletos || 0}/${data.totalModulos || 4}`;
+      document.getElementById('questionsStat').textContent =
+  `${data.perguntasRespondidas || 0}/${data.totalPerguntas || 22}`;
       document.getElementById('skillsStat').textContent = Array.isArray(data.habilidadesAtivas) ? data.habilidadesAtivas.length : 0;
     }
 

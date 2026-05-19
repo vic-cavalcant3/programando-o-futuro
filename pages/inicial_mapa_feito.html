@@ -828,6 +828,7 @@
     // usa a pergunta como label, não o bloco
     div.querySelector('.answer-cat').textContent = item.pergunta || item.bloco || 'Resposta';
 div.querySelector('.answer-text').textContent = `"${item.resposta}"`;
+    container.appendChild(div);
   });
 }
 

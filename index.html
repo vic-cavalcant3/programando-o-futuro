@@ -253,12 +253,34 @@
 
 
 
+/* card 3 - próximos passos */
+.benefit-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 1.8rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  height: auto; /* ← tira o 245px fixo */
+  min-height: 245px; /* ← mantém tamanho mínimo mas deixa crescer */
+}
+
+/* card 4 - progresso salvo */
 .benefit-card-large-bottom {
   grid-column: 2 / 4;
   grid-row: 2;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* ← empilha verticalmente */
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* stat fica no rodapé do card */
+.benefit-card-large-bottom .inline-stat {
+  margin-top: 2px; /* ← empurra pro fundo */
+  align-self: flex-end; /* ← joga pra direita */
 }
 
 
@@ -383,7 +405,14 @@
         font-size: 0.9rem;
         color: var(--text-secondary);
         line-height: 1.6;
-        width: 420px;
+        width: 400px;
+      }
+
+          .benefit-card .p2 {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        width: 300px;
       }
 
       /* Stat card */
@@ -949,7 +978,10 @@
 }
 .benefit-card h3 {
   font-size: 1rem !important;
+  margin-bottom: 0;
 }
+
+
   }
     </style>
   </head>
@@ -1146,26 +1178,32 @@
               />
             </div>
             <h3 class="font-manrope">Próximos passos práticos</h3>
-            <p class="font-manrope">
+            <p class="font-manrope p2">
               Nada de teoria vazia. Entregamos uma lista de ações concretas para
               você começar hoje mesmo.
             </p>
           </div>
 
           <!-- Row 2, Col 2-3 (largo) -->
-        
+          <!-- Row 2, Col 2-3 (largo) -->
+<div class="benefit-card bg-image benefit-card-large-bottom fade-up fade-up-2">
+  <img class="card-bg" src="assets/images/Image1.png" alt="" />
+  <div class="b-icon">
+    <img src="assets/images/icons/icon9.png" alt="" width="33 height="30" />
+  </div>
+  <h3 class="font-jakarta">Progresso salvo</h3>
+  <p class="font-manrope">
+    Suas descobertas ficam armazenadas na nuvem. Retorne a qualquer
+    momento para revisar seu roadmap ou atualizar suas preferências
+    conforme você cresce.
+  </p>
+  <!-- <div class="inline-stat">
+    <div class="stat-num font-manrope">100%</div>
+    <div class="stat-label font-manrope">Segurança Cloud</div>
+  </div> -->
+</div>
           
-            <h3 class="font-jakarta">Progresso salvo</h3>
-            <p class="font-manrope">
-              Suas descobertas ficam armazenadas na nuvem. Retorne a qualquer
-              momento para revisar seu roadmap ou atualizar suas preferências
-              conforme você cresce.
-            </p>
-          </div>
-            <div class="inline-stat">
-              <div class="stat-num font-manrope">100%</div>
-              <div class="stat-label font-manrope">Segurança Cloud</div>
-            </div>
+            
           </div>
         </div>
       </div>
