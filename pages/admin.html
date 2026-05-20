@@ -115,13 +115,38 @@
         <div class="metric-value blue font-jakarta" id="mPerfis">—</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label font-jakarta">Respostas</div>
-        <div class="metric-value font-jakarta" id="mRespostas">—</div>
+        <div class="metric-label font-jakarta">Taxa de Sucesso</div>
+        <div class="metric-value font-jakarta" id="mTaxa">—</div>
       </div>
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Tempo Médio IA</div>
+        <div class="metric-value font-jakarta" id="mTempo">—</div>
+      </div>
+    </div>
+    <!-- Segunda linha de métricas -->
+    <div class="metrics-grid" style="margin-top:0.75rem">
       <div class="metric-card">
         <div class="metric-label font-jakarta">Jobs Concluídos</div>
         <div class="metric-value font-jakarta" id="mJobs">—</div>
       </div>
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Jobs com Erro</div>
+        <div class="metric-value font-jakarta" style="color:#f87171" id="mErros">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Respostas Salvas</div>
+        <div class="metric-value font-jakarta" id="mRespostas">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label font-jakarta">Total de Jobs</div>
+        <div class="metric-value font-jakarta" id="mJobsTotal">—</div>
+      </div>
+    </div>
+
+    <!-- RANKING DE ÁREAS -->
+    <div class="section-title font-jakarta" style="margin-top:2rem">Ranking de áreas recomendadas pela IA</div>
+    <div class="table-wrap" id="rankingAreas">
+      <div style="padding:1.5rem;text-align:center;color:rgba(255,255,255,0.2);font-size:0.82rem">Carregando...</div>
     </div>
 
     <!-- USUÁRIOS -->
@@ -168,8 +193,10 @@
             <th>ID</th>
             <th>Usuário</th>
             <th>Status</th>
+            <th>Tempo IA</th>
             <th>Erro</th>
             <th>Data</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody id="tJobs"></tbody>
@@ -220,18 +247,44 @@
     }
 
     function renderDados(data) {
-      document.getElementById('mUsuarios').textContent = data.metricas.usuarios;
-      document.getElementById('mPerfis').textContent = data.metricas.perfis;
-      document.getElementById('mRespostas').textContent = data.metricas.respostas;
-      document.getElementById('mJobs').textContent = data.metricas.jobs_concluidos;
+      const m = data.metricas;
+      document.getElementById('mUsuarios').textContent = m.usuarios;
+      document.getElementById('mPerfis').textContent = m.perfis;
+      document.getElementById('mRespostas').textContent = m.respostas;
+      document.getElementById('mJobs').textContent = m.jobs_concluidos;
+      document.getElementById('mErros').textContent = m.jobs_erro ?? '—';
+      document.getElementById('mJobsTotal').textContent = m.jobs_total ?? '—';
+      document.getElementById('mTaxa').textContent = m.taxa_sucesso != null ? m.taxa_sucesso + '%' : '—';
+      document.getElementById('mTempo').textContent = m.tempo_medio_ia != null ? m.tempo_medio_ia + 's' : '—';
+      renderRankingAreas(data.ranking_areas || []);
       renderUsuarios(data.usuarios);
       renderPerfis(data.perfis);
       renderJobs(data.jobs);
     }
 
+    function renderRankingAreas(areas) {
+      const el = document.getElementById('rankingAreas');
+      if (!areas.length) { el.innerHTML = '<div style="padding:1.5rem;text-align:center;color:rgba(255,255,255,0.2);font-size:0.82rem">Nenhum perfil gerado ainda</div>'; return; }
+      const max = areas[0].total;
+      const cores = ['#3b82f6','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4','#ec4899','#84cc16','#f97316','#6366f1'];
+      el.innerHTML = '<div style="padding:1.2rem 1.5rem">' +
+        areas.map((a, i) => {
+          const pct = Math.round((a.total / max) * 100);
+          return `<div style="margin-bottom:0.9rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.8rem;font-weight:700;color:#f0f6ff">${a.area}</span>
+              <span style="font-size:0.75rem;color:rgba(255,255,255,0.4)">${a.total}x</span>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${cores[i%cores.length]};border-radius:99px;transition:width 0.5s"></div>
+            </div>
+          </div>`;
+        }).join('') + '</div>';
+    }
+
     function formatDate(str) {
       if (!str) return '—';
-      return new Date(str).toLocaleString('pt-BR');
+      return new Date(str + 'Z').toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
     }
 
     function renderUsuarios(usuarios) {
@@ -275,19 +328,42 @@
     function renderJobs(jobs) {
       const tbody = document.getElementById('tJobs');
       tbody.innerHTML = '';
-      if (!jobs.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.2)">Nenhum job</td></tr>'; return; }
+      if (!jobs.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:rgba(255,255,255,0.2)">Nenhum job</td></tr>'; return; }
       jobs.forEach(j => {
         const badgeClass = j.status==='concluido'?'badge-green':j.status==='erro'?'badge-red':'badge-gray';
+        const tempo = j.tempo_segundos != null ? `<span style="color:#10b981;font-weight:600">${j.tempo_segundos}s</span>` : '—';
+        const btnReprocessar = j.status === 'erro'
+          ? `<button class="btn-sm" onclick="reprocessar('${j.usuario_id}','${j.nome||''}')">↺ Reprocessar</button>`
+          : '';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="font-size:0.7rem;color:rgba(255,255,255,0.3)">${j.id.slice(0,8)}...</td>
           <td style="color:#f0f6ff">${j.nome||j.usuario_id.slice(0,8)}</td>
           <td><span class="badge ${badgeClass}">${j.status}</span></td>
-          <td style="font-size:0.75rem;color:#f87171">${j.erro||'—'}</td>
+          <td style="font-size:0.75rem;text-align:center">${tempo}</td>
+          <td style="font-size:0.75rem;color:#f87171;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${j.erro||''}">${j.erro||'—'}</td>
           <td style="color:rgba(255,255,255,0.4);font-size:0.75rem">${formatDate(j.criado_em)}</td>
+          <td>${btnReprocessar}</td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    async function reprocessar(uid, nome) {
+      if (!confirm(`Reprocessar a análise da IA para "${nome}"? As respostas já salvas serão reanalisadas.`)) return;
+      try {
+        const res = await fetch(`${API}/api/admin/reprocessar/${uid}?senha=${encodeURIComponent(senhaAdmin)}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.jobId) {
+          alert(`✅ Reprocessamento iniciado! Job: ${data.jobId.slice(0,8)}...
+Atualize o painel em alguns segundos para ver o resultado.`);
+          setTimeout(recarregar, 5000);
+        } else {
+          alert('❌ Erro ao reprocessar: ' + JSON.stringify(data));
+        }
+      } catch(e) {
+        alert('❌ Erro ao conectar: ' + e.message);
+      }
     }
 
     async function verRespostas(uid, nome) {
@@ -449,7 +525,7 @@
         doc.text((u.nome||'').slice(0,18),                        xs[1] + 2, y + 5);
         doc.text(u.teste_inicial_concluido ? 'Sim' : 'Não',       xs[2] + 2, y + 5);
         doc.text(`${(u.modulos_concluidos||[]).length}/4`,         xs[3] + 2, y + 5);
-        doc.text(u.criado_em ? new Date(u.criado_em).toLocaleDateString('pt-BR') : '—', xs[4] + 2, y + 5);
+        doc.text(u.criado_em ? new Date(u.criado_em + 'Z').toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : '—', xs[4] + 2, y + 5);
         y += 7;
       });
       if (!dados.usuarios.length) { doc.setTextColor(...cinza); doc.text('Nenhum usuário cadastrado.', M + 2, y + 5); y += 7; }
@@ -482,7 +558,7 @@
         doc.text(j.status,                               jXs[2] + 2, y + 5);
         doc.setTextColor(...escuro);
         doc.text((j.erro||'—').slice(0,28),              jXs[3] + 2, y + 5);
-        doc.text(j.criado_em ? new Date(j.criado_em).toLocaleDateString('pt-BR') : '—', jXs[4] + 2, y + 5);
+        doc.text(j.criado_em ? new Date(j.criado_em + 'Z').toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : '—', jXs[4] + 2, y + 5);
         y += 7;
       });
       if (!dados.jobs.length) { doc.setTextColor(...cinza); doc.text('Nenhum job registrado.', M + 2, y + 5); y += 7; }
