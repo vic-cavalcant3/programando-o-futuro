@@ -151,7 +151,7 @@ PERGUNTAS_TESTE = [
     # BLOCO 1 — Quem você é
     {"id":"1","bloco":"Quem você é","texto":"Qual é o seu nome completo?","tipo":"texto","placeholder":"Digite seu nome completo","obrigatorio":True},
     {"id":"2","bloco":"Quem você é","texto":"Quantos anos você tem?","tipo":"numero","placeholder":"Ex: 17","obrigatorio":True},
-    {"id":"3","bloco":"Quem você é","texto":"Em qual cidade e estado você mora?","tipo":"texto","placeholder":"Ex: São Paulo - SP","obrigatorio":True},
+    {"id":"3","bloco":"Quem você é","texto":"Em qual estado e cidade você mora?","tipo":"texto","placeholder":"Ex: São Paulo - SP","obrigatorio":True},
     {"id":"4","bloco":"Quem você é","texto":"Você está no ensino médio ou já concluiu?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Estou no 1º ano"},
         {"letra":"B","texto":"Estou no 2º ano"},

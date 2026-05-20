@@ -179,12 +179,8 @@
     respostas[q.id] = { ...respostaDaPergunta(q), valor };
     salvarLocal();
     renderPergunta();
-
-    try {
-      await salvarResposta(q);
-    } catch (error) {
-      mostrarErro('Resposta salva no navegador, mas não chegou ao servidor. Verifique se o backend está rodando.');
-    }
+    // Salva no servidor em background — não trava a UI
+    salvarResposta(q).catch(() => {});
   }
 
   async function salvarResposta(q) {
@@ -247,7 +243,10 @@
     btn.disabled = true;
 
     try {
-      await salvarTodas();
+      // Salva todas em paralelo — muito mais rápido que sequencial
+      await Promise.allSettled(
+        perguntas.filter(q => respostaPreenchida(q)).map(q => salvarResposta(q))
+      );
 
       if (isTesteInicial) {
         const payload = perguntas.map((q) => ({
