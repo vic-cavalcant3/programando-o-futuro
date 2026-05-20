@@ -413,38 +413,86 @@ Retorne SOMENTE um JSON válido (sem markdown, sem texto adicional) neste format
 
 async def chamar_ia(prompt: str) -> dict:
     if not ANTHROPIC_API_KEY:
-        raise RuntimeError("Chave de API da Anthropic não configurada.")
-    try:
-        async with httpx.AsyncClient(timeout=90) as client:
-            resp = await client.post(
-                "https://api.anthropic.com/v1/messages",
-                headers={"x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "Content-Type": "application/json"},
-                json={"model": ANTHROPIC_MODEL, "max_tokens": 8192, "messages": [{"role": "user", "content": prompt}]},
-            )
-    except httpx.RequestError as err:
-        raise RuntimeError(f"Falha de conexão com a Anthropic: {err}") from err
+        raise RuntimeError("Chave de API não configurada no servidor. Contate o administrador.")
 
-    if resp.status_code != 200:
+    MAX_TENTATIVAS = 3
+    ESPERA_ENTRE_TENTATIVAS = [5, 15]  # segundos entre tentativas
+
+    for tentativa in range(1, MAX_TENTATIVAS + 1):
         try:
-            detalhe = resp.json()
-        except Exception:
-            detalhe = resp.text
-        raise RuntimeError(f"Anthropic retornou HTTP {resp.status_code}: {detalhe}")
-    texto = "".join(b.get("text","") for b in resp.json().get("content",[]))
-    texto = texto.strip()
-    # Remove bloco ```json ... ``` se existir
-    texto = re.sub(r'```json\s*', '', texto)
-    texto = re.sub(r'```\s*', '', texto)
-    texto = texto.strip()
-    # Extrai o JSON com regex (do primeiro { até o último })
-    match = re.search(r'\{[\s\S]*\}', texto)
-    if match:
-        try:
-            return json.loads(match.group())
-        except Exception as parse_err:
-            logger.error(f"Erro ao parsear JSON: {parse_err}")
-    logger.error(f"JSON inválido: {texto[:300]}")
-    raise RuntimeError("IA retornou formato inválido.")
+            logger.info(f"🤖 Chamando IA — tentativa {tentativa}/{MAX_TENTATIVAS}")
+            async with httpx.AsyncClient(timeout=httpx.Timeout(120.0, connect=15.0)) as client:
+                resp = await client.post(
+                    "https://api.anthropic.com/v1/messages",
+                    headers={"x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "Content-Type": "application/json"},
+                    json={"model": ANTHROPIC_MODEL, "max_tokens": 8192, "messages": [{"role": "user", "content": prompt}]},
+                )
+        except httpx.TimeoutException:
+            msg = f"A IA demorou demais para responder (tentativa {tentativa}/{MAX_TENTATIVAS}). Muitos usuários simultâneos."
+            logger.warning(f"⏱️ Timeout na tentativa {tentativa}: {msg}")
+            if tentativa < MAX_TENTATIVAS:
+                await asyncio.sleep(ESPERA_ENTRE_TENTATIVAS[tentativa - 1])
+                continue
+            raise RuntimeError("A IA não respondeu a tempo após 3 tentativas. Tente novamente em alguns minutos.")
+        except httpx.ConnectError:
+            msg = f"Sem conexão com o servidor de IA (tentativa {tentativa}/{MAX_TENTATIVAS})."
+            logger.warning(f"🔌 Erro de conexão na tentativa {tentativa}")
+            if tentativa < MAX_TENTATIVAS:
+                await asyncio.sleep(ESPERA_ENTRE_TENTATIVAS[tentativa - 1])
+                continue
+            raise RuntimeError("Não foi possível conectar ao servidor de IA após 3 tentativas. Verifique a conexão do servidor.")
+        except httpx.RequestError as err:
+            logger.warning(f"⚠️ Erro de rede na tentativa {tentativa}: {err}")
+            if tentativa < MAX_TENTATIVAS:
+                await asyncio.sleep(ESPERA_ENTRE_TENTATIVAS[tentativa - 1])
+                continue
+            raise RuntimeError(f"Erro de rede ao contactar a IA após 3 tentativas: {type(err).__name__}")
+
+        # Verificar status HTTP
+        if resp.status_code == 429:
+            logger.warning(f"⚡ Rate limit atingido na tentativa {tentativa}")
+            if tentativa < MAX_TENTATIVAS:
+                await asyncio.sleep(ESPERA_ENTRE_TENTATIVAS[tentativa - 1] + 10)
+                continue
+            raise RuntimeError("Muitos usuários usando a IA ao mesmo tempo. Aguarde 1-2 minutos e tente novamente.")
+        elif resp.status_code == 529:
+            logger.warning(f"🔄 API sobrecarregada na tentativa {tentativa}")
+            if tentativa < MAX_TENTATIVAS:
+                await asyncio.sleep(ESPERA_ENTRE_TENTATIVAS[tentativa - 1])
+                continue
+            raise RuntimeError("O servidor de IA está sobrecarregado no momento. Tente novamente em alguns minutos.")
+        elif resp.status_code == 401:
+            raise RuntimeError("Chave de API inválida ou expirada. Contate o administrador do sistema.")
+        elif resp.status_code != 200:
+            try:
+                detalhe = resp.json().get("error", {}).get("message", resp.text[:200])
+            except Exception:
+                detalhe = resp.text[:200]
+            raise RuntimeError(f"Erro interno da IA (código {resp.status_code}): {detalhe}")
+
+        # Parsear resposta
+        texto = "".join(b.get("text", "") for b in resp.json().get("content", []))
+        texto = texto.strip()
+        texto = re.sub(r'```json\s*', '', texto)
+        texto = re.sub(r'```\s*', '', texto)
+        texto = texto.strip()
+        match = re.search(r'\{[\s\S]*\}', texto)
+        if match:
+            try:
+                return json.loads(match.group())
+            except Exception as parse_err:
+                logger.error(f"Erro ao parsear JSON na tentativa {tentativa}: {parse_err}")
+                if tentativa < MAX_TENTATIVAS:
+                    await asyncio.sleep(ESPERA_ENTRE_TENTATIVAS[tentativa - 1])
+                    continue
+                raise RuntimeError("A IA retornou uma resposta em formato inválido após 3 tentativas.")
+        logger.error(f"JSON inválido recebido na tentativa {tentativa}: {texto[:300]}")
+        if tentativa < MAX_TENTATIVAS:
+            await asyncio.sleep(ESPERA_ENTRE_TENTATIVAS[tentativa - 1])
+            continue
+        raise RuntimeError("A IA não retornou um resultado válido após 3 tentativas.")
+
+    raise RuntimeError("Erro inesperado no processamento da IA.")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -801,11 +849,26 @@ async def processar_resultado_ia_db(job_id: str, uid: str, usuario: dict, origem
                 await cur.execute("UPDATE jobs SET status='concluido' WHERE id=%s", (job_id,))
         logger.info(f"✅ {origem} {job_id} concluído")
     except Exception as e:
-        erro = str(e) or repr(e)
+        erro_raw = str(e) or repr(e)
+        # Monta mensagem amigável para o admin
+        if "tempo" in erro_raw.lower() or "timeout" in erro_raw.lower() or "demorou" in erro_raw.lower():
+            erro_admin = f" Timeout — IA demorou demais ({origem}). Muitos usuários simultâneos."
+        elif "rate limit" in erro_raw.lower() or "429" in erro_raw or "simultâneos" in erro_raw.lower():
+            erro_admin = f" Rate limit — muitos usuários ao mesmo tempo ({origem}). Usuário pode refazer."
+        elif "sobrecarregado" in erro_raw.lower() or "529" in erro_raw:
+            erro_admin = f" API sobrecarregada ({origem}). Tentar novamente em alguns minutos."
+        elif "conexão" in erro_raw.lower() or "connect" in erro_raw.lower():
+            erro_admin = f" Falha de rede ao contactar a IA ({origem}). Verificar conectividade do servidor."
+        elif "inválida" in erro_raw.lower() or "401" in erro_raw:
+            erro_admin = f" Chave de API inválida ({origem}). Verificar ANTHROPIC_API_KEY nas variáveis de ambiente."
+        elif "formato" in erro_raw.lower() or "json" in erro_raw.lower():
+            erro_admin = f"teste_carga.py IA retornou resposta em formato inválido ({origem}). Pode ser instabilidade da API."
+        else:
+            erro_admin = f"❌ Erro inesperado ({origem}): {erro_raw[:200]}"
         async with db_pool.acquire() as conn:
             async with conn.cursor() as cur:
-                await cur.execute("UPDATE jobs SET status='erro', erro=%s WHERE id=%s", (erro, job_id))
-        logger.exception(f"❌ {origem} {job_id} falhou: {erro}")
+                await cur.execute("UPDATE jobs SET status='erro', erro=%s WHERE id=%s", (erro_admin, job_id))
+        logger.exception(f"❌ {origem} {job_id} falhou: {erro_raw}")
 
 # ── Resultado ──────────────────────────────────────────────────────────────────
 @app.get("/api/resultado/status")
