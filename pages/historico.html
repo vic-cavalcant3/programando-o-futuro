@@ -204,9 +204,10 @@
       <div id="analiseConteudo"></div>
     </section>
 
-    <!-- SEÇÃO 3: GERENCIAR DADOS -->
+    <!-- SEÇÃO 3: RESETAR ANÁLISE -->
     <section class="section fade-up delay-2">
-      <div class="section-title font-jakarta">Gerenciar dados</div>
+      <div class="section-title font-jakarta">Resetar análise</div>
+      <p class="font-manrope" style="font-size:0.88rem;color:rgba(255,255,255,0.42);line-height:1.7;margin-bottom:1.2rem;">Se suas respostas mudaram ou você quer recomeçar do zero, pode refazer o teste. Atenção: isso apaga seu resultado atual permanentemente.</p>
       <div class="danger-card">
         <div class="danger-header">
           <div class="danger-icon">
@@ -391,7 +392,7 @@
       if (melhoria.length > 0) {
         const melhoriaHtml = melhoria.map(p => `
           <div class="melhoria-item">
-            <span class="melhoria-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+            <span class="melhoria-icon"><span style="width:8px;height:8px;background:#3b82f6;border-radius:50%;flex-shrink:0;margin-top:4px;display:inline-block;"></span></span>
             <span class="melhoria-text font-manrope">${escHtml(p)}</span>
           </div>
         `).join('');
