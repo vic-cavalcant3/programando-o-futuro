@@ -101,6 +101,14 @@ async def criar_tabelas():
             atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
         )""",
+        """CREATE TABLE IF NOT EXISTS mapa_progresso (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            usuario_id VARCHAR(36) NOT NULL UNIQUE,
+            etapas_concluidas TEXT NOT NULL DEFAULT '{}',
+            checks_feitos TEXT NOT NULL DEFAULT '{}',
+            atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+        )""",
         """CREATE TABLE IF NOT EXISTS jobs (
             id VARCHAR(36) PRIMARY KEY,
             usuario_id VARCHAR(36) NOT NULL,
@@ -1022,6 +1030,40 @@ async def get_perfil(usuario: dict = Depends(get_usuario)):
                 raise HTTPException(status_code=404, detail={"erro": "Perfil não gerado"})
             return json.loads(r["dados"])
 
+@app.get("/api/mapa/progresso")
+async def get_mapa_progresso(usuario: dict = Depends(get_usuario)):
+    usuario_id = usuario["id"]
+    async with db_pool.acquire() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cur:
+            await cur.execute(
+                "SELECT etapas_concluidas, checks_feitos FROM mapa_progresso WHERE usuario_id = %s",
+                (usuario_id,)
+            )
+            row = await cur.fetchone()
+    if not row:
+        return {"etapasConcluidas": {}, "checksFeitos": {}}
+    return {
+        "etapasConcluidas": json.loads(row["etapas_concluidas"] or "{}"),
+        "checksFeitos": json.loads(row["checks_feitos"] or "{}")
+    }
+
+@app.post("/api/mapa/progresso")
+async def save_mapa_progresso(body: dict, usuario: dict = Depends(get_usuario)):
+    usuario_id = usuario["id"]
+    etapas = json.dumps(body.get("etapasConcluidas", {}))
+    checks = json.dumps(body.get("checksFeitos", {}))
+    async with db_pool.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute("""
+                INSERT INTO mapa_progresso (usuario_id, etapas_concluidas, checks_feitos)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    etapas_concluidas = %s,
+                    checks_feitos = %s,
+                    atualizado_em = CURRENT_TIMESTAMP
+            """, (usuario_id, etapas, checks, etapas, checks))
+    return {"ok": True}
+
 @app.get("/api/mapa")
 async def get_mapa(usuario: dict = Depends(get_usuario)):
     async with db_pool.acquire() as conn:
@@ -1045,64 +1087,65 @@ async def jornada_prog(usuario: dict = Depends(get_usuario)):
             "habilidadesAtivas": dados.get("skills", []) if dados else []}
 
 
+async def chamar_ia_lista(prompt: str) -> list:
+    if not ANTHROPIC_API_KEY:
+        raise RuntimeError("Chave de API não configurada no servidor.")
+    async with httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=15.0)) as client:
+        resp = await client.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={"x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "Content-Type": "application/json"},
+            json={"model": ANTHROPIC_MODEL, "max_tokens": 2000, "messages": [{"role": "user", "content": prompt}]},
+        )
+    if resp.status_code != 200:
+        raise RuntimeError(f"Erro da IA: {resp.status_code}")
+    texto = "".join(b.get("text", "") for b in resp.json().get("content", [])).strip()
+    texto = re.sub(r'```json\s*', '', texto)
+    texto = re.sub(r'```\s*', '', texto)
+    texto = texto.strip()
+    match = re.search(r'\[[\s\S]*\]', texto)
+    if match:
+        return json.loads(match.group())
+    raise RuntimeError("A IA não retornou uma lista válida.")
+
 @app.post("/api/vagas")
 async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
-    profissao = body.get("profissao", "")
-    localizacao = body.get("localizacao", "Brasil")
-    api_key = os.getenv("JSEARCH_API_KEY", "")
-    
-    if not api_key:
-        raise HTTPException(status_code=500, detail="JSEARCH_API_KEY não configurada")
-    if not profissao:
-        raise HTTPException(status_code=400, detail="Profissão não informada")
+    area = body.get("profissao", "").strip()
+    cidade = body.get("localizacao", "Brasil").strip()
 
-    # Traduz a profissão para inglês usando Claude
-    traducao_prompt = f"Traduza para inglês apenas o nome desta área profissional, sem explicações: '{profissao}'. Responda só a tradução."
-    profissao_en = profissao  # fallback
-    try:
-        async with httpx.AsyncClient(timeout=httpx.Timeout(15.0)) as client:
-            tr_resp = await client.post(
-                "https://api.anthropic.com/v1/messages",
-                headers={"x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "Content-Type": "application/json"},
-                json={"model": ANTHROPIC_MODEL, "max_tokens": 50, "messages": [{"role": "user", "content": traducao_prompt}]},
-            )
-        if tr_resp.status_code == 200:
-            texto_tr = "".join(b.get("text", "") for b in tr_resp.json().get("content", [])).strip()
-            if texto_tr and len(texto_tr) < 100:
-                profissao_en = texto_tr
-    except Exception:
-        pass  # usa o original se falhar
+    if not area:
+        return []
+
+    prompt = f"""Você é um orientador de carreira para jovens brasileiros do ensino médio.
+O aluno mora em {cidade} e sua área de interesse é {area}.
+
+Gere uma lista com exatamente 6 oportunidades reais de entrada no mercado para esse perfil.
+Foque em: programas Jovem Aprendiz, estágios para jovens, certificações gratuitas ou baratas, e concursos públicos de nível médio.
+NÃO inclua faculdades, cursos técnicos longos nem cursos online — esses já são cobertos em outras páginas do sistema.
+NÃO mencione datas, prazos nem anos específicos — apenas oportunidades permanentes ou recorrentes.
+
+Responda APENAS com JSON válido, sem texto antes ou depois, sem markdown, sem ```json:
+[
+  {{
+    "titulo": "nome da oportunidade em até 60 caracteres",
+    "empresa": "nome da instituição ou programa",
+    "descricao": "o que é e como ajuda o jovem em 2 frases",
+    "comoAcessar": "instrução clara de como acessar (site oficial ou passo a passo)",
+    "tipo": "aprendiz|estagio|certificacao|concurso",
+    "gratuito": true
+  }}
+]"""
 
     try:
-        async with httpx.AsyncClient(timeout=15) as client:
-            resp = await client.get(
-                "https://jsearch.p.rapidapi.com/search",
-                headers={
-                    "X-RapidAPI-Key": api_key,
-                    "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
-                },
-                params={
-                    "query": profissao_en,
-                    "num_pages": "1",
-                    "date_posted": "month"
-                }
-            )
-        data = resp.json()
-        print("JSEARCH STATUS:", resp.status_code)
-        print("JSEARCH DATA:", data)
-        vagas = []
-        for job in data.get("data", [])[:6]:
-            vagas.append({
-                "titulo": job.get("job_title", ""),
-                "empresa": job.get("employer_name", ""),
-                "localizacao": f"{job.get('job_city', '')} {job.get('job_country', '')}".strip(),
-                "link": job.get("job_apply_link", "#"),
-                "descricao": (job.get("job_description", "")[:200] + "...") if job.get("job_description") else "",
-                "remoto": job.get("job_is_remote", False),
-            })
-        return vagas
+        resultado = await chamar_ia_lista(prompt)
+        if isinstance(resultado, list):
+            return resultado
+        if isinstance(resultado, dict):
+            for v in resultado.values():
+                if isinstance(v, list):
+                    return v
+        return []
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Erro ao buscar vagas: {str(e)}")
+        raise HTTPException(status_code=502, detail=f"Erro ao gerar oportunidades: {str(e)}")
 
 # ── Arquivos estáticos (deve ficar após todas as rotas) ────────────────────────
 app.mount("/js",       StaticFiles(directory=os.path.join(BASE_DIR, "js")),       name="js")

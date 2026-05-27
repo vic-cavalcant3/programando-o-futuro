@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
+    <script>(function() {
+      try {
+        const token = localStorage.getItem('pf_token');
+        const user = JSON.parse(localStorage.getItem('pf_user') || 'null');
+        if (token && user) {
+          const destino = user.teste_inicial_concluido
+            ? 'pages/inicial_mapa_feito.html'
+            : 'pages/inicial_logada.html';
+          window.location.replace(destino);
+        }
+      } catch(e) {}
+    })();</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Programando o Futuro</title>

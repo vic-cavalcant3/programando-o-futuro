@@ -297,8 +297,43 @@
 
     let perfilMapa = null, stepsMapa = [], selectedStepKey = null;
     const DONE_KEY = 'pf_mapa_done', CHECKS_KEY = 'pf_mapa_checks';
-    let etapasConcluidas = JSON.parse(localStorage.getItem(DONE_KEY) || '{}');
-    let checksFeitos = JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}');
+    let etapasConcluidas = {};
+    let checksFeitos = {};
+
+    async function carregarProgresso() {
+      try {
+        const token = localStorage.getItem('pf_token');
+        const res = await fetch(`${window.API_URL || 'https://programando-o-futuro.onrender.com'}/api/mapa/progresso`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          etapasConcluidas = data.etapasConcluidas || {};
+          checksFeitos = data.checksFeitos || {};
+          localStorage.setItem(DONE_KEY, JSON.stringify(etapasConcluidas));
+          salvarProgresso();
+        }
+      } catch(e) {
+        etapasConcluidas = JSON.parse(localStorage.getItem(DONE_KEY) || '{}');
+        checksFeitos = JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}');
+      }
+    }
+
+    async function salvarProgresso() {
+      localStorage.setItem(DONE_KEY, JSON.stringify(etapasConcluidas));
+      localStorage.setItem(CHECKS_KEY, JSON.stringify(checksFeitos));
+      try {
+        const token = localStorage.getItem('pf_token');
+        await fetch(`${window.API_URL || 'https://programando-o-futuro.onrender.com'}/api/mapa/progresso`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ etapasConcluidas, checksFeitos })
+        });
+      } catch(e) {}
+    }
 
     const fn = n => String(n||'').trim().split(/\s+/)[0]||'aluno';
     const ini = n => String(n||'').trim().split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join('')||'PF';
@@ -404,7 +439,7 @@
             }
           }
         }
-        localStorage.setItem(DONE_KEY, JSON.stringify(etapasConcluidas));
+        salvarProgresso();
         renderTimeline();
       };
 
@@ -427,7 +462,7 @@
           if (!checksFeitos[selectedStepKey]) checksFeitos[selectedStepKey] = {};
           if (now) checksFeitos[selectedStepKey][cid] = true;
           else delete checksFeitos[selectedStepKey][cid];
-          localStorage.setItem(CHECKS_KEY, JSON.stringify(checksFeitos));
+          salvarProgresso();
         });
         cl.appendChild(div);
       });
@@ -463,6 +498,7 @@
       document.getElementById('mapTitle').textContent = perfilMapa.areaPrincipal||'Mapa de Carreira';
       const compatEl = document.getElementById('mapCompatPct');
       if (compatEl) compatEl.textContent = pct(perfilMapa.percentualCompatibilidade) + '% compatível';
+      await carregarProgresso();
       renderTimeline();
       const ai = stepsMapa.findIndex(s=>s.status==='active');
       selectStep(sk(stepsMapa[ai>=0?ai:0], ai>=0?ai:0));

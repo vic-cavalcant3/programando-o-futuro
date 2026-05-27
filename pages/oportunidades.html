@@ -89,6 +89,22 @@
       .navbar .container { padding: 0 1.2rem; }
     }
 
+    /* JOB CARD LAYOUT NOVO */
+    .job-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; margin-bottom: 0.6rem; }
+    .job-info { flex: 1; min-width: 0; }
+    .job-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; flex-shrink: 0; }
+
+    /* BADGES DE TIPO */
+    .badge-aprendiz     { background: rgba(139,92,246,0.1); color: #a78bfa; border-color: rgba(139,92,246,0.2); }
+    .badge-estagio      { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.2); }
+    .badge-certificacao { background: rgba(245,158,11,0.1); color: #fbbf24; border-color: rgba(245,158,11,0.2); }
+    .badge-concurso     { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.2); }
+    .badge-gratuito     { background: rgba(37,99,235,0.1); color: #60a5fa; border-color: rgba(37,99,235,0.2); }
+
+    /* COMO ACESSAR */
+    .job-como-acessar { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.78rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+    .como-label { color: rgba(255,255,255,0.25); font-weight: 600; text-transform: uppercase; font-size: 0.62rem; letter-spacing: 0.06em; margin-right: 0.3rem; }
+
     /* PERFIL OVERLAY */
     .perfil-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 500; align-items: center; justify-content: center; padding: 1.5rem; }
     .perfil-overlay.open { display: flex; }
@@ -143,8 +159,8 @@
   <main>
     <div class="hero fade-up">
       <div class="hero-label font-jakarta">Mercado de Trabalho</div>
-      <h1 class="hero-title font-jakarta">Vagas para <span id="heroArea">sua área</span></h1>
-      <p class="hero-desc font-manrope">Vagas reais do mercado selecionadas de acordo com o seu perfil e área recomendada pela IA.</p>
+      <h1 class="hero-title font-jakarta">Oportunidades para <span id="heroArea">sua área</span></h1>
+      <p class="hero-desc font-manrope">Programas Jovem Aprendiz, estágios, certificações e concursos para você entrar no mercado agora.</p>
       <div class="area-chip" id="areaChip" style="display:none">
         <span class="area-chip-label font-manrope">Sua área:</span>
         <span class="area-chip-value font-jakarta" id="areaChipValue">—</span>
@@ -153,7 +169,7 @@
 
     <div class="search-bar fade-up delay-1">
       <input class="search-input font-manrope" id="searchInput" type="text" placeholder="Buscar por cargo, área ou empresa..." />
-      <button class="btn-buscar font-jakarta" id="btnBuscar" onclick="buscarVagas()">Buscar Vagas</button>
+      <button class="btn-buscar font-jakarta" id="btnBuscar" onclick="buscarVagas()">Buscar Oportunidades</button>
     </div>
 
     <div id="stateBox" class="state-box" style="display:none">
@@ -211,45 +227,52 @@
       stateMsg.textContent = msg || '';
     }
 
+    function escHtml(str) {
+      return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
     function renderVagas(vagas) {
       const grid = document.getElementById('cardsGrid');
       grid.innerHTML = '';
-      if (!vagas.length) {
-        mostrarEstado(false, 'Nenhuma vaga encontrada. Tente buscar por outra área.');
+
+      if (!vagas || vagas.length === 0) {
+        mostrarEstado(false, 'Nenhuma oportunidade encontrada. Tente buscar por outra área.');
         return;
       }
       mostrarEstado(false, '');
+
+      const tipoLabel = {
+        aprendiz: 'Jovem Aprendiz',
+        estagio: 'Estágio',
+        certificacao: 'Certificação',
+        concurso: 'Concurso Público'
+      };
+      const tipoColor = {
+        aprendiz: 'badge-aprendiz',
+        estagio: 'badge-estagio',
+        certificacao: 'badge-certificacao',
+        concurso: 'badge-concurso'
+      };
+
       vagas.forEach(v => {
         const card = document.createElement('div');
         card.className = 'job-card';
         card.innerHTML = `
-          <div class="job-card-top">
-            <div class="job-icon">
-              <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-              </svg>
+          <div class="job-header">
+            <div class="job-info">
+              <div class="job-title font-jakarta">${escHtml(v.titulo || '')}</div>
+              <div class="job-company font-manrope">${escHtml(v.empresa || '')}</div>
             </div>
-            <span class="job-badge ${v.remoto ? 'badge-remoto' : 'badge-presencial'} font-jakarta">${v.remoto ? 'Remoto' : 'Presencial'}</span>
-          </div>
-          <div>
-            <div class="job-title font-jakarta"></div>
-            <div class="job-company font-manrope">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-              <span></span>
-            </div>
-            <div class="job-location font-manrope">
-              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>
-              <span></span>
+            <div class="job-badges">
+              <span class="job-badge ${tipoColor[v.tipo] || 'badge-presencial'} font-jakarta">${tipoLabel[v.tipo] || escHtml(v.tipo || '')}</span>
+              ${v.gratuito ? '<span class="job-badge badge-gratuito font-jakarta">Gratuito</span>' : ''}
             </div>
           </div>
-          <div class="job-desc font-manrope"></div>
-          <a class="btn-candidatar font-jakarta" target="_blank" rel="noopener">Ver vaga →</a>
+          <p class="job-desc font-manrope">${escHtml(v.descricao || '')}</p>
+          <div class="job-como-acessar font-manrope">
+            <span class="como-label">Como acessar:</span>${escHtml(v.comoAcessar || '')}
+          </div>
         `;
-        card.querySelector('.job-title').textContent = v.titulo;
-        card.querySelector('.job-company span').textContent = v.empresa;
-        card.querySelector('.job-location span').textContent = v.localizacao || 'Brasil';
-        card.querySelector('.job-desc').textContent = v.descricao;
-        card.querySelector('.btn-candidatar').href = v.link || '#';
         grid.appendChild(card);
       });
     }
@@ -259,13 +282,13 @@
       if (!query) return;
       const btn = document.getElementById('btnBuscar');
       btn.disabled = true;
-      mostrarEstado(true, 'Buscando vagas no mercado...');
+      mostrarEstado(true, 'Buscando oportunidades...');
       document.getElementById('cardsGrid').innerHTML = '';
       try {
         const vagas = await api.post('/api/vagas', { profissao: query, localizacao: 'Brasil' });
         renderVagas(vagas);
       } catch (err) {
-        mostrarEstado(false, 'Erro ao buscar vagas. Verifique sua conexão e tente novamente.');
+        mostrarEstado(false, 'Erro ao buscar oportunidades. Verifique sua conexão e tente novamente.');
       } finally {
         btn.disabled = false;
       }
@@ -290,10 +313,10 @@
           document.getElementById('searchInput').value = area;
           await buscarVagas(area);
         } else {
-          mostrarEstado(false, 'Complete seu perfil para ver vagas personalizadas.');
+          mostrarEstado(false, 'Complete seu perfil para ver oportunidades personalizadas.');
         }
       } catch {
-        mostrarEstado(false, 'Complete o questionário para ver vagas da sua área.');
+        mostrarEstado(false, 'Complete o questionário para ver oportunidades da sua área.');
       }
     }
 

@@ -1,5 +1,3 @@
-
-
 <!-- FOOTER -->
 <footer>
   <div class="container">
@@ -9,19 +7,59 @@
         <div class="footer-copy font-manrope">© 2026 Programando o Futuro. Todos os direitos reservados.</div>
       </div>
       <ul class="footer-links font-manrope">
-        <li><a class="font-manrope" href="#">Termos de Uso</a></li>
-        <li><a class="font-manrope" href="#">Privacidade</a></li>
-        <li><a class="font-manrope" href="#">Suporte</a></li>
-        <li><a class="font-manrope" href="#">Sobre Nós</a></li>
+        <li><a class="font-manrope" href="../assets/termos-de-uso.pdf" download="Termos-de-Uso-Programando-o-Futuro.pdf">Termos de Uso</a></li>
+        <li><a class="font-manrope" href="../assets/politica-de-privacidade.pdf" download="Politica-de-Privacidade-Programando-o-Futuro.pdf">Privacidade</a></li>
+        <li><a class="font-manrope" href="#" onclick="abrirSuporte(event)">Suporte</a></li>
       </ul>
       <div class="footer-socials">
-        <a href="#" title="Compartilhar">
+        <a href="#" title="Compartilhar" onclick="compartilhar(event)">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </a>
-        <a href="#" title="Configurações">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </a>
       </div>
     </div>
   </div>
 </footer>
+
+<!-- MODAL SUPORTE -->
+<div class="suporte-overlay" id="suporteOverlay" onclick="fecharSuporte(event)">
+  <div class="suporte-card">
+    <button class="suporte-close" onclick="fecharSuporte()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="suporte-titulo font-jakarta">Fale com o Suporte</div>
+    <div class="suporte-sub font-manrope">Preencha o formulário e retornaremos em até 2 dias úteis.</div>
+    <div class="suporte-form-group">
+      <label class="suporte-label font-jakarta">Nome</label>
+      <input class="suporte-input font-manrope" id="suporteNome" type="text" placeholder="Seu nome">
+    </div>
+    <div class="suporte-form-group">
+      <label class="suporte-label font-jakarta">E-mail</label>
+      <input class="suporte-input font-manrope" id="suporteEmail" type="email" placeholder="seu@email.com">
+    </div>
+    <div class="suporte-form-group">
+      <label class="suporte-label font-jakarta">Mensagem</label>
+      <textarea class="suporte-input font-manrope" id="suporteMensagem" rows="4" placeholder="Descreva sua dúvida ou problema..."></textarea>
+    </div>
+    <div class="suporte-msg font-manrope" id="suporteMsg"></div>
+    <button class="suporte-btn font-jakarta" onclick="enviarSuporte()">Enviar mensagem</button>
+  </div>
+</div>
+
+<style>
+.suporte-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 500; align-items: center; justify-content: center; padding: 1.5rem; }
+.suporte-overlay.open { display: flex; }
+.suporte-card { background: #0d1424; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 2rem; width: 100%; max-width: 440px; position: relative; }
+.suporte-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; }
+.suporte-close:hover { color: #fff; }
+.suporte-titulo { font-size: 1.1rem; font-weight: 800; color: #f0f6ff; margin-bottom: 0.3rem; }
+.suporte-sub { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; }
+.suporte-form-group { margin-bottom: 1rem; }
+.suporte-label { display: block; font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem; }
+.suporte-input { width: 100%; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #f0f6ff; font-size: 0.88rem; resize: vertical; box-sizing: border-box; }
+.suporte-input:focus { outline: none; border-color: rgba(37,99,235,0.5); }
+.suporte-btn { width: 100%; padding: 0.85rem; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-size: 0.88rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+.suporte-btn:hover { background: #3b82f6; }
+.suporte-msg { font-size: 0.78rem; text-align: center; min-height: 1.2rem; margin-bottom: 0.4rem; }
+.suporte-msg.ok { color: #10b981; }
+.suporte-msg.erro { color: #f87171; }
+</style>
