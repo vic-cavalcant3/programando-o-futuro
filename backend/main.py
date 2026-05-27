@@ -101,6 +101,7 @@ async def criar_tabelas():
             atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
         )""",
+        "DROP TABLE IF EXISTS mapa_progresso",
         """CREATE TABLE IF NOT EXISTS mapa_progresso (
             id INT AUTO_INCREMENT PRIMARY KEY,
             usuario_id INT NOT NULL,
