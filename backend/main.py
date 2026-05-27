@@ -1082,9 +1082,10 @@ async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
                     "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
                 },
                 params={
-                    "query": f"{profissao_en} {localizacao}",
+                    "query": profissao_en,
                     "num_pages": "1",
-                    "date_posted": "month"
+                    "date_posted": "month",
+                    "language": "en"
                 }
             )
         data = resp.json()
