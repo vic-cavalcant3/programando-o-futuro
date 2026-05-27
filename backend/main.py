@@ -107,7 +107,6 @@ async def criar_tabelas():
             etapas_concluidas TEXT,
             checks_feitos TEXT,
             atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
             UNIQUE(usuario_id)
         )""",
         """CREATE TABLE IF NOT EXISTS jobs (
