@@ -103,11 +103,12 @@ async def criar_tabelas():
         )""",
         """CREATE TABLE IF NOT EXISTS mapa_progresso (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            usuario_id VARCHAR(36) NOT NULL UNIQUE,
-            etapas_concluidas TEXT NOT NULL DEFAULT '{}',
-            checks_feitos TEXT NOT NULL DEFAULT '{}',
-            atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+            usuario_id INT NOT NULL,
+            etapas_concluidas TEXT,
+            checks_feitos TEXT,
+            atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+            UNIQUE(usuario_id)
         )""",
         """CREATE TABLE IF NOT EXISTS jobs (
             id VARCHAR(36) PRIMARY KEY,
