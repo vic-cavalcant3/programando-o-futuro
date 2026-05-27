@@ -1078,7 +1078,8 @@ async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
                 "empresa": job.get("employer_name", ""),
                 "localizacao": f"{job.get('job_city', '')} {job.get('job_country', '')}".strip(),
                 "link": job.get("job_apply_link", "#"),
-                "descricao": (job.get("job_description", "")[:200] + "...") if job.get("job_description") else ""
+                "descricao": (job.get("job_description", "")[:200] + "...") if job.get("job_description") else "",
+                "remoto": job.get("job_is_remote", False),
             })
         return vagas
     except Exception as e:
