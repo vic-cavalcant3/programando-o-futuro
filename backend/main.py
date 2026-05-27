@@ -1056,6 +1056,23 @@ async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
     if not profissao:
         raise HTTPException(status_code=400, detail="Profissão não informada")
 
+    # Traduz a profissão para inglês usando Claude
+    traducao_prompt = f"Traduza para inglês apenas o nome desta área profissional, sem explicações: '{profissao}'. Responda só a tradução."
+    profissao_en = profissao  # fallback
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(15.0)) as client:
+            tr_resp = await client.post(
+                "https://api.anthropic.com/v1/messages",
+                headers={"x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "Content-Type": "application/json"},
+                json={"model": ANTHROPIC_MODEL, "max_tokens": 50, "messages": [{"role": "user", "content": traducao_prompt}]},
+            )
+        if tr_resp.status_code == 200:
+            texto_tr = "".join(b.get("text", "") for b in tr_resp.json().get("content", [])).strip()
+            if texto_tr and len(texto_tr) < 100:
+                profissao_en = texto_tr
+    except Exception:
+        pass  # usa o original se falhar
+
     try:
         async with httpx.AsyncClient(timeout=15) as client:
             resp = await client.get(
@@ -1065,7 +1082,7 @@ async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
                     "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
                 },
                 params={
-                    "query": f"{profissao} {localizacao}",
+                    "query": f"{profissao_en} {localizacao}",
                     "num_pages": "1",
                     "date_posted": "month"
                 }
