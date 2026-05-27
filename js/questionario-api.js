@@ -264,7 +264,7 @@
       const data = await modulosApi.finalizar(moduloId);
       localStorage.removeItem(storageKey);
       if (data.jobId) localStorage.setItem('pf_job_id', data.jobId);
-      window.location.href = data.jobId ? 'resultado.html' : 'minha_jornada.html';
+      window.location.href = data.jobId ? 'resultado.html' : 'historico.html';
     } catch (error) {
       mostrarErro(error?.detail?.erro || error?.erro || error?.detail || 'Não foi possível enviar suas respostas.');
       btn.disabled = false;
@@ -275,7 +275,7 @@
 
   function sair() {
     salvarLocal();
-    window.location.href = isTesteInicial ? 'inicial_logada.html' : 'minha_jornada.html';
+    window.location.href = isTesteInicial ? 'inicial_logada.html' : 'historico.html';
   }
 
   async function carregarPerguntas() {

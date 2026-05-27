@@ -149,22 +149,21 @@ class ContextoLivreBody(BaseModel):
 # ── Perguntas do Teste Inicial (completo) ──────────────────────────────────────
 PERGUNTAS_TESTE = [
     # BLOCO 1 — Quem você é
-    {"id":"1","bloco":"Quem você é","texto":"Qual é o seu nome completo?","tipo":"texto","placeholder":"Digite seu nome completo","obrigatorio":True},
+    {"id":"1","bloco":"Quem você é","texto":"Qual é o seu nome? (pode ser só o primeiro nome)","tipo":"texto","placeholder":"Digite seu primeiro nome","obrigatorio":True},
     {"id":"2","bloco":"Quem você é","texto":"Quantos anos você tem?","tipo":"numero","placeholder":"Ex: 17","obrigatorio":True},
-    {"id":"3","bloco":"Quem você é","texto":"Em qual estado e cidade você mora?","tipo":"texto","placeholder":"Ex: São Paulo - SP","obrigatorio":True},
-    {"id":"4","bloco":"Quem você é","texto":"Você está no ensino médio ou já concluiu?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Estou no 1º ano"},
-        {"letra":"B","texto":"Estou no 2º ano"},
-        {"letra":"C","texto":"Estou no 3º ano"},
-        {"letra":"D","texto":"Já terminei o ensino médio"},
-        {"letra":"E","texto":"Não terminei o ensino médio"},
-    ],"textoLivre":"Quer adicionar algo sobre sua situação escolar?"},
-    {"id":"5","bloco":"Quem você é","texto":"Sua escola é pública ou privada?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Pública"},
-        {"letra":"B","texto":"Privada / particular"},
+    {"id":"3","bloco":"Quem você é","texto":"Em qual cidade e estado você mora? (Ex: Ferraz de Vasconcelos - SP)","tipo":"texto","placeholder":"Ex: Ferraz de Vasconcelos - SP","obrigatorio":True},
+    {"id":"4","bloco":"Quem você é","texto":"Qual é a sua situação escolar atual?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Estou cursando o ensino médio"},
+        {"letra":"B","texto":"Já concluí o ensino médio"},
+        {"letra":"C","texto":"Fiz supletivo / EJA"},
+        {"letra":"D","texto":"Outra situação"},
+    ]},
+    {"id":"5","bloco":"Quem você é","texto":"Você estudou em escola pública, privada ou foi bolsista em escola privada?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Escola pública"},
+        {"letra":"B","texto":"Escola privada (pagante)"},
         {"letra":"C","texto":"Bolsista em escola privada"},
     ]},
-    {"id":"6","bloco":"Quem você é","texto":"Você já fez o ENEM?","tipo":"opcoes","opcoes":[
+    {"id":"6","bloco":"Quem você é","texto":"Você já fez o ENEM? Se sim, tem uma ideia da sua nota?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Sim, já fiz e tenho minhas notas"},
         {"letra":"B","texto":"Sim, mas não lembro exatamente as notas"},
         {"letra":"C","texto":"Ainda não fiz, vou fazer esse ano"},
@@ -172,26 +171,26 @@ PERGUNTAS_TESTE = [
     ],"textoLivre":"Se tiver suas notas, pode colocar aqui (ex: Linguagens 650, Matemática 600...)"},
 
     # BLOCO 2 — Situação financeira real
-    {"id":"7","bloco":"Sua situação financeira","texto":"Qual é a renda mensal aproximada da sua família?","tipo":"opcoes","opcoes":[
+    {"id":"7","bloco":"Sua situação financeira","texto":"Qual é a renda mensal aproximada da sua família somando todos que trabalham em casa?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Até R$ 1.412 (1 salário mínimo)"},
         {"letra":"B","texto":"Entre R$ 1.412 e R$ 3.000"},
         {"letra":"C","texto":"Entre R$ 3.000 e R$ 6.000"},
         {"letra":"D","texto":"Acima de R$ 6.000"},
         {"letra":"E","texto":"Prefiro não informar"},
     ],"textoLivre":"Quer descrever melhor sua situação? (ex: minha mãe trabalha sozinha, moramos de aluguel...)"},
-    {"id":"8","bloco":"Sua situação financeira","texto":"Você precisa trabalhar enquanto estuda?","tipo":"opcoes","opcoes":[
+    {"id":"8","bloco":"Sua situação financeira","texto":"Você precisa trabalhar enquanto estuda, ou pode se dedicar só aos estudos?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Sim, preciso trabalhar para me sustentar"},
         {"letra":"B","texto":"Sim, ajudo em casa mas não dependo só de mim"},
         {"letra":"C","texto":"Talvez, se não conseguir bolsa ou financiamento"},
         {"letra":"D","texto":"Não, minha família consegue me manter enquanto estudo"},
     ]},
-    {"id":"9","bloco":"Sua situação financeira","texto":"Você teria como pagar alguma mensalidade de faculdade?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Não, preciso de curso gratuito ou bolsa integral"},
-        {"letra":"B","texto":"Talvez, com financiamento (FIES) ou bolsa parcial"},
-        {"letra":"C","texto":"Sim, consigo pagar mensalidade com esforço"},
-        {"letra":"D","texto":"Sim, sem problemas"},
+    {"id":"9","bloco":"Sua situação financeira","texto":"Se não conseguir bolsa ou financiamento, você teria como pagar uma mensalidade? Se sim, qual faixa?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Não consigo pagar"},
+        {"letra":"B","texto":"Até R$ 400/mês"},
+        {"letra":"C","texto":"Até R$ 800/mês"},
+        {"letra":"D","texto":"Acima de R$ 800/mês"},
     ]},
-    {"id":"10","bloco":"Sua situação financeira","texto":"Você tem acesso a computador e internet em casa?","tipo":"opcoes","opcoes":[
+    {"id":"10","bloco":"Sua situação financeira","texto":"Em casa, você tem computador (não só celular) e internet boa o suficiente para estudar online?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Só tenho celular com internet limitada"},
         {"letra":"B","texto":"Tenho celular e acesso a computador às vezes"},
         {"letra":"C","texto":"Tenho computador com internet razoável"},
@@ -199,82 +198,92 @@ PERGUNTAS_TESTE = [
     ]},
 
     # BLOCO 3 — Onde você quer chegar
-    {"id":"11","bloco":"Onde você quer chegar","texto":"Você pode se deslocar para estudar em outra cidade?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Não, preciso estudar na minha cidade"},
-        {"letra":"B","texto":"Sim, cidades próximas (até 1h de distância)"},
-        {"letra":"C","texto":"Sim, qualquer cidade do meu estado"},
-        {"letra":"D","texto":"Sim, posso me mudar para qualquer lugar"},
+    {"id":"11","bloco":"Onde você quer chegar","texto":"Você consegue se deslocar para estudar em outra cidade? Se sim, até quanto tempo de deslocamento por dia?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Não consigo sair da minha cidade"},
+        {"letra":"B","texto":"Até 30 minutos por dia"},
+        {"letra":"C","texto":"Até 1 hora por dia"},
+        {"letra":"D","texto":"Consigo me mudar se necessário"},
     ]},
-    {"id":"12","bloco":"Onde você quer chegar","texto":"Em quanto tempo você quer estar trabalhando na sua área?","tipo":"opcoes","opcoes":[
+    {"id":"12","bloco":"Onde você quer chegar","texto":"Em quanto tempo você quer ou precisa estar trabalhando na sua área?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"O mais rápido possível — em até 1 ano"},
         {"letra":"B","texto":"Entre 1 e 2 anos (curso técnico ou tecnólogo)"},
         {"letra":"C","texto":"Entre 3 e 5 anos (graduação)"},
         {"letra":"D","texto":"Mais de 5 anos (graduação + pós)"},
     ]},
-    {"id":"13","bloco":"Onde você quer chegar","texto":"O que mais te importa na sua futura carreira?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Ganhar bem — quero estabilidade financeira"},
-        {"letra":"B","texto":"Fazer algo que eu ame, mesmo que ganhe menos"},
-        {"letra":"C","texto":"Ter liberdade e flexibilidade no trabalho"},
-        {"letra":"D","texto":"Ajudar pessoas e causar impacto social"},
-        {"letra":"E","texto":"Crescer e ser reconhecido profissionalmente"},
-    ],"textoLivre":"Tem algo mais específico que você quer da sua carreira?"},
-    {"id":"14","bloco":"Onde você quer chegar","texto":"Você já tem alguma ideia de curso ou área?","tipo":"opcoes","opcoes":[
+    {"id":"13","bloco":"Onde você quer chegar","texto":"O que é mais importante para você na carreira? Escolha até 2 opções.","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Ganhar bem"},
+        {"letra":"B","texto":"Ter estabilidade"},
+        {"letra":"C","texto":"Ajudar pessoas"},
+        {"letra":"D","texto":"Ser criativo"},
+        {"letra":"E","texto":"Ter autonomia"},
+        {"letra":"F","texto":"Crescer rápido"},
+        {"letra":"G","texto":"Trabalhar com tecnologia"},
+        {"letra":"H","texto":"Ter impacto social"},
+    ]},
+    {"id":"14","bloco":"Onde você quer chegar","texto":"Você já pesquisou ou tem interesse em algum curso, área ou profissão específica?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Sim, já tenho um curso definido na cabeça"},
         {"letra":"B","texto":"Tenho algumas opções mas estou indeciso"},
         {"letra":"C","texto":"Tenho uma área geral mas não sei o curso"},
         {"letra":"D","texto":"Não faço ideia ainda"},
-    ],"textoLivre":"Se tiver, qual curso ou área você está pensando?"},
+    ],"textoLivre":"Se tiver, qual curso ou área você está pesquisando?"},
 
     # BLOCO 4 — Quem você é por dentro
-    {"id":"15","bloco":"Quem você é por dentro","texto":"O que você mais gosta de fazer no seu tempo livre?","tipo":"opcoes","opcoes":[
+    {"id":"15","bloco":"Quem você é por dentro","texto":"Fora da escola, o que você faz ou aprende por conta própria? (Ex: programar, desenhar, cuidar de pessoas, vender coisas, jogar, criar conteúdo...)","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Mexer com tecnologia, programar, criar coisas no computador"},
         {"letra":"B","texto":"Ler, escrever, pesquisar sobre assuntos que me interessam"},
         {"letra":"C","texto":"Estar com pessoas, organizar eventos, conversar"},
         {"letra":"D","texto":"Desenhar, criar, fazer coisas com as mãos"},
         {"letra":"E","texto":"Praticar esportes ou atividades ao ar livre"},
-    ],"textoLivre":"Tem algo que você ama fazer que não está nas opções?"},
-    {"id":"16","bloco":"Quem você é por dentro","texto":"Quando você precisa resolver um problema difícil, como age?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Analiso tudo com calma antes de agir"},
-        {"letra":"B","texto":"Peço ajuda para alguém de confiança"},
-        {"letra":"C","texto":"Testo soluções na prática até funcionar"},
-        {"letra":"D","texto":"Busco informações e pesquiso bastante"},
+    ],"textoLivre":"Tem algo que você faz ou aprende que não está nas opções?"},
+    {"id":"16","bloco":"Quem você é por dentro","texto":"Quando você se depara com um problema difícil, o que você faz primeiro?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Pesquiso bastante antes de agir"},
+        {"letra":"B","texto":"Peço ajuda para alguém"},
+        {"letra":"C","texto":"Tento na prática e vou ajustando"},
+        {"letra":"D","texto":"Analiso tudo com calma"},
+        {"letra":"E","texto":"Delego para quem sabe mais"},
     ]},
-    {"id":"17","bloco":"Quem você é por dentro","texto":"Como você se sente trabalhando em grupo?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Amo — aprendo muito com os outros"},
-        {"letra":"B","texto":"Depende do grupo, às vezes sim às vezes não"},
-        {"letra":"C","texto":"Prefiro trabalhar sozinho, rendo mais"},
-        {"letra":"D","texto":"Gosto de liderar o grupo"},
+    {"id":"17","bloco":"Quem você é por dentro","texto":"Como você prefere trabalhar?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Prefiro trabalhar sozinho"},
+        {"letra":"B","texto":"Trabalho bem em equipe como membro"},
+        {"letra":"C","texto":"Gosto de liderar e organizar o grupo"},
+        {"letra":"D","texto":"Depende do projeto"},
     ]},
-    {"id":"18","bloco":"Quem você é por dentro","texto":"Qual dessas frases mais combina com você?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Sou curioso — adoro aprender coisas novas"},
-        {"letra":"B","texto":"Sou prático — prefiro fazer do que ficar teorizando"},
-        {"letra":"C","texto":"Sou criativo — penso fora da caixa"},
-        {"letra":"D","texto":"Sou organizado — gosto de planejar e executar"},
-        {"letra":"E","texto":"Sou empático — me importo muito com as pessoas"},
+    {"id":"18","bloco":"Quem você é por dentro","texto":"Em qual dessas áreas você acha que se sai melhor naturalmente?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Matemática e lógica"},
+        {"letra":"B","texto":"Comunicação e escrita"},
+        {"letra":"C","texto":"Ciências e saúde"},
+        {"letra":"D","texto":"Artes e criação visual"},
+        {"letra":"E","texto":"Organização e gestão"},
+        {"letra":"F","texto":"Tecnologia e computadores"},
     ]},
 
     # BLOCO 5 — Contexto de vida
-    {"id":"19","bloco":"Seu contexto de vida","texto":"Você tem alguma experiência de trabalho?","tipo":"opcoes","opcoes":[
+    {"id":"19","bloco":"Seu contexto de vida","texto":"Você já trabalhou, fez estágio, bico ou aprendeu algo profissional fora da escola? Se sim, o quê?","tipo":"opcoes","opcoes":[
         {"letra":"A","texto":"Nunca trabalhei"},
         {"letra":"B","texto":"Já fiz bicos ou trabalhos informais"},
         {"letra":"C","texto":"Fui ou sou Jovem Aprendiz"},
         {"letra":"D","texto":"Já fiz estágio"},
         {"letra":"E","texto":"Já trabalhei com carteira assinada"},
     ],"textoLivre":"Conta um pouco dessa experiência se quiser (o que fazia, o que aprendeu...)"},
-    {"id":"20","bloco":"Seu contexto de vida","texto":"Tem alguém na sua família ou círculo próximo que trabalha numa área que você admira?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Sim, e isso me influencia na minha escolha"},
-        {"letra":"B","texto":"Sim, mas quero seguir um caminho diferente"},
-        {"letra":"C","texto":"Não, serei o primeiro da família nessa área"},
-        {"letra":"D","texto":"Não pensei nisso ainda"},
-    ],"textoLivre":"Se quiser, conte quem é e o que faz"},
-    {"id":"21","bloco":"Seu contexto de vida","texto":"O que mais te preocupa quando pensa no seu futuro profissional?","tipo":"opcoes","opcoes":[
-        {"letra":"A","texto":"Não ter dinheiro para estudar"},
-        {"letra":"B","texto":"Escolher errado e se arrepender"},
-        {"letra":"C","texto":"Não conseguir emprego na área escolhida"},
-        {"letra":"D","texto":"Decepcionar minha família"},
-        {"letra":"E","texto":"Não me sentir capaz ou inteligente o suficiente"},
+    {"id":"20","bloco":"Seu contexto de vida","texto":"Você já tentou aprender algo por conta própria fora da escola — como um curso online, YouTube, app? Conseguiu terminar?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Sim, já terminei cursos ou aprendi bastante coisa"},
+        {"letra":"B","texto":"Já tentei mas não terminei"},
+        {"letra":"C","texto":"Assisto bastante mas não faço curso formal"},
+        {"letra":"D","texto":"Nunca tentei aprender fora da escola"},
+    ]},
+    {"id":"21","bloco":"Seu contexto de vida","texto":"Qual é o seu maior medo ou bloqueio em relação à escolha de carreira?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Escolher errado e me arrepender"},
+        {"letra":"B","texto":"Não conseguir emprego"},
+        {"letra":"C","texto":"Não ter dinheiro para estudar"},
+        {"letra":"D","texto":"Decepcionar a família"},
+        {"letra":"E","texto":"Não saber por onde começar"},
+        {"letra":"F","texto":"Não me sentir capaz"},
     ],"textoLivre":"Quer desabafar algo sobre esse medo? A IA leva isso em consideração na análise"},
-    {"id":"22","bloco":"Seu contexto de vida","texto":"Se você pudesse escrever uma carta para o seu eu daqui a 5 anos, o que diria?","tipo":"texto_livre","placeholder":"Escreva à vontade — pode ser algo simples como 'quero estar feliz' ou mais detalhado. Isso ajuda a IA a entender o que realmente importa para você.","obrigatorio":False},
+    {"id":"22","bloco":"Seu contexto de vida","texto":"Se a IA te recomendar uma área que você nunca considerou, você estaria aberto a explorar?","tipo":"opcoes","opcoes":[
+        {"letra":"A","texto":"Sim, estou aberto a explorar"},
+        {"letra":"B","texto":"Depende da área"},
+        {"letra":"C","texto":"Prefiro que confirme o que já penso"},
+    ]},
 ]
 
 PERGUNTAS_MODULOS = {
@@ -888,11 +897,13 @@ async def resultado_status(jobId: str, usuario: dict = Depends(get_usuario)):
 async def get_resultado(usuario: dict = Depends(get_usuario)):
     async with db_pool.acquire() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cur:
-            await cur.execute("SELECT dados FROM perfis WHERE usuario_id=%s", (usuario["id"],))
+            await cur.execute("SELECT dados, atualizado_em FROM perfis WHERE usuario_id=%s", (usuario["id"],))
             r = await cur.fetchone()
             if not r:
                 raise HTTPException(status_code=404, detail={"erro": "Resultado não encontrado", "codigo": "RESULTADO_NAO_ENCONTRADO"})
-            return json.loads(r["dados"])
+            dados = json.loads(r["dados"])
+            dados["_atualizado_em"] = r["atualizado_em"].isoformat() if r["atualizado_em"] else None
+            return dados
 
 # ── Módulos ────────────────────────────────────────────────────────────────────
 @app.get("/api/modulos")
@@ -972,6 +983,28 @@ async def finalizar_modulo(modulo_id: str, usuario: dict = Depends(get_usuario))
         asyncio.create_task(processar_resultado_ia_db(job_id, uid, usuario, "Módulo 04"))
         return {"concluido": True, "jobId": job_id}
     return {"concluido": True, "proximoModulo": f"{int(modulo_id)+1:02d}"}
+
+# ── Histórico — reset e respostas do usuário ──────────────────────────────────
+@app.delete("/api/testeinicial/resetar")
+async def resetar_teste(usuario: dict = Depends(get_usuario)):
+    uid = usuario["id"]
+    async with db_pool.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute("DELETE FROM respostas_teste WHERE usuario_id=%s", (uid,))
+            await cur.execute("DELETE FROM perfis WHERE usuario_id=%s", (uid,))
+            await cur.execute("UPDATE usuarios SET teste_inicial_concluido=FALSE WHERE id=%s", (uid,))
+    return {"ok": True, "mensagem": "Dados resetados com sucesso"}
+
+@app.get("/api/testeinicial/minhas-respostas")
+async def minhas_respostas(usuario: dict = Depends(get_usuario)):
+    async with db_pool.acquire() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cur:
+            await cur.execute(
+                "SELECT pergunta_id, valor, texto_livre FROM respostas_teste WHERE usuario_id=%s ORDER BY CAST(pergunta_id AS UNSIGNED)",
+                (usuario["id"],)
+            )
+            rows = await cur.fetchall()
+    return {"respostas": [{"perguntaId": r["pergunta_id"], "valor": r["valor"], "textoLivre": r["texto_livre"] or ""} for r in rows]}
 
 # ── Contexto livre extra ───────────────────────────────────────────────────────
 @app.post("/api/contexto")

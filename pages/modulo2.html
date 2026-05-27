@@ -333,7 +333,7 @@
 <body>
     <div class="bg-glow"></div>
     <nav class="test-nav">
-        <a href="minha_jornada.html" class="nav-logo font-jakarta">Programando o Futuro</a>
+        <a href="historico.html" class="nav-logo font-jakarta">Programando o Futuro</a>
         <div class="nav-center">
             <span class="nav-modulo-label font-jakarta">Módulo 02 — Interesses e Paixões</span>
             <span class="nav-progress-text font-jakarta">Pergunta <span id="navCurrent">1</span> de <span
@@ -518,12 +518,12 @@
         function finalizarModulo() {
             /* TODO BACK-END: POST /api/modulos/02/finalizar → desbloqueia módulo 03 */
             localStorage.setItem(`pf_modulo_${MODULO_ID}`, JSON.stringify(respostas));
-            window.location.href = 'minha_jornada.html?modulo_concluido=02';
+            window.location.href = 'historico.html?modulo_concluido=02';
         }
 
         function sair() {
             localStorage.setItem(`pf_modulo_${MODULO_ID}`, JSON.stringify(respostas));
-            window.location.href = 'minha_jornada.html';
+            window.location.href = 'historico.html';
         }
 
         renderPergunta();
