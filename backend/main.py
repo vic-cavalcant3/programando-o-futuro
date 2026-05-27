@@ -1088,6 +1088,8 @@ async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
                 }
             )
         data = resp.json()
+        print("JSEARCH STATUS:", resp.status_code)
+        print("JSEARCH DATA:", data)
         vagas = []
         for job in data.get("data", [])[:6]:
             vagas.append({
