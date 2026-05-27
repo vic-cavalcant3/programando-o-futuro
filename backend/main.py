@@ -1084,8 +1084,7 @@ async def buscar_vagas(body: dict, usuario: dict = Depends(get_usuario)):
                 params={
                     "query": profissao_en,
                     "num_pages": "1",
-                    "date_posted": "month",
-                    "language": "en"
+                    "date_posted": "month"
                 }
             )
         data = resp.json()
