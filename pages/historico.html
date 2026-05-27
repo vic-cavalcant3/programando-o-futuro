@@ -56,24 +56,38 @@
     .btn-iniciar { padding: 0.75rem 1.5rem; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s; }
     .btn-iniciar:hover { background: #3b82f6; }
 
-    /* RESPOSTAS */
-    .respostas-lista { display: flex; flex-direction: column; gap: 0.5rem; }
-    .resposta-item { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; overflow: hidden; }
-    .resposta-header { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.2rem; cursor: pointer; user-select: none; transition: background 0.15s; }
-    .resposta-header:hover { background: rgba(255,255,255,0.02); }
-    .resposta-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.65rem; font-weight: 700; color: #3b82f6; min-width: 22px; }
-    .resposta-pergunta { font-family: 'Manrope', sans-serif; font-size: 0.8rem; color: rgba(255,255,255,0.5); flex: 1; line-height: 1.4; }
-    .resposta-chevron { font-size: 0.62rem; color: rgba(255,255,255,0.18); transition: transform 0.2s; flex-shrink: 0; }
-    .resposta-item.open .resposta-chevron { transform: rotate(180deg); }
-    .resposta-body { display: none; padding: 0 1.2rem 1rem; border-top: 1px solid rgba(255,255,255,0.04); }
-    .resposta-item.open .resposta-body { display: block; }
-    .resposta-valor { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 700; color: #f0f6ff; margin-top: 0.75rem; }
-    .resposta-livre { font-family: 'Manrope', sans-serif; font-size: 0.77rem; color: rgba(255,255,255,0.38); margin-top: 0.35rem; line-height: 1.55; font-style: italic; }
+    /* ANALISE DA IA */
+    .analise-card { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.3rem 1.4rem; display: flex; gap: 1rem; align-items: flex-start; }
+    .analise-icon { width: 34px; height: 34px; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .analise-text { font-family: 'Manrope', sans-serif; font-size: 0.84rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+    .area-sec-card { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.1rem 1.3rem; margin-bottom: 0.55rem; }
+    .area-sec-card:last-child { margin-bottom: 0; }
+    .area-sec-nome { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 700; color: #f0f6ff; margin-bottom: 0.45rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .area-sec-pct { font-family: 'Manrope', sans-serif; font-size: 0.72rem; color: #60a5fa; font-weight: 700; white-space: nowrap; }
+    .prog-bar-track { height: 4px; background: rgba(37,99,235,0.12); border-radius: 2px; margin-bottom: 0.65rem; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 2px; transition: width 0.6s ease; }
+    .area-sec-just { font-family: 'Manrope', sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.38); line-height: 1.6; }
+    .ia-perfil-card { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.3rem 1.4rem; }
+    .ia-perfil-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; color: #f0f6ff; margin-bottom: 0.4rem; }
+    .ia-perfil-resumo { font-family: 'Manrope', sans-serif; font-size: 0.84rem; color: rgba(255,255,255,0.48); line-height: 1.7; }
+    .skills-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .skill-chip { padding: 0.35rem 0.85rem; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.22); border-radius: 20px; font-family: 'Manrope', sans-serif; font-size: 0.75rem; font-weight: 600; color: #93c5fd; }
+    .destaque-subsec { margin-bottom: 0.65rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.22); letter-spacing: 0.1em; text-transform: uppercase; }
+    .destaque-table { background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; overflow: hidden; }
+    .destaque-row { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .destaque-row:last-child { border-bottom: none; }
+    .destaque-label { font-family: 'Manrope', sans-serif; font-size: 0.74rem; color: rgba(255,255,255,0.3); min-width: 155px; flex-shrink: 0; padding-top: 0.05rem; }
+    .destaque-valor { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem; font-weight: 600; color: #f0f6ff; line-height: 1.4; }
+    .melhoria-lista { display: flex; flex-direction: column; gap: 0.5rem; }
+    .melhoria-item { display: flex; align-items: flex-start; gap: 0.75rem; background: rgba(17,24,39,0.9); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 0.85rem 1.2rem; }
+    .melhoria-icon { color: #60a5fa; flex-shrink: 0; line-height: 0; margin-top: 0.18rem; }
+    .melhoria-text { font-family: 'Manrope', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.52); line-height: 1.55; }
+    .subsec-gap { margin-bottom: 1.2rem; }
 
     /* DANGER */
     .danger-card { background: rgba(220,38,38,0.10); border: 1px solid rgba(220,38,38,0.3); border-radius: 18px; padding: 1.8rem; }
     .danger-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; }
-    .danger-icon { font-size: 1.35rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .danger-icon { flex-shrink: 0; line-height: 0; margin-top: 0.1rem; }
     .danger-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.98rem; font-weight: 800; color: #fca5a5; margin-bottom: 0.4rem; }
     .danger-text { font-family: 'Manrope', sans-serif; font-size: 0.82rem; color: rgba(252,165,165,0.65); line-height: 1.65; }
     .danger-text strong { color: #fca5a5; }
@@ -184,10 +198,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 2: SUAS RESPOSTAS -->
-    <section class="section fade-up delay-2" id="respostasSection" style="display:none;">
-      <div class="section-title font-jakarta">Suas respostas</div>
-      <div class="respostas-lista" id="respostasLista"></div>
+    <!-- SEÇÃO 2: RACIOCÍNIO DA IA -->
+    <section class="section fade-up delay-2" id="analiseSection" style="display:none;">
+      <div class="section-title font-jakarta">Raciocínio da IA</div>
+      <div id="analiseConteudo"></div>
     </section>
 
     <!-- SEÇÃO 3: GERENCIAR DADOS -->
@@ -195,7 +209,12 @@
       <div class="section-title font-jakarta">Gerenciar dados</div>
       <div class="danger-card">
         <div class="danger-header">
-          <div class="danger-icon">⚠️</div>
+          <div class="danger-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
           <div>
             <div class="danger-title">Atenção — isso não pode ser desfeito</div>
             <div class="danger-text">
@@ -287,31 +306,6 @@
       document.getElementById('modalErro').style.display = 'none';
     }
 
-    const PERGUNTAS_MAPA = {
-      "1":  "Qual é o seu nome?",
-      "2":  "Quantos anos você tem?",
-      "3":  "Em qual cidade e estado você mora?",
-      "4":  "Qual é a sua situação escolar atual?",
-      "5":  "Você estudou em escola pública, privada ou foi bolsista em escola privada?",
-      "6":  "Você já fez o ENEM? Se sim, tem uma ideia da sua nota?",
-      "7":  "Qual é a renda mensal aproximada da sua família somando todos que trabalham em casa?",
-      "8":  "Você precisa trabalhar enquanto estuda, ou pode se dedicar só aos estudos?",
-      "9":  "Se não conseguir bolsa ou financiamento, você teria como pagar uma mensalidade? Se sim, qual faixa?",
-      "10": "Em casa, você tem computador (não só celular) e internet boa o suficiente para estudar online?",
-      "11": "Você consegue se deslocar para estudar em outra cidade? Se sim, até quanto tempo de deslocamento por dia?",
-      "12": "Em quanto tempo você quer ou precisa estar trabalhando na sua área?",
-      "13": "O que é mais importante para você na carreira? Escolha até 2 opções.",
-      "14": "Você já pesquisou ou tem interesse em algum curso, área ou profissão específica?",
-      "15": "Fora da escola, o que você faz ou aprende por conta própria?",
-      "16": "Quando você se depara com um problema difícil, o que você faz primeiro?",
-      "17": "Como você prefere trabalhar?",
-      "18": "Em qual dessas áreas você acha que se sai melhor naturalmente?",
-      "19": "Você já trabalhou, fez estágio, bico ou aprendeu algo profissional fora da escola?",
-      "20": "Você já tentou aprender algo por conta própria fora da escola — como um curso online, YouTube, app?",
-      "21": "Qual é o seu maior medo ou bloqueio em relação à escolha de carreira?",
-      "22": "Se a IA te recomendar uma área que você nunca considerou, você estaria aberto a explorar?",
-    };
-
     function formatarData(isoStr) {
       if (!isoStr) return '';
       const d = new Date(isoStr);
@@ -320,8 +314,94 @@
       return `Analisado em ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} às ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
-    function toggleResposta(item) {
-      item.classList.toggle('open');
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderAnalise(r) {
+      const section = document.getElementById('analiseSection');
+      const conteudo = document.getElementById('analiseConteudo');
+      const partes = [];
+
+      if (r.areaPrincipalJustificativa) {
+        partes.push(`
+          <div class="analise-card subsec-gap">
+            <div class="analise-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <div class="analise-text font-manrope">${escHtml(r.areaPrincipalJustificativa)}</div>
+          </div>
+        `);
+      }
+
+      const areas = r.areasSecundarias || [];
+      if (areas.length > 0) {
+        const areasHtml = areas.map(a => {
+          const pct = Math.min(Number(a.percentual || a.compatibilidade || 0), 100);
+          return `
+            <div class="area-sec-card">
+              <div class="area-sec-nome font-jakarta">
+                <span>${escHtml(a.nome || a.area || '')}</span>
+                <span class="area-sec-pct">${pct}%</span>
+              </div>
+              <div class="prog-bar-track"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+              ${a.justificativa ? `<div class="area-sec-just font-manrope">${escHtml(a.justificativa)}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+        partes.push(`<div class="subsec-gap">${areasHtml}</div>`);
+      }
+
+      if (r.perfilLabel || r.perfilResumoClaro) {
+        partes.push(`
+          <div class="ia-perfil-card subsec-gap">
+            ${r.perfilLabel ? `<div class="ia-perfil-label font-jakarta">${escHtml(r.perfilLabel)}</div>` : ''}
+            ${r.perfilResumoClaro ? `<div class="ia-perfil-resumo font-manrope">${escHtml(r.perfilResumoClaro)}</div>` : ''}
+          </div>
+        `);
+      }
+
+      const skills = r.skills || [];
+      if (skills.length > 0) {
+        partes.push(`<div class="skills-wrap subsec-gap">${skills.map(s => `<span class="skill-chip font-manrope">${escHtml(s)}</span>`).join('')}</div>`);
+      }
+
+      const destaque = r.respostasDestaque || {};
+      const campos = [
+        { label: 'Preferência de trabalho', key: 'preferenciaTrabalho' },
+        { label: 'Ambiente ideal',           key: 'ambienteIdeal' },
+        { label: 'Principal desafio',        key: 'principalDesafio' },
+        { label: 'Sonho',                    key: 'sonho' },
+      ];
+      const linhas = campos
+        .filter(c => destaque[c.key])
+        .map(c => `<div class="destaque-row"><div class="destaque-label font-manrope">${c.label}</div><div class="destaque-valor font-jakarta">${escHtml(destaque[c.key])}</div></div>`)
+        .join('');
+      if (linhas) {
+        partes.push(`
+          <div class="subsec-gap">
+            <div class="destaque-subsec font-jakarta">O que você disse que mais pesou na análise</div>
+            <div class="destaque-table">${linhas}</div>
+          </div>
+        `);
+      }
+
+      const melhoria = r.pontosDeMelhoria || [];
+      if (melhoria.length > 0) {
+        const melhoriaHtml = melhoria.map(p => `
+          <div class="melhoria-item">
+            <span class="melhoria-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+            <span class="melhoria-text font-manrope">${escHtml(p)}</span>
+          </div>
+        `).join('');
+        partes.push(`<div class="melhoria-lista">${melhoriaHtml}</div>`);
+      }
+
+      if (partes.length > 0) {
+        conteudo.innerHTML = partes.join('');
+        section.style.display = '';
+      }
     }
 
     async function carregar() {
@@ -337,12 +417,13 @@
           <div class="resultado-card">
             <div class="resultado-info">
               <div class="resultado-area-label font-manrope">Área recomendada pela IA</div>
-              <div class="resultado-area font-jakarta">${resultado.areaPrincipal}</div>
+              <div class="resultado-area font-jakarta">${escHtml(resultado.areaPrincipal)}</div>
               ${dataStr ? `<div class="resultado-data font-manrope">${dataStr}</div>` : ''}
             </div>
             <a href="resultado.html" class="btn-ver-resultado font-jakarta">Ver resultado completo</a>
           </div>
         `;
+        renderAnalise(resultado);
       } else {
         wrap.innerHTML = `
           <div class="empty-card">
@@ -353,33 +434,6 @@
           </div>
         `;
       }
-
-      try {
-        const data = await api.get('/api/testeinicial/minhas-respostas');
-        const respostas = data.respostas || [];
-        if (respostas.length > 0) {
-          document.getElementById('respostasSection').style.display = '';
-          const lista = document.getElementById('respostasLista');
-          lista.innerHTML = '';
-          respostas.forEach(r => {
-            const pergunta = PERGUNTAS_MAPA[r.perguntaId] || `Pergunta ${r.perguntaId}`;
-            const item = document.createElement('div');
-            item.className = 'resposta-item';
-            item.innerHTML = `
-              <div class="resposta-header" onclick="toggleResposta(this.parentElement)">
-                <span class="resposta-num font-jakarta">${r.perguntaId}</span>
-                <span class="resposta-pergunta font-manrope">${pergunta}</span>
-                <span class="resposta-chevron">▼</span>
-              </div>
-              <div class="resposta-body">
-                <div class="resposta-valor font-jakarta">${r.valor || '—'}</div>
-                ${r.textoLivre ? `<div class="resposta-livre font-manrope">"${r.textoLivre}"</div>` : ''}
-              </div>
-            `;
-            lista.appendChild(item);
-          });
-        }
-      } catch (e) { /* respostas opcionais na UI */ }
     }
 
     async function resetar() {
