@@ -69,10 +69,10 @@ Basta abrir o arquivo `index.html` em um navegador ou servir a pasta raiz com um
 Projeto desenvolvido em equipe por:
 
 - [Victor Cavalcante](https://github.com/vic-cavalcant3)
-- Mateus Alcantara
+- [Mateus Alcantara](https://github.com/MateusAlcantara13)
 - Yago Dias dos Santos
-- Ricardo Ongari Rodrigues
-- Lucas Gomes
+- [Ricardo Ongari Rodrigues](https://github.com/RicardoOngari)
+- [Lucas Gomes](https://github.com/lucasgsilva102-oss)
 
 ## 📌 Status
 
